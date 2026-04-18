@@ -249,9 +249,131 @@ select option{background:var(--surface2);}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .kanban{grid-template-columns:repeat(2,1fr);}
 }
+
+/* ══════════════════════════════════════
+   MOBILE — max 768px
+══════════════════════════════════════ */
+
+/* Hamburguer button */
+.mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:500;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:5px;padding:8px;}
+.mob-menu-btn span{display:block;width:18px;height:2px;background:var(--text);border-radius:1px;transition:all .25s;}
+.mob-menu-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.mob-menu-btn.open span:nth-child(2){opacity:0;}
+.mob-menu-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Overlay escuro atrás da sidebar */
+.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:98;backdrop-filter:blur(2px);}
+.mob-overlay.show{display:block;}
+
+@media(max-width:768px){
+
+  body{overflow:auto;}
+
+  /* ── Hamburguer visível ── */
+  .mob-menu-btn{display:flex;}
+
+  /* ── Sidebar vira drawer lateral ── */
+  .sidebar{
+    transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    z-index:200;
+    width:260px;
+  }
+  .sidebar.mob-open{transform:translateX(0);}
+
+  /* ── Main ocupa tela toda ── */
+  .main{margin-left:0;}
+
+  /* ── Topbar compacta ── */
+  .topbar{padding:14px 16px 14px 64px;}
+  .topbar h2{font-size:17px;}
+  #topbar-role-badge{display:none;}
+  #topbar-user-name{display:none;}
+
+  /* ── Content com padding menor ── */
+  .content{padding:16px;height:auto;min-height:calc(100vh - 57px);}
+
+  /* ── Login box ── */
+  .login-box{padding:16px;}
+  .login-card{padding:24px 20px;}
+  .login-logo h1{font-size:26px;}
+
+  /* ── Stats: 2 colunas no mobile ── */
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+  .stat-value{font-size:22px;}
+
+  /* ── Grids viram 1 coluna ── */
+  .grid-2,.grid-3{grid-template-columns:1fr;}
+
+  /* ── Section header empilha ── */
+  .section-header{flex-direction:column;align-items:flex-start;gap:12px;}
+  .section-header > div:last-child{width:100%;display:flex;gap:8px;}
+  .search-bar{max-width:none;flex:1;}
+  .btn.editor-action,.btn.btn-primary{white-space:nowrap;}
+
+  /* ── Tabelas: scroll horizontal + células menores ── */
+  .table-wrap{-webkit-overflow-scrolling:touch;}
+  thead th{padding:8px 10px;font-size:10px;}
+  tbody td{padding:9px 10px;font-size:12px;}
+
+  /* ── Kanban: 1 coluna ── */
+  .kanban{grid-template-columns:1fr;}
+
+  /* ── Clientes: 1 coluna ── */
+  #clientes-grid{grid-template-columns:1fr !important;}
+
+  /* ── Modais: tela quase cheia ── */
+  .modal{width:96%;max-height:88vh;border-radius:12px;}
+  .modal-body{padding:16px;}
+  .modal-header{padding:16px 16px 12px;}
+  .modal-footer{padding:12px 16px;}
+
+  /* ── Form rows viram coluna ── */
+  .form-row,.form-row-3{grid-template-columns:1fr;}
+
+  /* ── Cards ── */
+  .card{padding:14px;}
+  .card-header{flex-wrap:wrap;gap:8px;}
+
+  /* ── User cards ── */
+  .user-card{flex-wrap:wrap;}
+  .user-card-actions{width:100%;justify-content:flex-end;}
+
+  /* ── Filter buttons: scroll horizontal ── */
+  .filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+  .filter-btn{flex-shrink:0;}
+
+  /* ── Toast: full width ── */
+  #toast{left:16px;right:16px;bottom:16px;font-size:12px;}
+
+  /* ── Perm table menor ── */
+  .perm-table{font-size:12px;}
+  .perm-table th,.perm-table td{padding:8px 6px;}
+
+  /* ── Fin stats: 2 colunas ── */
+  #fin-stats{grid-template-columns:repeat(2,1fr) !important;}
+
+  /* ── Delivery item ── */
+  .delivery-meta{gap:6px;font-size:11px;}
+
+  /* ── Progress bar nos contratos ── */
+  .progress-bar{width:100% !important;}
+}
+
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:1fr;}
+  #fin-stats{grid-template-columns:1fr !important;}
+}
 </style>
 </head>
 <body>
+
+<!-- MOBILE MENU BUTTON -->
+<button class="mob-menu-btn" id="mob-menu-btn" onclick="toggleMobMenu()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mob-overlay" onclick="closeMobMenu()"></div>
 
 <!-- LOADER -->
 <div id="loader">
@@ -1316,6 +1438,41 @@ async function deleteUsuario(uid,nome){
     toast(`Acesso de "${nome}" bloqueado.`,'🔒');
   }catch(e){toast('Erro.','❌');console.error(e);}
 }
+
+// ═══════════════════════════════════════════════
+//  MOBILE MENU
+// ═══════════════════════════════════════════════
+function toggleMobMenu(){
+  const sidebar=document.getElementById('sidebar');
+  const btn=document.getElementById('mob-menu-btn');
+  const overlay=document.getElementById('mob-overlay');
+  const isOpen=sidebar.classList.contains('mob-open');
+  if(isOpen){ closeMobMenu(); } else {
+    sidebar.classList.add('mob-open');
+    btn.classList.add('open');
+    overlay.classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+}
+function closeMobMenu(){
+  const sidebar=document.getElementById('sidebar');
+  const btn=document.getElementById('mob-menu-btn');
+  const overlay=document.getElementById('mob-overlay');
+  sidebar.classList.remove('mob-open');
+  btn.classList.remove('open');
+  overlay.classList.remove('show');
+  document.body.style.overflow='';
+}
+
+// Fecha sidebar ao clicar em qualquer nav-item no mobile
+document.addEventListener('click', e=>{
+  if(window.innerWidth<=768 && e.target.closest('.nav-item')){
+    closeMobMenu();
+  }
+});
+
+// Fecha ao girar a tela
+window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMobMenu(); });
 </script>
 </body>
 </html>
