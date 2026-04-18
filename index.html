@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Representa — Gestão Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;--surface:#111118;--surface2:#18181f;--surface3:#1f1f2a;
+  --border:#2a2a38;--accent:#7c5cfc;--accent2:#fc5c7d;--accent3:#5cf4c0;
+  --accent4:#fcb85c;--text:#e8e8f0;--text2:#8888aa;--text3:#555570;
+  --danger:#fc5c5c;--success:#5cf4a0;--warning:#fcdb5c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;transition:opacity .4s;}
+#loader h1{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#loader p{color:var(--text3);font-size:13px;}
+.loader-bar{width:220px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:slide 1.2s ease-in-out infinite;}
+@keyframes slide{0%{transform:translateX(-100%);}100%{transform:translateX(300%);}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);z-index:8000;display:none;align-items:center;justify-content:center;}
+#login-screen.show{display:flex;}
+.login-box{width:100%;max-width:400px;padding:20px;}
+.login-logo{text-align:center;margin-bottom:32px;}
+.login-logo h1{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.login-logo p{color:var(--text3);font-size:13px;margin-top:4px;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:0 32px 80px rgba(0,0,0,.6);}
+.login-card h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:24px;text-align:center;}
+.login-error{background:rgba(252,92,92,.1);border:1px solid rgba(252,92,92,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--danger);margin-bottom:14px;display:none;}
+.login-error.show{display:block;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;bottom:0;z-index:100;}
+.logo{padding:24px 24px 18px;border-bottom:1px solid var(--border);}
+.logo h1{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;}
+.logo span{font-size:11px;color:var(--text3);font-weight:300;letter-spacing:1px;text-transform:uppercase;display:block;margin-top:2px;}
+.online-dot{width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block;margin-right:4px;box-shadow:0 0 5px var(--success);}
+.nav{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-section-label{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:10px 12px 5px;margin-top:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:13.5px;color:var(--text2);transition:all .15s;border:1px solid transparent;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:linear-gradient(135deg,rgba(124,92,252,.15),rgba(252,92,125,.08));color:var(--text);border-color:rgba(124,92,252,.3);}
+.nav-item .icon{font-size:15px;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center;}
+.sidebar-footer{padding:14px 16px;border-top:1px solid var(--border);}
+.user-info{display:flex;align-items:center;gap:10px;}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-info-text{flex:1;min-width:0;}
+.user-info-text div{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-info-text small{font-size:11px;color:var(--text3);display:block;}
+.logout-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;border-radius:4px;font-size:15px;transition:color .15s;flex-shrink:0;}
+.logout-btn:hover{color:var(--danger);}
+
+/* ── MAIN ── */
+.main{margin-left:240px;flex:1;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{padding:18px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:50;}
+.topbar h2{font-family:'Syne',sans-serif;font-size:21px;font-weight:700;letter-spacing:-.5px;}
+.topbar-right{display:flex;gap:10px;align-items:center;}
+.role-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.role-admin{background:rgba(124,92,252,.15);color:var(--accent);border:1px solid rgba(124,92,252,.3);}
+.role-editor{background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);}
+.role-viewer{background:rgba(252,219,92,.12);color:var(--warning);border:1px solid rgba(252,219,92,.25);}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text);transition:all .15s;display:flex;align-items:center;gap:6px;}
+.btn:hover{background:var(--surface3);border-color:var(--accent);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#9c7cfc);border-color:transparent;color:#fff;}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 20px rgba(124,92,252,.4);}
+.btn-danger{background:rgba(252,92,92,.15);border-color:rgba(252,92,92,.3);color:var(--danger);}
+.btn-success{background:rgba(92,244,160,.12);border-color:rgba(92,244,160,.3);color:var(--success);}
+.btn-warning{background:rgba(252,219,92,.12);border-color:rgba(252,219,92,.3);color:var(--warning);}
+.btn-sm{padding:5px 10px;font-size:12px;}
+.btn-icon{padding:6px 10px;}
+
+/* ── CONTENT ── */
+.content{flex:1;padding:26px 32px;overflow-y:auto;height:calc(100vh - 69px);}
+.tab{display:none;}.tab.active{display:block;animation:fadeIn .2s ease;}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.stat-card:nth-child(1)::before{background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.stat-card:nth-child(2)::before{background:linear-gradient(90deg,var(--accent3),#3cbfff);}
+.stat-card:nth-child(3)::before{background:linear-gradient(90deg,var(--accent4),var(--accent2));}
+.stat-card:nth-child(4)::before{background:linear-gradient(90deg,var(--accent),var(--accent3));}
+.stat-label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+.stat-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin:6px 0 4px;letter-spacing:-1px;}
+.stat-sub{font-size:11px;color:var(--text3);}
+.stat-icon{font-size:26px;position:absolute;right:16px;top:16px;opacity:.12;}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(42,42,56,.5);transition:background .12s;}
+tbody tr:hover{background:rgba(124,92,252,.04);}
+tbody td{padding:11px 12px;color:var(--text);vertical-align:middle;}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.badge-active{background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);}
+.badge-inactive{background:rgba(252,92,92,.1);color:var(--danger);border:1px solid rgba(252,92,92,.2);}
+.badge-pending{background:rgba(252,219,92,.12);color:var(--warning);border:1px solid rgba(252,219,92,.25);}
+.badge-prospect{background:rgba(124,92,252,.12);color:var(--accent);border:1px solid rgba(124,92,252,.25);}
+.badge-done{background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);}
+.badge-late{background:rgba(252,92,92,.1);color:var(--danger);border:1px solid rgba(252,92,92,.2);}
+.badge-inprogress{background:rgba(60,191,255,.12);color:#3cbfff;border:1px solid rgba(60,191,255,.25);}
+.badge-paused{background:rgba(255,150,50,.1);color:#ffa030;border:1px solid rgba(255,150,50,.2);}
+
+/* ── FORM ── */
+.form-group{margin-bottom:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border-color .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,252,.1);}
+textarea{resize:vertical;min-height:80px;}
+select option{background:var(--surface2);}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:90%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6);}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1;}
+.modal-header h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;}
+.modal-body{padding:20px 24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+.close-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;line-height:1;padding:4px;border-radius:4px;}
+.close-btn:hover{color:var(--text);background:var(--surface2);}
+
+/* ── SEARCH ── */
+.search-bar{position:relative;flex:1;max-width:300px;}
+.search-bar input{padding-left:34px;}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;}
+
+/* ── DELIVERY ── */
+.delivery-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);margin-bottom:8px;transition:all .15s;}
+.delivery-item.clickable{cursor:pointer;}
+.delivery-item.clickable:hover{border-color:rgba(124,92,252,.3);}
+.delivery-item.checked{opacity:.6;border-color:rgba(92,244,160,.2);background:rgba(92,244,160,.04);}
+.delivery-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s;font-size:12px;}
+.delivery-item.checked .delivery-check{background:var(--success);border-color:var(--success);color:#0a0a0f;font-weight:700;}
+.delivery-info{flex:1;}
+.delivery-title{font-size:14px;font-weight:500;}
+.delivery-item.checked .delivery-title{text-decoration:line-through;color:var(--text3);}
+.delivery-meta{font-size:12px;color:var(--text2);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;}
+
+/* ── PROGRESS ── */
+.progress-bar{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:8px;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width .4s ease;}
+
+/* ── CLIENT CARD ── */
+.client-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .15s;cursor:pointer;}
+.client-card:hover{border-color:rgba(124,92,252,.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.client-avatar{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#fff;font-family:'Syne',sans-serif;margin-bottom:10px;}
+.client-name{font-weight:600;font-size:15px;}
+.client-company{font-size:12px;color:var(--text2);margin-top:2px;}
+.divider{height:1px;background:var(--border);margin:12px 0;}
+.client-meta-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:4px;}
+.client-meta-row strong{color:var(--text);}
+
+/* ── KANBAN ── */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+.kanban-col{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.kanban-col-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.kanban-count{font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text3);padding:2px 7px;border-radius:20px;}
+.kanban-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;transition:all .12s;}
+.kanban-card:hover{border-color:rgba(124,92,252,.3);}
+
+/* ── TAGS ── */
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(124,92,252,.15);color:var(--accent);letter-spacing:.3px;}
+
+/* ── FINANCE ── */
+.finance-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.finance-row:last-child{border-bottom:none;}
+.amount-green{color:var(--success);font-weight:600;}
+.amount-red{color:var(--danger);font-weight:600;}
+.amount-yellow{color:var(--warning);font-weight:600;}
+
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text3);}
+.empty-state div{font-size:40px;margin-bottom:12px;}
+.empty-state p{font-size:14px;}
+
+/* ── SECTION ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+.section-sub{font-size:13px;color:var(--text2);margin-top:2px;}
+.filter-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.filter-btn{padding:5px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .12s;}
+.filter-btn.active,.filter-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(124,92,252,.1);}
+
+/* ── SCOPE / NOTE ── */
+.scope-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(42,42,56,.5);font-size:13px;}
+.scope-item:last-child{border-bottom:none;}
+.scope-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.note-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+.note-text{font-size:13px;color:var(--text2);line-height:1.5;}
+
+/* ── USER CARD (admin) ── */
+.user-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px;}
+.user-card-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;font-family:'Syne',sans-serif;flex-shrink:0;}
+.user-card-info{flex:1;min-width:0;}
+.user-card-name{font-weight:600;font-size:14px;}
+.user-card-email{font-size:12px;color:var(--text3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-card-actions{display:flex;gap:6px;flex-shrink:0;}
+.perm-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:600;}
+.perm-admin{background:rgba(124,92,252,.15);color:var(--accent);border:1px solid rgba(124,92,252,.3);}
+.perm-editor{background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);}
+.perm-viewer{background:rgba(252,219,92,.12);color:var(--warning);border:1px solid rgba(252,219,92,.25);}
+.perm-blocked{background:rgba(252,92,92,.1);color:var(--danger);border:1px solid rgba(252,92,92,.2);}
+
+/* ── PERMISSION INFO ── */
+.perm-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+.perm-table th{text-align:left;padding:8px 10px;font-size:11px;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.perm-table td{padding:10px 10px;border-bottom:1px solid rgba(42,42,56,.4);vertical-align:middle;}
+.perm-table tr:last-child td{border-bottom:none;}
+.perm-check{font-size:15px;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;z-index:9998;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+@media(max-width:1200px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .kanban{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <h1>Representa</h1>
+  <p>Carregando sistema...</p>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ══════════════════ LOGIN SCREEN ══════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>Representa</h1>
+      <p>Gestão completa para agências de marketing</p>
+    </div>
+    <div class="login-card">
+      <h2>Entrar no sistema</h2>
+      <div class="login-error" id="login-error"></div>
+      <div class="form-group"><label>E-mail</label><input type="email" id="login-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:11px;margin-top:4px;font-size:14px;" id="btn-login" onclick="doLogin()">Entrar</button>
+    </div>
+
+    <!-- SETUP FIRST ADMIN (shown only when no users exist) -->
+    <div id="setup-box" style="display:none;margin-top:20px;">
+      <div class="login-card" style="border-color:rgba(252,219,92,.3);">
+        <h2 style="color:var(--warning);">⚙️ Configuração Inicial</h2>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Nenhum usuário cadastrado. Crie o primeiro administrador do sistema.</p>
+        <div class="form-group"><label>Nome</label><input type="text" id="setup-nome" placeholder="Seu nome"></div>
+        <div class="form-group"><label>E-mail</label><input type="email" id="setup-email" placeholder="admin@agencia.com"></div>
+        <div class="form-group"><label>Senha (mín. 6 caracteres)</label><input type="password" id="setup-senha" placeholder="••••••••"></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:11px;font-size:14px;" id="btn-setup" onclick="doSetup()">Criar Administrador</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ APP ══════════════════ -->
+<aside class="sidebar" id="sidebar" style="display:none;">
+  <div class="logo">
+    <h1>Representa</h1>
+    <span><span class="online-dot"></span>Online · Tempo real</span>
+  </div>
+  <nav class="nav">
+    <div class="nav-section-label">Principal</div>
+    <div class="nav-item active" onclick="switchTab('dashboard',this)"><span class="icon">📊</span>Dashboard</div>
+    <div class="nav-section-label">Comercial</div>
+    <div class="nav-item" onclick="switchTab('clientes',this)"><span class="icon">👥</span>Clientes<span class="nav-badge" id="badge-clientes">0</span></div>
+    <div class="nav-item" onclick="switchTab('pipeline',this)"><span class="icon">🎯</span>Pipeline</div>
+    <div class="nav-section-label">Operação</div>
+    <div class="nav-item" onclick="switchTab('contratos',this)"><span class="icon">📋</span>Contratos<span class="nav-badge" id="badge-contratos">0</span></div>
+    <div class="nav-item" onclick="switchTab('entregas',this)"><span class="icon">✅</span>Entregas<span class="nav-badge" id="badge-entregas">0</span></div>
+    <div class="nav-section-label">Gestão</div>
+    <div class="nav-item" onclick="switchTab('financeiro',this)"><span class="icon">💰</span>Financeiro</div>
+    <div class="nav-item" onclick="switchTab('tarefas',this)"><span class="icon">📌</span>Tarefas</div>
+    <div class="nav-section-label admin-only" style="display:none;">Administração</div>
+    <div class="nav-item admin-only" style="display:none;" onclick="switchTab('usuarios',this)"><span class="icon">🔐</span>Usuários</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="avatar" id="sb-avatar">?</div>
+      <div class="user-info-text">
+        <div id="sb-nome">—</div>
+        <small id="sb-role-label">—</small>
+      </div>
+      <button class="logout-btn" onclick="doLogout()" title="Sair">⏻</button>
+    </div>
+  </div>
+</aside>
+
+<div class="main" id="main-app" style="display:none;">
+  <div class="topbar">
+    <h2 id="page-title">Dashboard</h2>
+    <div class="topbar-right">
+      <span class="role-badge" id="topbar-role-badge"></span>
+      <span style="font-size:13px;color:var(--text2);" id="topbar-user-name"></span>
+    </div>
+  </div>
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab active">
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card"><div class="card-header"><span class="card-title">📈 Contratos Recentes</span></div><div id="dash-contratos-list"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">✅ Entregas Pendentes</span></div><div id="dash-entregas-list"></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><span class="card-title">💰 Resumo Financeiro</span></div><div id="dash-financeiro"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">📌 Tarefas em Aberto</span></div><div id="dash-tarefas"></div></div>
+      </div>
+    </div>
+
+    <!-- CLIENTES -->
+    <div id="tab-clientes" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Clientes</div><div class="section-sub">Gerencie sua base de clientes</div></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Buscar..." id="search-clientes" oninput="renderClientes()"></div>
+          <button class="btn btn-primary editor-action" onclick="openModal('modal-cliente')">+ Novo Cliente</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterClientes('todos',this)">Todos</button>
+        <button class="filter-btn" onclick="filterClientes('ativo',this)">Ativos</button>
+        <button class="filter-btn" onclick="filterClientes('inativo',this)">Inativos</button>
+        <button class="filter-btn" onclick="filterClientes('prospect',this)">Prospects</button>
+      </div>
+      <div id="clientes-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div id="tab-pipeline" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Pipeline de Vendas</div><div class="section-sub">Acompanhe suas oportunidades</div></div>
+        <button class="btn btn-primary editor-action" onclick="openModal('modal-pipeline')">+ Nova Oportunidade</button>
+      </div>
+      <div class="kanban" id="kanban-board"></div>
+    </div>
+
+    <!-- CONTRATOS -->
+    <div id="tab-contratos" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Contratos</div><div class="section-sub">Contratos vendidos e escopo de serviços</div></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div class="search-bar"><span class="search-icon">🔍</span><input type="text" placeholder="Buscar..." id="search-contratos" oninput="renderContratos()"></div>
+          <button class="btn btn-primary editor-action" onclick="openModal('modal-contrato')">+ Novo Contrato</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterContratos('todos',this)">Todos</button>
+        <button class="filter-btn" onclick="filterContratos('ativo',this)">Ativos</button>
+        <button class="filter-btn" onclick="filterContratos('pausado',this)">Pausados</button>
+        <button class="filter-btn" onclick="filterContratos('encerrado',this)">Encerrados</button>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table><thead><tr><th>Cliente</th><th>Contrato</th><th>Serviços</th><th>Valor/mês</th><th>Início</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="contratos-tbody"></tbody></table>
+      </div></div>
+    </div>
+
+    <!-- ENTREGAS -->
+    <div id="tab-entregas" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Controle de Entregas</div><div class="section-sub">Marque as entregas por contrato</div></div>
+        <button class="btn btn-primary editor-action" onclick="openModal('modal-entrega')">+ Nova Entrega</button>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterEntregas('todos',this)">Todas</button>
+        <button class="filter-btn" onclick="filterEntregas('pendente',this)">Pendentes</button>
+        <button class="filter-btn" onclick="filterEntregas('concluido',this)">Concluídas</button>
+        <button class="filter-btn" onclick="filterEntregas('atrasado',this)">Atrasadas</button>
+      </div>
+      <div id="entregas-list"></div>
+    </div>
+
+    <!-- FINANCEIRO -->
+    <div id="tab-financeiro" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Financeiro</div><div class="section-sub">Receitas, despesas e fluxo de caixa</div></div>
+        <button class="btn btn-primary editor-action" onclick="openModal('modal-financeiro')">+ Lançamento</button>
+      </div>
+      <div class="stats-grid" id="fin-stats"></div>
+      <div class="grid-2">
+        <div class="card"><div class="card-header"><span class="card-title">📥 Receitas</span></div><div id="receitas-list"></div></div>
+        <div class="card"><div class="card-header"><span class="card-title">📤 Despesas</span></div><div id="despesas-list"></div></div>
+      </div>
+    </div>
+
+    <!-- TAREFAS -->
+    <div id="tab-tarefas" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Tarefas</div><div class="section-sub">Organização interna da equipe</div></div>
+        <button class="btn btn-primary editor-action" onclick="openModal('modal-tarefa')">+ Nova Tarefa</button>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterTarefas('todos',this)">Todas</button>
+        <button class="filter-btn" onclick="filterTarefas('aberta',this)">Abertas</button>
+        <button class="filter-btn" onclick="filterTarefas('feita',this)">Concluídas</button>
+        <button class="filter-btn" onclick="filterTarefas('urgente',this)">Urgentes</button>
+      </div>
+      <div class="card"><div class="table-wrap">
+        <table><thead><tr><th>Tarefa</th><th>Responsável</th><th>Cliente</th><th>Prioridade</th><th>Prazo</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tarefas-tbody"></tbody></table>
+      </div></div>
+    </div>
+
+    <!-- USUÁRIOS (admin only) -->
+    <div id="tab-usuarios" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">🔐 Gerenciador de Usuários</div><div class="section-sub">Controle de acesso e permissões da equipe</div></div>
+        <button class="btn btn-primary" onclick="openModal('modal-usuario')">+ Novo Usuário</button>
+      </div>
+
+      <!-- Permissões explicadas -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="card-title">📋 Níveis de Permissão</span></div>
+        <table class="perm-table">
+          <thead><tr><th>Funcionalidade</th><th>👑 Admin</th><th>✏️ Editor</th><th>👁 Visualizador</th></tr></thead>
+          <tbody>
+            <tr><td>Visualizar todos os dados</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">✅</td></tr>
+            <tr><td>Criar / editar / excluir registros</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">🚫</td></tr>
+            <tr><td>Marcar entregas como concluídas</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">🚫</td></tr>
+            <tr><td>Lançamentos financeiros</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">🚫</td></tr>
+            <tr><td>Gerenciar usuários e permissões</td><td class="perm-check">✅</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="usuarios-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ MODAIS ══════════════════ -->
+
+<!-- Modal Cliente -->
+<div class="modal-overlay" id="modal-cliente">
+  <div class="modal">
+    <div class="modal-header"><h3>👥 Novo Cliente</h3><button class="close-btn" onclick="closeModal('modal-cliente')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label>Nome*</label><input type="text" id="c-nome" placeholder="Nome do contato"></div><div class="form-group"><label>Empresa*</label><input type="text" id="c-empresa" placeholder="Nome da empresa"></div></div>
+      <div class="form-row"><div class="form-group"><label>E-mail</label><input type="email" id="c-email" placeholder="email@empresa.com"></div><div class="form-group"><label>Telefone</label><input type="text" id="c-telefone" placeholder="(11) 99999-9999"></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Segmento</label><select id="c-segmento"><option value="">Selecione...</option><option>E-commerce</option><option>Saúde</option><option>Educação</option><option>Imobiliário</option><option>Alimentação</option><option>Tecnologia</option><option>Moda</option><option>Serviços</option><option>Outro</option></select></div>
+        <div class="form-group"><label>Status</label><select id="c-status"><option value="prospect">Prospect</option><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div>
+      </div>
+      <div class="form-row"><div class="form-group"><label>Instagram</label><input type="text" id="c-instagram" placeholder="@perfil"></div><div class="form-group"><label>Site</label><input type="text" id="c-site" placeholder="www.site.com.br"></div></div>
+      <div class="form-group"><label>Observações</label><textarea id="c-obs" placeholder="Informações relevantes..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-cliente')">Cancelar</button><button class="btn btn-primary" id="btn-save-cliente" onclick="saveCliente()">Salvar Cliente</button></div>
+  </div>
+</div>
+
+<!-- Modal Contrato -->
+<div class="modal-overlay" id="modal-contrato">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3>📋 Novo Contrato</h3><button class="close-btn" onclick="closeModal('modal-contrato')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label>Cliente*</label><select id="ct-cliente"></select></div><div class="form-group"><label>Nome do Contrato*</label><input type="text" id="ct-nome" placeholder="Ex: Gestão Full Social + Tráfego"></div></div>
+      <div class="form-row-3">
+        <div class="form-group"><label>Valor Mensal (R$)*</label><input type="number" id="ct-valor" placeholder="0,00"></div>
+        <div class="form-group"><label>Data de Início</label><input type="date" id="ct-inicio"></div>
+        <div class="form-group"><label>Vencimento</label><input type="date" id="ct-fim"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Status</label><select id="ct-status"><option value="ativo">Ativo</option><option value="pausado">Pausado</option><option value="encerrado">Encerrado</option></select></div>
+        <div class="form-group"><label>Dia de Cobrança</label><input type="number" id="ct-diavcto" placeholder="Ex: 10" min="1" max="31"></div>
+      </div>
+      <div class="form-group"><label>Serviços contemplados</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;" id="servicos-check"></div>
+        <input type="text" id="ct-servico-custom" placeholder="Adicionar serviço personalizado... (Enter)" onkeydown="if(event.key==='Enter')addCustomServico()">
+      </div>
+      <div class="form-group"><label>Observações</label><textarea id="ct-obs" placeholder="Detalhes, SLAs, regras especiais..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-contrato')">Cancelar</button><button class="btn btn-primary" id="btn-save-contrato" onclick="saveContrato()">Salvar Contrato</button></div>
+  </div>
+</div>
+
+<!-- Modal Entrega -->
+<div class="modal-overlay" id="modal-entrega">
+  <div class="modal">
+    <div class="modal-header"><h3>✅ Nova Entrega</h3><button class="close-btn" onclick="closeModal('modal-entrega')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Contrato*</label><select id="e-contrato"></select></div>
+        <div class="form-group"><label>Tipo de Entrega</label>
+          <select id="e-tipo">
+            <option value="">Selecione...</option>
+            <optgroup label="Instagram"><option>Post Instagram</option><option>Story Instagram</option><option>Reels Instagram</option><option>Anúncio Instagram Ads</option><option>Relatório Instagram Ads</option></optgroup>
+            <optgroup label="Facebook"><option>Post Facebook</option><option>Anúncio Facebook Ads</option><option>Relatório Facebook Ads</option></optgroup>
+            <optgroup label="YouTube"><option>Vídeo YouTube</option><option>Thumbnail YouTube</option><option>Shorts YouTube</option><option>Anúncio YouTube Ads</option><option>Relatório YouTube</option></optgroup>
+            <optgroup label="LinkedIn / TikTok"><option>Post LinkedIn</option><option>Vídeo TikTok</option></optgroup>
+            <optgroup label="Outros"><option>E-mail Marketing</option><option>Relatório de Tráfego</option><option>Relatório de Redes</option><option>Criação de Arte</option><option>Edição de Vídeo</option><option>Landing Page</option><option>Anúncio (Copy)</option><option>Reunião de Alinhamento</option><option>Outro</option></optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Descrição*</label><input type="text" id="e-descricao" placeholder="Ex: 12 posts feed para o mês de maio"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Quantidade</label><input type="number" id="e-quantidade" value="1" min="1"></div>
+        <div class="form-group"><label>Prazo</label><input type="date" id="e-prazo"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Responsável</label><input type="text" id="e-responsavel" placeholder="Nome do responsável"></div>
+        <div class="form-group"><label>Recorrência</label><select id="e-recorrencia"><option value="unica">Única</option><option value="mensal">Mensal</option><option value="semanal">Semanal</option></select></div>
+      </div>
+      <div class="form-group"><label>Observações</label><textarea id="e-obs" placeholder="Detalhes, briefing, links..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-entrega')">Cancelar</button><button class="btn btn-primary" id="btn-save-entrega" onclick="saveEntrega()">Cadastrar Entrega</button></div>
+  </div>
+</div>
+
+<!-- Modal Pipeline -->
+<div class="modal-overlay" id="modal-pipeline">
+  <div class="modal">
+    <div class="modal-header"><h3>🎯 Nova Oportunidade</h3><button class="close-btn" onclick="closeModal('modal-pipeline')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row"><div class="form-group"><label>Empresa*</label><input type="text" id="p-empresa" placeholder="Nome da empresa"></div><div class="form-group"><label>Contato</label><input type="text" id="p-contato" placeholder="Nome do contato"></div></div>
+      <div class="form-row">
+        <div class="form-group"><label>Valor Estimado (R$)</label><input type="number" id="p-valor" placeholder="0,00"></div>
+        <div class="form-group"><label>Estágio</label><select id="p-estagio"><option value="lead">Lead</option><option value="contato">Contato Feito</option><option value="proposta">Proposta Enviada</option><option value="negociacao">Negociação</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Fonte</label><select id="p-fonte"><option>Instagram</option><option>Indicação</option><option>LinkedIn</option><option>Google</option><option>Site</option><option>YouTube</option><option>Evento</option><option>Outro</option></select></div>
+        <div class="form-group"><label>Próximo Follow-up</label><input type="date" id="p-followup"></div>
+      </div>
+      <div class="form-group"><label>Observações</label><textarea id="p-obs" placeholder="Detalhes da oportunidade..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-pipeline')">Cancelar</button><button class="btn btn-primary" id="btn-save-pipeline" onclick="savePipeline()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Financeiro -->
+<div class="modal-overlay" id="modal-financeiro">
+  <div class="modal">
+    <div class="modal-header"><h3>💰 Lançamento Financeiro</h3><button class="close-btn" onclick="closeModal('modal-financeiro')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Tipo*</label><select id="f-tipo"><option value="receita">Receita</option><option value="despesa">Despesa</option></select></div>
+        <div class="form-group"><label>Valor (R$)*</label><input type="number" id="f-valor" placeholder="0,00"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Descrição*</label><input type="text" id="f-descricao" placeholder="Ex: Mensalidade cliente X"></div>
+        <div class="form-group"><label>Data*</label><input type="date" id="f-data"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Categoria</label><select id="f-categoria"><option>Mensalidade</option><option>Projeto</option><option>Ferramentas</option><option>Freelancer</option><option>Salário</option><option>Impostos</option><option>Marketing</option><option>Outros</option></select></div>
+        <div class="form-group"><label>Cliente / Fornecedor</label><input type="text" id="f-ref" placeholder="Relacionado a..."></div>
+      </div>
+      <div class="form-group"><label>Status</label><select id="f-status"><option value="pago">Pago / Recebido</option><option value="pendente">Pendente</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-financeiro')">Cancelar</button><button class="btn btn-primary" id="btn-save-fin" onclick="saveFinanceiro()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Tarefa -->
+<div class="modal-overlay" id="modal-tarefa">
+  <div class="modal">
+    <div class="modal-header"><h3>📌 Nova Tarefa</h3><button class="close-btn" onclick="closeModal('modal-tarefa')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Título*</label><input type="text" id="t-titulo" placeholder="O que precisa ser feito?"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Responsável</label><input type="text" id="t-responsavel" placeholder="Nome da pessoa"></div>
+        <div class="form-group"><label>Cliente Relacionado</label><select id="t-cliente-rel"></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Prioridade</label><select id="t-prioridade"><option value="normal">Normal</option><option value="urgente">Urgente</option><option value="baixa">Baixa</option></select></div>
+        <div class="form-group"><label>Prazo</label><input type="date" id="t-prazo"></div>
+      </div>
+      <div class="form-group"><label>Descrição</label><textarea id="t-descricao" placeholder="Detalhes..."></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-tarefa')">Cancelar</button><button class="btn btn-primary" id="btn-save-tarefa" onclick="saveTarefa()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Usuário -->
+<div class="modal-overlay" id="modal-usuario">
+  <div class="modal">
+    <div class="modal-header"><h3>🔐 Novo Usuário</h3><button class="close-btn" onclick="closeModal('modal-usuario')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Nome completo*</label><input type="text" id="u-nome" placeholder="Nome do colaborador"></div>
+      <div class="form-row">
+        <div class="form-group"><label>E-mail*</label><input type="email" id="u-email" placeholder="email@agencia.com"></div>
+        <div class="form-group"><label>Senha inicial*</label><input type="password" id="u-senha" placeholder="Mín. 6 caracteres"></div>
+      </div>
+      <div class="form-group"><label>Nível de Permissão*</label>
+        <select id="u-role">
+          <option value="viewer">👁 Visualizador — Somente leitura</option>
+          <option value="editor">✏️ Editor — Criar e editar registros</option>
+          <option value="admin">👑 Admin — Acesso total + gerenciar usuários</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Cargo / Função</label><input type="text" id="u-cargo" placeholder="Ex: Gestor de Tráfego, Designer..."></div>
+      <div class="note-card" style="margin-top:4px;">
+        <div class="note-text">⚠️ O usuário poderá fazer login com o e-mail e senha informados acima. Você pode alterar a permissão ou bloquear o acesso a qualquer momento.</div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-usuario')">Cancelar</button><button class="btn btn-primary" id="btn-save-usuario" onclick="saveUsuario()">Criar Usuário</button></div>
+  </div>
+</div>
+
+<!-- Modal Editar Role -->
+<div class="modal-overlay" id="modal-edit-role">
+  <div class="modal">
+    <div class="modal-header"><h3 id="edit-role-title">✏️ Editar Permissão</h3><button class="close-btn" onclick="closeModal('modal-edit-role')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-role-uid">
+      <div class="form-group"><label>Nível de Permissão</label>
+        <select id="edit-role-select">
+          <option value="viewer">👁 Visualizador — Somente leitura</option>
+          <option value="editor">✏️ Editor — Criar e editar registros</option>
+          <option value="admin">👑 Admin — Acesso total</option>
+          <option value="blocked">🚫 Bloqueado — Sem acesso</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Cargo / Função</label><input type="text" id="edit-role-cargo" placeholder="Ex: Designer..."></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal('modal-edit-role')">Cancelar</button><button class="btn btn-primary" onclick="saveEditRole()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal Detalhe Cliente -->
+<div class="modal-overlay" id="modal-cliente-detalhe">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3 id="detalhe-title"></h3><button class="close-btn" onclick="closeModal('modal-cliente-detalhe')">✕</button></div>
+    <div class="modal-body" id="detalhe-body"></div>
+  </div>
+</div>
+
+<!-- Modal Detalhe Contrato -->
+<div class="modal-overlay" id="modal-contrato-detalhe">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3 id="contrato-detalhe-title"></h3><button class="close-btn" onclick="closeModal('modal-contrato-detalhe')">✕</button></div>
+    <div class="modal-body" id="contrato-detalhe-body"></div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════
+//  FIREBASE INIT
+// ═══════════════════════════════════════════════
+const FB_CONFIG = {
+  apiKey:"AIzaSyDGD4PTxIMwFOiFqBm_-RsyzB1SclIt6ws",
+  authDomain:"agencia-crm-ab302.firebaseapp.com",
+  projectId:"agencia-crm-ab302",
+  storageBucket:"agencia-crm-ab302.firebasestorage.app",
+  messagingSenderId:"473402375581",
+  appId:"1:473402375581:web:9f76a839aebd5659798374"
+};
+
+firebase.initializeApp(FB_CONFIG);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+// ── SAFETY: se o Firebase não responder em 8s, mostra a tela de login ──
+const _safetyTimer = setTimeout(() => {
+  hideLoader();
+  showLogin();
+  console.warn('Representa: Firebase não respondeu a tempo. Verifique se o domínio está autorizado no Firebase Authentication.');
+}, 8000);
+
+// Secondary app (para criar usuários sem deslogar o admin)
+let secondaryApp;
+try { secondaryApp = firebase.app('sec'); }
+catch(e) { secondaryApp = firebase.initializeApp(FB_CONFIG, 'sec'); }
+const authSec = secondaryApp.auth();
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[]};
+const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas'];
+const readyCols = new Set();
+let currentUser = null;
+let currentRole = null;
+let currentNome = null;
+let listeners = [];
+
+// ═══════════════════════════════════════════════
+//  AUTH STATE
+// ═══════════════════════════════════════════════
+auth.onAuthStateChanged(async user => {
+  clearTimeout(_safetyTimer); // Firebase respondeu — cancela o timer de segurança
+  hideLoader();
+  if (!user) { showLogin(); return; }
+
+  // Verifica se o documento do usuário existe no Firestore
+  try {
+    const doc = await db.collection('usuarios').doc(user.uid).get();
+    if (!doc.exists) { await auth.signOut(); showLogin(); toast('Acesso não autorizado.','🚫'); return; }
+    const data = doc.data();
+    if (data.role === 'blocked') { await auth.signOut(); showLogin(); toast('Seu acesso está bloqueado. Contate o administrador.','🚫'); return; }
+    currentUser = user;
+    currentRole = data.role;
+    currentNome = data.nome;
+    startApp(data);
+  } catch(e) {
+    console.error('Erro ao verificar usuário:', e);
+    // Se for erro de permissão do Firestore, mostra mensagem clara
+    if (e.code === 'permission-denied') {
+      toast('Erro de permissão no banco de dados. Verifique as regras do Firestore.', '❌');
+    }
+    showLogin();
+  }
+}, err => {
+  // onAuthStateChanged error handler
+  clearTimeout(_safetyTimer);
+  console.error('Erro de autenticação:', err);
+  hideLoader();
+  showLogin();
+  toast('Erro de conexão com o Firebase. Verifique se o domínio está autorizado.', '❌');
+});
+
+// ═══════════════════════════════════════════════
+//  LOADER / LOGIN / APP SHOW
+// ═══════════════════════════════════════════════
+function hideLoader(){ const l=document.getElementById('loader'); if(!l)return; l.style.opacity='0'; setTimeout(()=>l.style.display='none',400); }
+function showLogin(){
+  hideLoader(); // garante que o loader some sempre que ir para o login
+  document.getElementById('login-screen').classList.add('show');
+  document.getElementById('sidebar').style.display='none';
+  document.getElementById('main-app').style.display='none';
+  // Verifica se é o primeiro acesso (nenhum usuário cadastrado)
+  db.collection('usuarios').limit(1).get()
+    .then(snap=>{ document.getElementById('setup-box').style.display = snap.empty ? 'block' : 'none'; })
+    .catch(()=>{ document.getElementById('setup-box').style.display='none'; });
+}
+function startApp(userData){
+  document.getElementById('login-screen').classList.remove('show');
+  document.getElementById('sidebar').style.display='flex';
+  document.getElementById('main-app').style.display='flex';
+  // Set sidebar user info
+  const ini = (userData.nome||'?').charAt(0).toUpperCase();
+  document.getElementById('sb-avatar').textContent=ini;
+  document.getElementById('sb-nome').textContent=userData.nome||'—';
+  document.getElementById('sb-role-label').textContent={admin:'👑 Administrador',editor:'✏️ Editor',viewer:'👁 Visualizador'}[userData.role]||userData.role;
+  // Topbar
+  document.getElementById('topbar-user-name').textContent=userData.nome||'';
+  const rb=document.getElementById('topbar-role-badge');
+  rb.textContent={admin:'👑 Admin',editor:'✏️ Editor',viewer:'👁 Visualizador'}[userData.role]||userData.role;
+  rb.className='role-badge role-'+userData.role;
+  // Show/hide admin elements
+  document.querySelectorAll('.admin-only').forEach(el=>el.style.display=userData.role==='admin'?'':'none');
+  // Apply permission to editor-action buttons
+  applyPermissions();
+  // Start Firestore listeners
+  startListeners();
+}
+
+function applyPermissions(){
+  const canEdit = currentRole==='admin'||currentRole==='editor';
+  document.querySelectorAll('.editor-action').forEach(el=>{
+    el.style.display = canEdit ? '' : 'none';
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  LOGIN / LOGOUT / SETUP
+// ═══════════════════════════════════════════════
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const senha=document.getElementById('login-senha').value;
+  const errEl=document.getElementById('login-error');
+  const btn=document.getElementById('btn-login');
+  if(!email||!senha){showErr(errEl,'Preencha e-mail e senha.');return;}
+  btn.disabled=true; btn.textContent='Entrando...';
+  try {
+    await auth.signInWithEmailAndPassword(email,senha);
+    errEl.classList.remove('show');
+  } catch(e){
+    const msgs={
+      'auth/user-not-found':'Usuário não encontrado.',
+      'auth/wrong-password':'Senha incorreta.',
+      'auth/invalid-credential':'E-mail ou senha inválidos.',
+      'auth/invalid-email':'E-mail inválido.',
+      'auth/too-many-requests':'Muitas tentativas. Aguarde alguns minutos.',
+      'auth/unauthorized-domain':'Domínio não autorizado no Firebase. Contate o administrador.',
+      'auth/network-request-failed':'Erro de rede. Verifique sua conexão.'
+    };
+    showErr(errEl, msgs[e.code]||'Erro ao entrar ('+e.code+'). Contate o administrador.');
+    console.error('Login error:', e.code, e.message);
+  }
+  btn.disabled=false; btn.textContent='Entrar';
+}
+
+async function doSetup(){
+  const nome=document.getElementById('setup-nome').value.trim();
+  const email=document.getElementById('setup-email').value.trim();
+  const senha=document.getElementById('setup-senha').value;
+  const btn=document.getElementById('btn-setup');
+  if(!nome||!email||!senha){toast('Preencha todos os campos!','⚠️');return;}
+  if(senha.length<6){toast('Senha deve ter no mínimo 6 caracteres.','⚠️');return;}
+  btn.disabled=true; btn.textContent='Criando...';
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email,senha);
+    await db.collection('usuarios').doc(cred.user.uid).set({nome,email,role:'admin',cargo:'Administrador',criadoEm:new Date().toLocaleDateString('pt-BR'),ativo:true});
+    toast('Administrador criado! Bem-vindo!');
+  } catch(e){ toast('Erro: '+e.message,'❌'); console.error(e); }
+  btn.disabled=false; btn.textContent='Criar Administrador';
+}
+
+async function doLogout(){
+  if(!confirm('Deseja sair do sistema?'))return;
+  listeners.forEach(unsub=>unsub());
+  listeners=[];
+  await auth.signOut();
+  showLogin();
+  toast('Você saiu do sistema.','👋');
+}
+
+function showErr(el,msg){ el.textContent=msg; el.classList.add('show'); }
+
+// ═══════════════════════════════════════════════
+//  FIRESTORE LISTENERS
+// ═══════════════════════════════════════════════
+function startListeners(){
+  listeners.forEach(u=>u()); listeners=[];
+  COLS.forEach(col=>{
+    const unsub=db.collection(col).onSnapshot(snap=>{
+      st[col]=snap.docs.map(d=>({id:d.id,...d.data()}));
+      readyCols.add(col); renderAll();
+    },err=>console.error(col,err));
+    listeners.push(unsub);
+  });
+  const u1=db.collection('config').doc('servicos').onSnapshot(doc=>{ st.customServicos=doc.exists?(doc.data().custom||[]): []; });
+  const u2=db.collection('usuarios').onSnapshot(snap=>{ st.usuarios=snap.docs.map(d=>({id:d.id,...d.data()})); renderUsuarios(); },err=>console.error(err));
+  listeners.push(u1,u2);
+}
+
+// ═══════════════════════════════════════════════
+//  TOAST / MODAL / NAV
+// ═══════════════════════════════════════════════
+let _tt;
+function toast(msg,icon='✅'){ const el=document.getElementById('toast'); el.innerHTML=`<span>${icon}</span> ${msg}`; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2800); }
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='modal-contrato') populateContratoClientes();
+  if(id==='modal-entrega') populateEntregaContratos();
+  if(id==='modal-tarefa') populateTarefaClientes();
+  if(id==='modal-financeiro'){ const d=document.getElementById('f-data'); if(d&&!d.value) d.value=today(); }
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
+function today(){ return new Date().toISOString().split('T')[0]; }
+
+function switchTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',usuarios:'Gerenciador de Usuários'};
+  document.getElementById('page-title').textContent=titles[name]||name;
+}
+
+function canEdit(){ return currentRole==='admin'||currentRole==='editor'; }
+
+// ═══════════════════════════════════════════════
+//  RENDER ALL
+// ═══════════════════════════════════════════════
+function renderAll(){
+  renderDashboard(); renderClientes(); renderContratos(); renderEntregas();
+  renderPipeline(); renderFinanceiro(); renderTarefas();
+  document.getElementById('badge-clientes').textContent=st.clientes.filter(c=>c.status==='ativo').length;
+  document.getElementById('badge-contratos').textContent=st.contratos.filter(c=>c.status==='ativo').length;
+  document.getElementById('badge-entregas').textContent=st.entregas.filter(e=>!e.concluida).length;
+}
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════
+function renderDashboard(){
+  const aC=st.clientes.filter(c=>c.status==='ativo').length;
+  const aK=st.contratos.filter(c=>c.status==='ativo').length;
+  const mrr=st.contratos.filter(c=>c.status==='ativo').reduce((s,c)=>s+(+c.valor||0),0);
+  const pnd=st.entregas.filter(e=>!e.concluida).length;
+  const sg=document.getElementById('stats-grid');
+  if(sg) sg.innerHTML=`
+    <div class="stat-card"><span class="stat-icon">👥</span><div class="stat-label">Clientes Ativos</div><div class="stat-value">${aC}</div><div class="stat-sub">${st.clientes.filter(c=>c.status==='prospect').length} prospects</div></div>
+    <div class="stat-card"><span class="stat-icon">📋</span><div class="stat-label">Contratos Ativos</div><div class="stat-value">${aK}</div><div class="stat-sub">${st.contratos.filter(c=>c.status==='pausado').length} pausados</div></div>
+    <div class="stat-card"><span class="stat-icon">💰</span><div class="stat-label">MRR</div><div class="stat-value">R$&nbsp;${mrr.toLocaleString('pt-BR')}</div><div class="stat-sub">Receita mensal recorrente</div></div>
+    <div class="stat-card"><span class="stat-icon">✅</span><div class="stat-label">Entregas Pendentes</div><div class="stat-value">${pnd}</div><div class="stat-sub">${st.entregas.filter(e=>e.concluida).length} concluídas</div></div>`;
+  const ul=[...st.contratos].reverse().slice(0,5);
+  const dcl=document.getElementById('dash-contratos-list');
+  if(dcl) dcl.innerHTML=ul.length===0?'<div class="empty-state"><div>📋</div><p>Nenhum contrato ainda.</p></div>':ul.map(c=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${c.nome}</div><div style="font-size:11px;color:var(--text3);">${c.clienteNome||'—'}</div></div><div style="text-align:right;"><div class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}/mês</div><span class="badge badge-${c.status==='ativo'?'active':c.status==='pausado'?'paused':'inactive'}">${c.status}</span></div></div>`).join('');
+  const ep=st.entregas.filter(e=>!e.concluida).slice(0,5);
+  const del=document.getElementById('dash-entregas-list');
+  if(del) del.innerHTML=ep.length===0?'<div class="empty-state"><div>🎉</div><p>Tudo em dia!</p></div>':ep.map(e=>`<div class="delivery-item ${canEdit()?'clickable':''}" onclick="${canEdit()?`toggleEntrega('${e.id}')`:''}">${canEdit()?`<div class="delivery-check"></div>`:''}<div class="delivery-info"><div class="delivery-title">${e.descricao}</div><div class="delivery-meta"><span>${e.contratoNome||'—'}</span><span>📅 ${e.prazo||'Sem prazo'}</span></div></div></div>`).join('');
+  const r=st.financeiro.filter(f=>f.tipo==='receita'&&f.status==='pago').reduce((s,f)=>s+(+f.valor),0);
+  const d=st.financeiro.filter(f=>f.tipo==='despesa'&&f.status==='pago').reduce((s,f)=>s+(+f.valor),0);
+  const pR=st.financeiro.filter(f=>f.tipo==='receita'&&f.status==='pendente').reduce((s,f)=>s+(+f.valor),0);
+  const df=document.getElementById('dash-financeiro');
+  if(df) df.innerHTML=`<div class="finance-row"><span>💹 Receitas recebidas</span><span class="amount-green">R$ ${r.toLocaleString('pt-BR')}</span></div><div class="finance-row"><span>📤 Despesas pagas</span><span class="amount-red">R$ ${d.toLocaleString('pt-BR')}</span></div><div class="finance-row"><span style="font-weight:600;">💰 Saldo</span><span class="amount-${r-d>=0?'green':'red'}" style="font-size:16px;">R$ ${(r-d).toLocaleString('pt-BR')}</span></div><div class="finance-row"><span>⏳ A receber</span><span class="amount-yellow">R$ ${pR.toLocaleString('pt-BR')}</span></div>`;
+  const taf=st.tarefas.filter(t=>t.status!=='feita').slice(0,5);
+  const dt=document.getElementById('dash-tarefas');
+  if(dt) dt.innerHTML=taf.length===0?'<div class="empty-state"><div>📌</div><p>Nenhuma tarefa aberta.</p></div>':taf.map(t=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${t.titulo}</div><div style="font-size:11px;color:var(--text3);">${t.responsavel||'—'} · ${t.prazo||'Sem prazo'}</div></div><span class="badge badge-${t.prioridade==='urgente'?'late':'inprogress'}">${t.prioridade}</span></div>`).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  CLIENTES
+// ═══════════════════════════════════════════════
+let fCli='todos';
+function filterClientes(f,el){fCli=f;document.querySelectorAll('#tab-clientes .filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderClientes();}
+function renderClientes(){
+  const q=(document.getElementById('search-clientes')?.value||'').toLowerCase();
+  const list=st.clientes.filter(c=>(fCli==='todos'||c.status===fCli)&&(!q||c.nome.toLowerCase().includes(q)||c.empresa.toLowerCase().includes(q)));
+  const grid=document.getElementById('clientes-grid');if(!grid)return;
+  if(!list.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div>👥</div><p>Nenhum cliente encontrado.</p></div>`;return;}
+  const cx=['#7c5cfc','#fc5c7d','#5cf4c0','#fcb85c','#3cbfff','#fc9c5c'];
+  grid.innerHTML=list.map((c,i)=>{
+    const cts=st.contratos.filter(ct=>ct.clienteId===c.id&&ct.status==='ativo');
+    const mrr=cts.reduce((s,ct)=>s+(+ct.valor||0),0);
+    return `<div class="client-card" onclick="showClienteDetalhe('${c.id}')">
+      <div class="client-avatar" style="background:linear-gradient(135deg,${cx[i%cx.length]},${cx[(i+2)%cx.length]})">${(c.nome||'?').charAt(0).toUpperCase()}</div>
+      <div class="client-name">${c.nome}</div><div class="client-company">${c.empresa}</div>
+      <div class="divider"></div>
+      <div class="client-meta-row"><span>📱 ${c.telefone||'—'}</span><span class="badge badge-${c.status==='ativo'?'active':c.status==='inativo'?'inactive':'prospect'}">${c.status}</span></div>
+      <div class="client-meta-row"><span>📋 Contratos ativos</span><strong>${cts.length}</strong></div>
+      <div class="client-meta-row"><span>💰 MRR</span><strong class="amount-green">R$ ${mrr.toLocaleString('pt-BR')}</strong></div>
+      ${c.segmento?`<div style="margin-top:8px;"><span class="tag">${c.segmento}</span></div>`:''}
+    </div>`;
+  }).join('');
+}
+async function saveCliente(){
+  if(!canEdit()){toast('Sem permissão para esta ação.','🚫');return;}
+  const nome=document.getElementById('c-nome').value.trim(),empresa=document.getElementById('c-empresa').value.trim();
+  if(!nome||!empresa){toast('Nome e empresa são obrigatórios!','⚠️');return;}
+  const btn=document.getElementById('btn-save-cliente');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    await db.collection('clientes').add({nome,empresa,email:document.getElementById('c-email').value,telefone:document.getElementById('c-telefone').value,segmento:document.getElementById('c-segmento').value,status:document.getElementById('c-status').value,instagram:document.getElementById('c-instagram').value,site:document.getElementById('c-site').value,obs:document.getElementById('c-obs').value,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});
+    closeModal('modal-cliente');['c-nome','c-empresa','c-email','c-telefone','c-instagram','c-site','c-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast('Cliente salvo!');
+  }catch(e){toast('Erro ao salvar.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar Cliente';
+}
+async function deleteCliente(id){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  if(!confirm('Excluir este cliente?'))return;
+  await db.collection('clientes').doc(id).delete();toast('Cliente removido.','🗑️');
+}
+function showClienteDetalhe(id){
+  const c=st.clientes.find(x=>x.id===id);if(!c)return;
+  const cts=st.contratos.filter(ct=>ct.clienteId===id);
+  const ents=st.entregas.filter(e=>cts.some(ct=>ct.id===e.contratoId));
+  document.getElementById('detalhe-title').textContent=`👤 ${c.nome} — ${c.empresa}`;
+  document.getElementById('detalhe-body').innerHTML=`
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>E-mail</label><div style="color:var(--text);font-size:13px;">${c.email||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Telefone</label><div style="color:var(--text);font-size:13px;">${c.telefone||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Segmento</label><div style="color:var(--text);font-size:13px;">${c.segmento||'—'}</div></div>
+      </div>
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Status</label><span class="badge badge-${c.status==='ativo'?'active':c.status==='inativo'?'inactive':'prospect'}">${c.status}</span></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Instagram</label><div style="color:var(--text);font-size:13px;">${c.instagram||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Site</label><div style="color:var(--text);font-size:13px;">${c.site||'—'}</div></div>
+      </div>
+    </div>
+    ${c.obs?`<div class="note-card"><div class="note-text">${c.obs}</div></div>`:''}
+    <div style="margin-top:16px;"><div class="card-title" style="margin-bottom:10px;">📋 Contratos (${cts.length})</div>
+      ${cts.length===0?'<p style="color:var(--text3);font-size:13px;">Sem contratos.</p>':cts.map(ct=>`<div class="finance-row"><div><div style="font-weight:500;">${ct.nome}</div><div style="font-size:11px;color:var(--text3);">${ct.inicio||'—'} a ${ct.fim||'—'}</div></div><div style="text-align:right;"><div class="amount-green">R$ ${(+ct.valor||0).toLocaleString('pt-BR')}/mês</div><span class="badge badge-${ct.status==='ativo'?'active':'inactive'}">${ct.status}</span></div></div>`).join('')}
+    </div>
+    <div style="margin-top:16px;"><div class="card-title" style="margin-bottom:10px;">✅ Entregas (${ents.length})</div>
+      ${ents.length===0?'<p style="color:var(--text3);font-size:13px;">Sem entregas.</p>':ents.map(e=>`<div class="finance-row"><span>${e.descricao}</span><span class="${e.concluida?'amount-green':'amount-yellow'}">${e.concluida?'✓ Concluída':'⏳ Pendente'}</span></div>`).join('')}
+    </div>
+    ${canEdit()?`<div style="margin-top:16px;text-align:right;"><button class="btn btn-danger btn-sm" onclick="deleteCliente('${id}');closeModal('modal-cliente-detalhe');">🗑️ Excluir Cliente</button></div>`:''}`;
+  openModal('modal-cliente-detalhe');
+}
+
+// ═══════════════════════════════════════════════
+//  PIPELINE
+// ═══════════════════════════════════════════════
+const ESTAGIOS=[{key:'lead',label:'Leads',color:'var(--text3)'},{key:'contato',label:'Contato Feito',color:'#3cbfff'},{key:'proposta',label:'Proposta Enviada',color:'var(--accent4)'},{key:'negociacao',label:'Negociação',color:'var(--accent)'}];
+function renderPipeline(){
+  const board=document.getElementById('kanban-board');if(!board)return;
+  board.innerHTML=ESTAGIOS.map(est=>{
+    const cards=st.pipeline.filter(p=>p.estagio===est.key);
+    const tot=cards.reduce((s,p)=>s+(+p.valor||0),0);
+    return `<div class="kanban-col">
+      <div class="kanban-col-header"><span class="kanban-col-title" style="color:${est.color}">${est.label}</span><span class="kanban-count">${cards.length}</span></div>
+      ${tot>0?`<div style="font-size:11px;color:var(--text3);margin-bottom:10px;">R$ ${tot.toLocaleString('pt-BR')}</div>`:''}
+      ${cards.map(p=>`<div class="kanban-card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:4px;">${p.empresa}</div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:6px;">${p.contato||''}</div>
+        ${p.valor?`<div style="font-size:12px;color:var(--accent3);margin-bottom:6px;">R$ ${(+p.valor).toLocaleString('pt-BR')}</div>`:''}
+        <div style="font-size:11px;color:var(--text3);display:flex;justify-content:space-between;margin-bottom:8px;"><span>📡 ${p.fonte||'—'}</span><span>${p.followup?'📅 '+p.followup:''}</span></div>
+        ${canEdit()?`<div style="display:flex;gap:4px;flex-wrap:wrap;">
+          ${ESTAGIOS.findIndex(e=>e.key===p.estagio)<ESTAGIOS.length-1?`<button class="btn btn-sm" onclick="movePipeline('${p.id}')">→ Avançar</button>`:''}
+          <button class="btn btn-sm btn-success" onclick="convertPipeline('${p.id}')">✓ Cliente</button>
+          <button class="btn btn-sm btn-danger" onclick="deletePipeline('${p.id}')">✕</button>
+        </div>`:''}
+      </div>`).join('')}
+      ${cards.length===0?`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">Sem oportunidades</div>`:''}
+    </div>`;
+  }).join('');
+}
+async function movePipeline(id){if(!canEdit())return;const p=st.pipeline.find(x=>x.id===id);const idx=ESTAGIOS.findIndex(e=>e.key===p.estagio);if(idx<ESTAGIOS.length-1)await db.collection('pipeline').doc(id).update({estagio:ESTAGIOS[idx+1].key});}
+async function convertPipeline(id){if(!canEdit())return;const p=st.pipeline.find(x=>x.id===id);if(!confirm(`Converter "${p.empresa}" em cliente ativo?`))return;await db.collection('clientes').add({nome:p.contato||p.empresa,empresa:p.empresa,email:'',telefone:'',segmento:'',status:'ativo',criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});await db.collection('pipeline').doc(id).delete();toast('Cliente criado!');}
+async function deletePipeline(id){if(!canEdit())return;if(!confirm('Remover?'))return;await db.collection('pipeline').doc(id).delete();toast('Removido.','🗑️');}
+async function savePipeline(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const empresa=document.getElementById('p-empresa').value.trim();if(!empresa){toast('Empresa obrigatória!','⚠️');return;}
+  const btn=document.getElementById('btn-save-pipeline');btn.disabled=true;btn.textContent='Salvando...';
+  try{await db.collection('pipeline').add({empresa,contato:document.getElementById('p-contato').value,valor:document.getElementById('p-valor').value,estagio:document.getElementById('p-estagio').value,fonte:document.getElementById('p-fonte').value,followup:document.getElementById('p-followup').value,obs:document.getElementById('p-obs').value,criadoPor:currentNome});closeModal('modal-pipeline');['p-empresa','p-contato','p-valor','p-obs','p-followup'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast('Oportunidade adicionada!');}catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+
+// ═══════════════════════════════════════════════
+//  CONTRATOS
+// ═══════════════════════════════════════════════
+const SERVICOS_BASE=[
+  'Gestão de Instagram','Gestão de Facebook','Gestão de LinkedIn','Gestão de TikTok','Gestão de YouTube',
+  'Instagram Ads','Facebook Ads','Google Ads','YouTube Ads','TikTok Ads',
+  'Produção de Conteúdo','Edição de Vídeo','Design Gráfico',
+  'E-mail Marketing','SEO','Landing Page','Relatório Mensal',
+  'Gestão de WhatsApp','Influencer Marketing'
+];
+let fCon='todos';
+function filterContratos(f,el){fCon=f;document.querySelectorAll('#tab-contratos .filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderContratos();}
+function populateContratoClientes(){
+  document.getElementById('ct-cliente').innerHTML='<option value="">Selecione...</option>'+st.clientes.map(c=>`<option value="${c.id}">${c.empresa} — ${c.nome}</option>`).join('');
+  const all=[...SERVICOS_BASE,...st.customServicos];
+  document.getElementById('servicos-check').innerHTML=all.map(s=>`<label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text);text-transform:none;letter-spacing:0;cursor:pointer;padding:4px 0;"><input type="checkbox" value="${s}" style="width:14px;height:14px;"> ${s}</label>`).join('');
+}
+async function addCustomServico(){
+  const inp=document.getElementById('ct-servico-custom'),val=inp.value.trim();if(!val)return;
+  if(!st.customServicos.includes(val)) await db.collection('config').doc('servicos').set({custom:[...st.customServicos,val]});
+  inp.value='';populateContratoClientes();
+}
+function renderContratos(){
+  const q=(document.getElementById('search-contratos')?.value||'').toLowerCase();
+  const list=st.contratos.filter(c=>(fCon==='todos'||c.status===fCon)&&(!q||c.nome.toLowerCase().includes(q)||(c.clienteNome||'').toLowerCase().includes(q)));
+  const tbody=document.getElementById('contratos-tbody');if(!tbody)return;
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div>📋</div><p>Nenhum contrato ainda.</p></div></td></tr>`;return;}
+  tbody.innerHTML=list.map(c=>{
+    const sv=(c.servicos||[]).slice(0,3);
+    return `<tr><td><strong>${c.clienteNome||'—'}</strong></td><td><span style="font-weight:500;">${c.nome}</span></td>
+      <td><div style="display:flex;gap:4px;flex-wrap:wrap;">${sv.map(s=>`<span class="tag">${s}</span>`).join('')}${(c.servicos||[]).length>3?`<span class="tag">+${c.servicos.length-3}</span>`:''}</div></td>
+      <td><strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong></td>
+      <td>${c.inicio||'—'}</td><td>${c.fim||'—'}</td>
+      <td><span class="badge badge-${c.status==='ativo'?'active':c.status==='pausado'?'paused':'inactive'}">${c.status}</span></td>
+      <td><div style="display:flex;gap:4px;"><button class="btn btn-sm" onclick="showContratoDetalhe('${c.id}')">👁</button>${canEdit()?`<button class="btn btn-sm btn-danger" onclick="deleteContrato('${c.id}')">✕</button>`:''}</div></td></tr>`;
+  }).join('');
+}
+async function saveContrato(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const cId=document.getElementById('ct-cliente').value,nome=document.getElementById('ct-nome').value.trim();
+  if(!cId||!nome){toast('Selecione o cliente e informe o nome!','⚠️');return;}
+  const btn=document.getElementById('btn-save-contrato');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    const cli=st.clientes.find(c=>c.id===cId);
+    const servicos=Array.from(document.querySelectorAll('#servicos-check input:checked')).map(cb=>cb.value);
+    await db.collection('contratos').add({clienteId:cId,clienteNome:cli?cli.empresa:nome,nome,valor:document.getElementById('ct-valor').value,inicio:document.getElementById('ct-inicio').value,fim:document.getElementById('ct-fim').value,diaVcto:document.getElementById('ct-diavcto').value,status:document.getElementById('ct-status').value,servicos,obs:document.getElementById('ct-obs').value,criadoPor:currentNome});
+    closeModal('modal-contrato');['ct-nome','ct-valor','ct-inicio','ct-fim','ct-diavcto','ct-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast('Contrato salvo!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar Contrato';
+}
+async function deleteContrato(id){if(!canEdit())return;if(!confirm('Excluir?'))return;await db.collection('contratos').doc(id).delete();toast('Removido.','🗑️');}
+function showContratoDetalhe(id){
+  const c=st.contratos.find(x=>x.id===id);if(!c)return;
+  const ents=st.entregas.filter(e=>e.contratoId===id);
+  const done=ents.filter(e=>e.concluida).length,pct=ents.length>0?Math.round(done/ents.length*100):0;
+  document.getElementById('contrato-detalhe-title').textContent=`📋 ${c.nome}`;
+  document.getElementById('contrato-detalhe-body').innerHTML=`
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Cliente</label><strong>${c.clienteNome}</strong></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Valor Mensal</label><strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Início</label>${c.inicio||'—'}</div>
+      </div>
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Status</label><span class="badge badge-${c.status==='ativo'?'active':'inactive'}">${c.status}</span></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Vencimento</label>${c.fim||'—'}</div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Dia de cobrança</label>${c.diaVcto||'—'}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;"><label>Serviços Contemplados</label><div style="margin-top:8px;">${(c.servicos||[]).length===0?'<p style="color:var(--text3);font-size:13px;">Nenhum.</p>':(c.servicos||[]).map(s=>`<div class="scope-item"><div class="scope-dot"></div>${s}</div>`).join('')}</div></div>
+    ${c.obs?`<div class="note-card"><div class="note-text">${c.obs}</div></div>`:''}
+    <div style="margin-top:16px;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><label>Progresso de Entregas</label><span style="font-size:13px;color:var(--text2);">${done}/${ents.length}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div><div style="font-size:11px;color:var(--text3);margin-top:4px;">${pct}% concluído</div></div>`;
+  openModal('modal-contrato-detalhe');
+}
+
+// ═══════════════════════════════════════════════
+//  ENTREGAS
+// ═══════════════════════════════════════════════
+let fEnt='todos';
+function filterEntregas(f,el){fEnt=f;document.querySelectorAll('#tab-entregas .filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderEntregas();}
+function populateEntregaContratos(){document.getElementById('e-contrato').innerHTML='<option value="">Selecione...</option>'+st.contratos.filter(c=>c.status==='ativo').map(c=>`<option value="${c.id}">${c.clienteNome} — ${c.nome}</option>`).join('');}
+function renderEntregas(){
+  const td=today();
+  const list=st.entregas.filter(e=>{
+    if(fEnt==='pendente')return !e.concluida&&(!e.prazo||e.prazo>=td);
+    if(fEnt==='concluido')return e.concluida;
+    if(fEnt==='atrasado')return !e.concluida&&e.prazo&&e.prazo<td;
+    return true;
+  });
+  const ctn=document.getElementById('entregas-list');if(!ctn)return;
+  if(!list.length){ctn.innerHTML=`<div class="empty-state"><div>✅</div><p>Nenhuma entrega encontrada.</p></div>`;return;}
+  const grp={};list.forEach(e=>{const k=e.contratoId||'s';if(!grp[k])grp[k]={nome:e.contratoNome||'Sem contrato',items:[]};grp[k].items.push(e);});
+  ctn.innerHTML=Object.values(grp).map(g=>{
+    const tot=g.items.length,done=g.items.filter(e=>e.concluida).length,pct=tot>0?Math.round(done/tot*100):0;
+    return `<div class="card" style="margin-bottom:16px;">
+      <div class="card-header"><div><span class="card-title">${g.nome}</span><div style="font-size:11px;color:var(--text3);margin-top:2px;">${done}/${tot} concluídas</div><div class="progress-bar" style="width:200px;margin-top:6px;"><div class="progress-fill" style="width:${pct}%"></div></div></div><span style="font-size:22px;font-family:'Syne',sans-serif;font-weight:800;color:var(--accent)">${pct}%</span></div>
+      ${g.items.map(e=>{const late=!e.concluida&&e.prazo&&e.prazo<td;const editable=canEdit();return `<div class="delivery-item ${editable?'clickable':''} ${e.concluida?'checked':''}" ${editable?`onclick="toggleEntrega('${e.id}')"`:''}>
+        <div class="delivery-check">${e.concluida?'✓':''}</div>
+        <div class="delivery-info"><div class="delivery-title">${e.descricao}</div>
+          <div class="delivery-meta">
+            <span>📂 ${e.tipo||'—'}</span>
+            ${e.quantidade>1?`<span>Qtd: ${e.quantidade}</span>`:''}
+            ${e.prazo?`<span ${late?'style="color:var(--danger)"':''}>📅 ${e.prazo}${late?' ⚠️':''}</span>`:''}
+            ${e.responsavel?`<span>👤 ${e.responsavel}</span>`:''}
+            ${e.recorrencia&&e.recorrencia!=='unica'?`<span class="badge badge-inprogress">${e.recorrencia}</span>`:''}
+          </div>
+        </div>
+        ${editable?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntrega('${e.id}')">✕</button>`:''}
+      </div>`;}).join('')}
+    </div>`;
+  }).join('');
+}
+async function toggleEntrega(id){if(!canEdit()){toast('Sem permissão.','🚫');return;}const e=st.entregas.find(x=>x.id===id);if(!e)return;const c=!e.concluida;await db.collection('entregas').doc(id).update({concluida:c,concluidaEm:c?new Date().toLocaleDateString('pt-BR'):null,concluidaPor:c?currentNome:null});toast(c?'Entrega concluída! ✅':'Entrega reaberta.');}
+async function deleteEntrega(id){if(!canEdit())return;if(!confirm('Excluir?'))return;await db.collection('entregas').doc(id).delete();toast('Removido.','🗑️');}
+async function saveEntrega(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const desc=document.getElementById('e-descricao').value.trim();if(!desc){toast('Descrição obrigatória!','⚠️');return;}
+  const btn=document.getElementById('btn-save-entrega');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    const cId=document.getElementById('e-contrato').value,ct=st.contratos.find(c=>c.id===cId);
+    await db.collection('entregas').add({contratoId:cId,contratoNome:ct?`${ct.clienteNome} — ${ct.nome}`:'',tipo:document.getElementById('e-tipo').value,descricao:desc,quantidade:+document.getElementById('e-quantidade').value||1,prazo:document.getElementById('e-prazo').value,responsavel:document.getElementById('e-responsavel').value,recorrencia:document.getElementById('e-recorrencia').value,obs:document.getElementById('e-obs').value,concluida:false,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});
+    closeModal('modal-entrega');['e-descricao','e-prazo','e-responsavel','e-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('e-quantidade').value='1';
+    toast('Entrega cadastrada!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Cadastrar Entrega';
+}
+
+// ═══════════════════════════════════════════════
+//  FINANCEIRO
+// ═══════════════════════════════════════════════
+function renderFinanceiro(){
+  const rec=st.financeiro.filter(f=>f.tipo==='receita'),des=st.financeiro.filter(f=>f.tipo==='despesa');
+  const tR=rec.filter(f=>f.status==='pago').reduce((s,f)=>s+(+f.valor),0);
+  const tD=des.filter(f=>f.status==='pago').reduce((s,f)=>s+(+f.valor),0);
+  const pR=rec.filter(f=>f.status==='pendente').reduce((s,f)=>s+(+f.valor),0);
+  const pD=des.filter(f=>f.status==='pendente').reduce((s,f)=>s+(+f.valor),0);
+  const fs=document.getElementById('fin-stats');
+  if(fs) fs.innerHTML=`
+    <div class="stat-card"><span class="stat-icon">📥</span><div class="stat-label">Total Recebido</div><div class="stat-value" style="color:var(--success)">R$ ${tR.toLocaleString('pt-BR')}</div><div class="stat-sub">A receber: R$ ${pR.toLocaleString('pt-BR')}</div></div>
+    <div class="stat-card"><span class="stat-icon">📤</span><div class="stat-label">Total Despesas</div><div class="stat-value" style="color:var(--danger)">R$ ${tD.toLocaleString('pt-BR')}</div><div class="stat-sub">A pagar: R$ ${pD.toLocaleString('pt-BR')}</div></div>
+    <div class="stat-card"><span class="stat-icon">💰</span><div class="stat-label">Saldo</div><div class="stat-value" style="color:${tR-tD>=0?'var(--success)':'var(--danger)'}">R$ ${(tR-tD).toLocaleString('pt-BR')}</div><div class="stat-sub">Lucro líquido</div></div>
+    <div class="stat-card"><span class="stat-icon">📊</span><div class="stat-label">Margem</div><div class="stat-value">${tR>0?Math.round((tR-tD)/tR*100):0}%</div><div class="stat-sub">Margem de lucro</div></div>`;
+  const rl=document.getElementById('receitas-list');
+  if(rl) rl.innerHTML=rec.length===0?'<div class="empty-state"><div>📥</div><p>Nenhuma receita</p></div>':[...rec].sort((a,b)=>b.data>a.data?1:-1).map(f=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${f.descricao}</div><div style="font-size:11px;color:var(--text3);">${f.categoria} · ${f.data||'—'}${f.ref?' · '+f.ref:''}</div></div><div style="display:flex;align-items:center;gap:8px;"><div><div class="amount-green">R$ ${(+f.valor).toLocaleString('pt-BR')}</div><span class="badge badge-${f.status==='pago'?'active':'pending'}">${f.status}</span></div>${canEdit()?`<button class="btn btn-sm btn-danger" onclick="deleteFinanceiro('${f.id}')">✕</button>`:''}</div></div>`).join('');
+  const dl=document.getElementById('despesas-list');
+  if(dl) dl.innerHTML=des.length===0?'<div class="empty-state"><div>📤</div><p>Nenhuma despesa</p></div>':[...des].sort((a,b)=>b.data>a.data?1:-1).map(f=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${f.descricao}</div><div style="font-size:11px;color:var(--text3);">${f.categoria} · ${f.data||'—'}</div></div><div style="display:flex;align-items:center;gap:8px;"><div><div class="amount-red">R$ ${(+f.valor).toLocaleString('pt-BR')}</div><span class="badge badge-${f.status==='pago'?'inactive':'pending'}">${f.status}</span></div>${canEdit()?`<button class="btn btn-sm btn-danger" onclick="deleteFinanceiro('${f.id}')">✕</button>`:''}</div></div>`).join('');
+}
+async function saveFinanceiro(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const desc=document.getElementById('f-descricao').value.trim(),valor=document.getElementById('f-valor').value;
+  if(!desc||!valor){toast('Descrição e valor obrigatórios!','⚠️');return;}
+  const btn=document.getElementById('btn-save-fin');btn.disabled=true;btn.textContent='Salvando...';
+  try{await db.collection('financeiro').add({tipo:document.getElementById('f-tipo').value,valor,descricao:desc,data:document.getElementById('f-data').value,categoria:document.getElementById('f-categoria').value,ref:document.getElementById('f-ref').value,status:document.getElementById('f-status').value,criadoPor:currentNome});closeModal('modal-financeiro');['f-descricao','f-valor','f-ref'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast('Lançamento salvo!');}catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+async function deleteFinanceiro(id){if(!canEdit())return;if(!confirm('Excluir?'))return;await db.collection('financeiro').doc(id).delete();toast('Removido.','🗑️');}
+
+// ═══════════════════════════════════════════════
+//  TAREFAS
+// ═══════════════════════════════════════════════
+let fTar='todos';
+function filterTarefas(f,el){fTar=f;document.querySelectorAll('#tab-tarefas .filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderTarefas();}
+function populateTarefaClientes(){document.getElementById('t-cliente-rel').innerHTML='<option value="">Nenhum</option>'+st.clientes.map(c=>`<option value="${c.id}">${c.empresa}</option>`).join('');}
+function renderTarefas(){
+  const list=st.tarefas.filter(t=>{if(fTar==='aberta')return t.status!=='feita';if(fTar==='feita')return t.status==='feita';if(fTar==='urgente')return t.prioridade==='urgente'&&t.status!=='feita';return true;});
+  const tbody=document.getElementById('tarefas-tbody');if(!tbody)return;
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="7"><div class="empty-state"><div>📌</div><p>Nenhuma tarefa.</p></div></td></tr>`;return;}
+  const pc={urgente:'var(--danger)',normal:'var(--accent3)',baixa:'var(--text3)'};
+  tbody.innerHTML=list.map(t=>`<tr style="${t.status==='feita'?'opacity:.5':''}">
+    <td><div style="font-weight:500;${t.status==='feita'?'text-decoration:line-through;':''}">${t.titulo}</div>${t.descricao?`<div style="font-size:11px;color:var(--text3);margin-top:2px;">${t.descricao.substring(0,55)}${t.descricao.length>55?'...':''}</div>`:''}</td>
+    <td>${t.responsavel||'—'}</td><td>${t.clienteNome||'—'}</td>
+    <td><span style="color:${pc[t.prioridade]||'var(--text2)'};font-size:12px;font-weight:600;">${t.prioridade}</span></td>
+    <td>${t.prazo||'—'}</td>
+    <td><span class="badge badge-${t.status==='feita'?'done':t.prioridade==='urgente'?'late':'inprogress'}">${t.status}</span></td>
+    <td><div style="display:flex;gap:4px;">${canEdit()?`<button class="btn btn-sm btn-success" onclick="toggleTarefa('${t.id}')">${t.status==='feita'?'↩':'✓'}</button><button class="btn btn-sm btn-danger" onclick="deleteTarefa('${t.id}')">✕</button>`:'—'}</div></td>
+  </tr>`).join('');
+}
+async function saveTarefa(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const titulo=document.getElementById('t-titulo').value.trim();if(!titulo){toast('Título obrigatório!','⚠️');return;}
+  const btn=document.getElementById('btn-save-tarefa');btn.disabled=true;btn.textContent='Salvando...';
+  try{const cId=document.getElementById('t-cliente-rel').value,cli=st.clientes.find(c=>c.id===cId);await db.collection('tarefas').add({titulo,responsavel:document.getElementById('t-responsavel').value,clienteId:cId,clienteNome:cli?cli.empresa:'',prioridade:document.getElementById('t-prioridade').value,prazo:document.getElementById('t-prazo').value,descricao:document.getElementById('t-descricao').value,status:'aberta',criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});closeModal('modal-tarefa');['t-titulo','t-responsavel','t-descricao','t-prazo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});toast('Tarefa criada!');}catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar';
+}
+async function toggleTarefa(id){if(!canEdit())return;const t=st.tarefas.find(x=>x.id===id);if(!t)return;const s=t.status==='feita'?'aberta':'feita';await db.collection('tarefas').doc(id).update({status:s});toast(s==='feita'?'Tarefa concluída!':'Reaberta.');}
+async function deleteTarefa(id){if(!canEdit())return;if(!confirm('Excluir?'))return;await db.collection('tarefas').doc(id).delete();toast('Removido.','🗑️');}
+
+// ═══════════════════════════════════════════════
+//  USUÁRIOS (admin only)
+// ═══════════════════════════════════════════════
+function renderUsuarios(){
+  const grid=document.getElementById('usuarios-grid');if(!grid)return;
+  if(!st.usuarios.length){grid.innerHTML='<div class="empty-state"><div>👥</div><p>Nenhum usuário cadastrado.</p></div>';return;}
+  const roleLabel={admin:'👑 Admin',editor:'✏️ Editor',viewer:'👁 Visualizador',blocked:'🚫 Bloqueado'};
+  const roleClass={admin:'perm-admin',editor:'perm-editor',viewer:'perm-viewer',blocked:'perm-blocked'};
+  grid.innerHTML=st.usuarios.map(u=>`
+    <div class="user-card">
+      <div class="user-card-avatar">${(u.nome||'?').charAt(0).toUpperCase()}</div>
+      <div class="user-card-info">
+        <div class="user-card-name">${u.nome||'—'} ${u.id===currentUser?.uid?'<span style="font-size:11px;color:var(--text3);">(você)</span>':''}</div>
+        <div class="user-card-email">${u.email||'—'}</div>
+        <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <span class="perm-badge ${roleClass[u.role]||'perm-viewer'}">${roleLabel[u.role]||u.role}</span>
+          ${u.cargo?`<span style="font-size:11px;color:var(--text3);">${u.cargo}</span>`:''}
+          <span style="font-size:11px;color:var(--text3);">Cadastrado: ${u.criadoEm||'—'}</span>
+        </div>
+      </div>
+      ${u.id!==currentUser?.uid?`<div class="user-card-actions">
+        <button class="btn btn-sm btn-warning" onclick="openEditRole('${u.id}','${u.role}','${u.nome||''}','${u.cargo||''}')">✏️ Editar</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteUsuario('${u.id}','${u.nome||''}')">🗑️</button>
+      </div>`:'<div style="padding:0 8px;font-size:12px;color:var(--text3);">Sua conta</div>'}
+    </div>`).join('');
+}
+
+async function saveUsuario(){
+  if(currentRole!=='admin'){toast('Apenas admins podem criar usuários.','🚫');return;}
+  const nome=document.getElementById('u-nome').value.trim();
+  const email=document.getElementById('u-email').value.trim();
+  const senha=document.getElementById('u-senha').value;
+  const role=document.getElementById('u-role').value;
+  const cargo=document.getElementById('u-cargo').value.trim();
+  if(!nome||!email||!senha){toast('Preencha todos os campos obrigatórios!','⚠️');return;}
+  if(senha.length<6){toast('Senha deve ter mínimo 6 caracteres.','⚠️');return;}
+  const btn=document.getElementById('btn-save-usuario');btn.disabled=true;btn.textContent='Criando...';
+  try{
+    // Create in secondary auth (without logging out current admin)
+    const cred=await authSec.createUserWithEmailAndPassword(email,senha);
+    await db.collection('usuarios').doc(cred.user.uid).set({nome,email,role,cargo,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome,ativo:true});
+    await authSec.signOut();
+    closeModal('modal-usuario');
+    ['u-nome','u-email','u-senha','u-cargo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast(`Usuário "${nome}" criado com sucesso!`);
+  }catch(e){
+    const msgs={'auth/email-already-in-use':'Este e-mail já está em uso.','auth/invalid-email':'E-mail inválido.','auth/weak-password':'Senha muito fraca.'};
+    toast(msgs[e.code]||'Erro ao criar usuário: '+e.message,'❌');
+    console.error(e);
+  }
+  btn.disabled=false;btn.textContent='Criar Usuário';
+}
+
+function openEditRole(uid,role,nome,cargo){
+  document.getElementById('edit-role-uid').value=uid;
+  document.getElementById('edit-role-title').textContent=`✏️ Editar — ${nome}`;
+  document.getElementById('edit-role-select').value=role;
+  document.getElementById('edit-role-cargo').value=cargo;
+  openModal('modal-edit-role');
+}
+
+async function saveEditRole(){
+  if(currentRole!=='admin'){toast('Sem permissão.','🚫');return;}
+  const uid=document.getElementById('edit-role-uid').value;
+  const newRole=document.getElementById('edit-role-select').value;
+  const cargo=document.getElementById('edit-role-cargo').value.trim();
+  try{
+    await db.collection('usuarios').doc(uid).update({role:newRole,cargo});
+    closeModal('modal-edit-role');
+    toast('Permissão atualizada!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+}
+
+async function deleteUsuario(uid,nome){
+  if(currentRole!=='admin'){toast('Sem permissão.','🚫');return;}
+  if(!confirm(`Remover o acesso de "${nome}"? O usuário não conseguirá mais entrar no sistema.`))return;
+  try{
+    await db.collection('usuarios').doc(uid).update({role:'blocked'});
+    toast(`Acesso de "${nome}" bloqueado.`,'🔒');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+}
+</script>
+</body>
+</html>
