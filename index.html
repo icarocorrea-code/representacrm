@@ -245,135 +245,48 @@ select option{background:var(--surface2);}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
+/* ── DIAGNÓSTICO ── */
+.diag-section{margin-bottom:20px;}
+.diag-section-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.diag-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+.diag-chip{padding:4px 10px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;}
+.diag-chip.on{border-color:var(--accent);background:rgba(124,92,252,.15);color:var(--accent);}
+.diag-stars{display:flex;gap:4px;margin-top:4px;}
+.diag-star{font-size:22px;cursor:pointer;opacity:.25;transition:opacity .12s;user-select:none;}
+.diag-star.on{opacity:1;}
+.radar-wrap{position:relative;width:100%;max-width:300px;margin:0 auto;}
+.insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;}
+.insight-card.high{border-color:rgba(92,244,160,.3);background:rgba(92,244,160,.05);}
+.insight-card.med{border-color:rgba(252,219,92,.3);background:rgba(252,219,92,.05);}
+.insight-card.low{border-color:rgba(252,92,92,.3);background:rgba(252,92,92,.05);}
+.insight-icon{font-size:18px;flex-shrink:0;}
+.insight-title{font-weight:600;font-size:13px;margin-bottom:2px;}
+.insight-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+
+/* ── FREELANCERS ── */
+.fl-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .15s;cursor:pointer;}
+.fl-card:hover{border-color:rgba(92,244,160,.3);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.25);}
+.fl-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),#3cbfff);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#0a0a0f;font-family:'Syne',sans-serif;margin-bottom:10px;}
+.fl-name{font-weight:600;font-size:15px;}
+.fl-role{font-size:12px;color:var(--text2);margin-top:2px;}
+.fl-rate-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.fl-rate-row:last-child{border-bottom:none;}
+.pag-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);margin-bottom:8px;transition:all .15s;}
+.pag-item.pago{opacity:.55;border-color:rgba(92,244,160,.2);background:rgba(92,244,160,.03);}
+.pag-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;cursor:pointer;transition:all .15s;margin-top:1px;}
+.pag-item.pago .pag-check{background:var(--success);border-color:var(--success);color:#0a0a0f;font-weight:700;}
+.pag-info{flex:1;}
+.pag-title{font-size:13px;font-weight:500;}
+.pag-item.pago .pag-title{text-decoration:line-through;color:var(--text3);}
+.pag-meta{font-size:11px;color:var(--text2);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;}
+
 @media(max-width:1200px){
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .kanban{grid-template-columns:repeat(2,1fr);}
 }
-
-/* ══════════════════════════════════════
-   MOBILE — max 768px
-══════════════════════════════════════ */
-
-/* Hamburguer button */
-.mob-menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:500;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:5px;padding:8px;}
-.mob-menu-btn span{display:block;width:18px;height:2px;background:var(--text);border-radius:1px;transition:all .25s;}
-.mob-menu-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-.mob-menu-btn.open span:nth-child(2){opacity:0;}
-.mob-menu-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-
-/* Overlay escuro atrás da sidebar */
-.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:98;backdrop-filter:blur(2px);}
-.mob-overlay.show{display:block;}
-
-@media(max-width:768px){
-
-  body{overflow:auto;}
-
-  /* ── Hamburguer visível ── */
-  .mob-menu-btn{display:flex;}
-
-  /* ── Sidebar vira drawer lateral ── */
-  .sidebar{
-    transform:translateX(-100%);
-    transition:transform .28s cubic-bezier(.4,0,.2,1);
-    z-index:200;
-    width:260px;
-  }
-  .sidebar.mob-open{transform:translateX(0);}
-
-  /* ── Main ocupa tela toda ── */
-  .main{margin-left:0;}
-
-  /* ── Topbar compacta ── */
-  .topbar{padding:14px 16px 14px 64px;}
-  .topbar h2{font-size:17px;}
-  #topbar-role-badge{display:none;}
-  #topbar-user-name{display:none;}
-
-  /* ── Content com padding menor ── */
-  .content{padding:16px;height:auto;min-height:calc(100vh - 57px);}
-
-  /* ── Login box ── */
-  .login-box{padding:16px;}
-  .login-card{padding:24px 20px;}
-  .login-logo h1{font-size:26px;}
-
-  /* ── Stats: 2 colunas no mobile ── */
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
-  .stat-value{font-size:22px;}
-
-  /* ── Grids viram 1 coluna ── */
-  .grid-2,.grid-3{grid-template-columns:1fr;}
-
-  /* ── Section header empilha ── */
-  .section-header{flex-direction:column;align-items:flex-start;gap:12px;}
-  .section-header > div:last-child{width:100%;display:flex;gap:8px;}
-  .search-bar{max-width:none;flex:1;}
-  .btn.editor-action,.btn.btn-primary{white-space:nowrap;}
-
-  /* ── Tabelas: scroll horizontal + células menores ── */
-  .table-wrap{-webkit-overflow-scrolling:touch;}
-  thead th{padding:8px 10px;font-size:10px;}
-  tbody td{padding:9px 10px;font-size:12px;}
-
-  /* ── Kanban: 1 coluna ── */
-  .kanban{grid-template-columns:1fr;}
-
-  /* ── Clientes: 1 coluna ── */
-  #clientes-grid{grid-template-columns:1fr !important;}
-
-  /* ── Modais: tela quase cheia ── */
-  .modal{width:96%;max-height:88vh;border-radius:12px;}
-  .modal-body{padding:16px;}
-  .modal-header{padding:16px 16px 12px;}
-  .modal-footer{padding:12px 16px;}
-
-  /* ── Form rows viram coluna ── */
-  .form-row,.form-row-3{grid-template-columns:1fr;}
-
-  /* ── Cards ── */
-  .card{padding:14px;}
-  .card-header{flex-wrap:wrap;gap:8px;}
-
-  /* ── User cards ── */
-  .user-card{flex-wrap:wrap;}
-  .user-card-actions{width:100%;justify-content:flex-end;}
-
-  /* ── Filter buttons: scroll horizontal ── */
-  .filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
-  .filter-btn{flex-shrink:0;}
-
-  /* ── Toast: full width ── */
-  #toast{left:16px;right:16px;bottom:16px;font-size:12px;}
-
-  /* ── Perm table menor ── */
-  .perm-table{font-size:12px;}
-  .perm-table th,.perm-table td{padding:8px 6px;}
-
-  /* ── Fin stats: 2 colunas ── */
-  #fin-stats{grid-template-columns:repeat(2,1fr) !important;}
-
-  /* ── Delivery item ── */
-  .delivery-meta{gap:6px;font-size:11px;}
-
-  /* ── Progress bar nos contratos ── */
-  .progress-bar{width:100% !important;}
-}
-
-@media(max-width:400px){
-  .stats-grid{grid-template-columns:1fr;}
-  #fin-stats{grid-template-columns:1fr !important;}
-}
 </style>
 </head>
 <body>
-
-<!-- MOBILE MENU BUTTON -->
-<button class="mob-menu-btn" id="mob-menu-btn" onclick="toggleMobMenu()" aria-label="Menu">
-  <span></span><span></span><span></span>
-</button>
-<!-- MOBILE OVERLAY -->
-<div class="mob-overlay" id="mob-overlay" onclick="closeMobMenu()"></div>
 
 <!-- LOADER -->
 <div id="loader">
@@ -432,6 +345,7 @@ select option{background:var(--surface2);}
     <div class="nav-section-label">Gestão</div>
     <div class="nav-item" onclick="switchTab('financeiro',this)"><span class="icon">💰</span>Financeiro</div>
     <div class="nav-item" onclick="switchTab('tarefas',this)"><span class="icon">📌</span>Tarefas</div>
+    <div class="nav-item" onclick="switchTab('freelancers',this)"><span class="icon">🧑‍💻</span>Freelancers<span class="nav-badge" id="badge-freelancers">0</span></div>
     <div class="nav-section-label admin-only" style="display:none;">Administração</div>
     <div class="nav-item admin-only" style="display:none;" onclick="switchTab('usuarios',this)"><span class="icon">🔐</span>Usuários</div>
   </nav>
@@ -564,6 +478,28 @@ select option{background:var(--surface2);}
       </div></div>
     </div>
 
+    <!-- FREELANCERS -->
+    <div id="tab-freelancers" class="tab">
+      <div class="section-header">
+        <div><div class="section-title">Freelancers</div><div class="section-sub">Equipe externa e pagamentos por entrega</div></div>
+        <button class="btn btn-primary editor-action" onclick="openModal('modal-freelancer')">+ Novo Freelancer</button>
+      </div>
+      <!-- Dashboard Freelancer -->
+      <div class="stats-grid" id="fl-stats"></div>
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-header"><span class="card-title">💸 Pagamentos Pendentes</span></div>
+          <div id="fl-pag-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">✅ Pagamentos do Mês</span></div>
+          <div id="fl-pag-mes"></div>
+        </div>
+      </div>
+      <div class="section-title" style="margin-bottom:14px;font-size:15px;">🧑‍💻 Freelancers Cadastrados</div>
+      <div id="fl-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div>
+    </div>
+
     <!-- USUÁRIOS (admin only) -->
     <div id="tab-usuarios" class="tab">
       <div class="section-header">
@@ -664,6 +600,7 @@ select option{background:var(--surface2);}
         <div class="form-group"><label>Responsável</label><input type="text" id="e-responsavel" placeholder="Nome do responsável"></div>
         <div class="form-group"><label>Recorrência</label><select id="e-recorrencia"><option value="unica">Única</option><option value="mensal">Mensal</option><option value="semanal">Semanal</option></select></div>
       </div>
+      <div class="form-group"><label>Atribuir a freelancer</label><select id="e-freelancer"><option value="">Nenhum (interno)</option></select></div>
       <div class="form-group"><label>Observações</label><textarea id="e-obs" placeholder="Detalhes, briefing, links..."></textarea></div>
     </div>
     <div class="modal-footer"><button class="btn" onclick="closeModal('modal-entrega')">Cancelar</button><button class="btn btn-primary" id="btn-save-entrega" onclick="saveEntrega()">Cadastrar Entrega</button></div>
@@ -795,10 +732,201 @@ select option{background:var(--surface2);}
   </div>
 </div>
 
+<!-- Modal Diagnóstico Cliente -->
+<div class="modal-overlay" id="modal-diagnostico">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header"><h3>🔍 Diagnóstico do Cliente</h3><button class="close-btn" onclick="closeModal('modal-diagnostico')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="diag-cliente-id">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px;">Preenchimento opcional. Quanto mais informações, mais preciso o diagnóstico e os próximos passos sugeridos.</p>
+
+      <div class="diag-section">
+        <div class="diag-section-title">🏢 Sobre o negócio</div>
+        <div class="form-row">
+          <div class="form-group"><label>Tempo de mercado</label>
+            <select id="diag-tempo"><option value="">Selecione...</option><option>Menos de 1 ano</option><option>1 a 3 anos</option><option>3 a 5 anos</option><option>Mais de 5 anos</option></select>
+          </div>
+          <div class="form-group"><label>Ticket médio (R$)</label>
+            <input type="number" id="diag-ticket" placeholder="Ex: 500"></div>
+        </div>
+        <div class="form-group"><label>Público-alvo (descreva brevemente)</label>
+          <input type="text" id="diag-publico" placeholder="Ex: Mulheres 25-40 anos, classe B/C, interesse em saúde"></div>
+        <div class="form-group"><label>Principais concorrentes</label>
+          <input type="text" id="diag-concorrentes" placeholder="Ex: Empresa A, Empresa B"></div>
+        <div class="form-group"><label>Diferencial competitivo</label>
+          <input type="text" id="diag-diferencial" placeholder="O que torna o cliente único no mercado?"></div>
+      </div>
+
+      <div class="diag-section">
+        <div class="diag-section-title">📣 Presença digital atual</div>
+        <div class="form-group"><label>Já fez tráfego pago?</label>
+          <div class="diag-chips" id="chips-trafego">
+            <span class="diag-chip" data-v="Nunca">Nunca</span>
+            <span class="diag-chip" data-v="Tentou e parou">Tentou e parou</span>
+            <span class="diag-chip" data-v="Faz atualmente">Faz atualmente</span>
+          </div>
+        </div>
+        <div class="form-group"><label>Plataformas utilizadas</label>
+          <div class="diag-chips" id="chips-plataformas">
+            <span class="diag-chip" data-v="Instagram">Instagram</span>
+            <span class="diag-chip" data-v="Facebook">Facebook</span>
+            <span class="diag-chip" data-v="Google">Google</span>
+            <span class="diag-chip" data-v="YouTube">YouTube</span>
+            <span class="diag-chip" data-v="TikTok">TikTok</span>
+            <span class="diag-chip" data-v="LinkedIn">LinkedIn</span>
+            <span class="diag-chip" data-v="Email">E-mail mkt</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Investimento mensal atual (R$)</label>
+            <input type="number" id="diag-investimento" placeholder="Ex: 1500"></div>
+          <div class="form-group"><label>Tem site?</label>
+            <select id="diag-site"><option value="">Selecione...</option><option>Sim, otimizado</option><option>Sim, mas desatualizado</option><option>Não tem</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Tem CRM / ferramenta de leads?</label>
+          <div class="diag-chips" id="chips-crm">
+            <span class="diag-chip" data-v="Sim">Sim</span>
+            <span class="diag-chip" data-v="Não">Não</span>
+            <span class="diag-chip" data-v="Em implantação">Em implantação</span>
+          </div>
+        </div>
+        <div class="form-group"><label>Tem colaborador dedicado para tratar leads?</label>
+          <div class="diag-chips" id="chips-colabs">
+            <span class="diag-chip" data-v="Sim">Sim, exclusivo</span>
+            <span class="diag-chip" data-v="Parcial">Parcial (acumula funções)</span>
+            <span class="diag-chip" data-v="Não">Não tem</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="diag-section">
+        <div class="diag-section-title">🎯 Maturidade de marketing (avalie de 1 a 5)</div>
+        <div class="form-row">
+          <div class="form-group"><label>Identidade visual</label>
+            <div class="diag-stars" data-key="identidade">
+              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Qualidade do conteúdo</label>
+            <div class="diag-stars" data-key="conteudo">
+              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Engajamento nas redes</label>
+            <div class="diag-stars" data-key="engajamento">
+              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Maturidade de vendas</label>
+            <div class="diag-stars" data-key="vendas">
+              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Conversão / atendimento</label>
+            <div class="diag-stars" data-key="conversao">
+              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Reputação / reviews</label>
+            <div class="diag-stars" data-key="reputacao">
+              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="diag-section">
+        <div class="diag-section-title">💬 Expectativas</div>
+        <div class="form-group"><label>Principal objetivo com a agência</label>
+          <div class="diag-chips" id="chips-objetivo">
+            <span class="diag-chip" data-v="Gerar leads">Gerar leads</span>
+            <span class="diag-chip" data-v="Aumentar vendas">Aumentar vendas</span>
+            <span class="diag-chip" data-v="Branding">Fortalecer marca</span>
+            <span class="diag-chip" data-v="Seguidores">Crescer seguidores</span>
+            <span class="diag-chip" data-v="Retenção">Fidelizar clientes</span>
+            <span class="diag-chip" data-v="Lançamento">Lançar produto/serviço</span>
+          </div>
+        </div>
+        <div class="form-group"><label>Observações adicionais</label>
+          <textarea id="diag-obs" placeholder="Qualquer informação relevante sobre o cliente, seus desafios ou oportunidades..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-diagnostico')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-diag" onclick="saveDiagnostico()">Salvar Diagnóstico</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Diagnóstico -->
+<div class="modal-overlay" id="modal-diagnostico-view">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header"><h3 id="diag-view-title">📊 Diagnóstico</h3><button class="close-btn" onclick="closeModal('modal-diagnostico-view')">✕</button></div>
+    <div class="modal-body" id="diag-view-body"></div>
+  </div>
+</div>
+
+<!-- Modal Freelancer -->
+<div class="modal-overlay" id="modal-freelancer">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header"><h3>🧑‍💻 Novo Freelancer</h3><button class="close-btn" onclick="closeModal('modal-freelancer')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Nome*</label><input type="text" id="fl-nome" placeholder="Nome completo"></div>
+        <div class="form-group"><label>Especialidade*</label>
+          <select id="fl-especialidade">
+            <option value="">Selecione...</option>
+            <option>Designer Gráfico</option><option>Editor de Vídeo</option><option>Gestor de Tráfego</option>
+            <option>Redator / Copywriter</option><option>Social Media</option><option>Dev / Programador</option>
+            <option>Fotógrafo</option><option>Motion Designer</option><option>Outro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>E-mail</label><input type="email" id="fl-email" placeholder="email@exemplo.com"></div>
+        <div class="form-group"><label>Telefone / WhatsApp</label><input type="text" id="fl-telefone" placeholder="(11) 99999-9999"></div>
+      </div>
+      <div class="form-group"><label>Forma de pagamento</label>
+        <select id="fl-pagamento">
+          <option value="por_entrega">Por entrega (valor fixo por tipo de tarefa)</option>
+          <option value="hora">Por hora</option>
+          <option value="projeto">Por projeto (combinado)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tabela de valores por tipo de entrega</label>
+        <div id="fl-rates-editor" style="display:flex;flex-direction:column;gap:6px;margin-top:6px;"></div>
+        <button class="btn btn-sm" style="margin-top:8px;" onclick="addFlRateRow()">+ Adicionar tipo</button>
+      </div>
+      <div class="form-group"><label>Chave PIX / Banco</label><input type="text" id="fl-pix" placeholder="CPF, e-mail ou chave PIX"></div>
+      <div class="form-group"><label>Observações</label><textarea id="fl-obs" placeholder="Notas sobre este freelancer..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-freelancer')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-fl" onclick="saveFreelancer()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalhe Freelancer -->
+<div class="modal-overlay" id="modal-fl-detalhe">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3 id="fl-detalhe-title">Freelancer</h3><button class="close-btn" onclick="closeModal('modal-fl-detalhe')">✕</button></div>
+    <div class="modal-body" id="fl-detalhe-body"></div>
+  </div>
+</div>
+
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -833,8 +961,8 @@ const authSec = secondaryApp.auth();
 // ═══════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════
-const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[]};
-const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas'];
+const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[],freelancers:[]};
+const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas','freelancers'];
 const readyCols = new Set();
 let currentUser = null;
 let currentRole = null;
@@ -1003,6 +1131,7 @@ function openModal(id){
   if(id==='modal-entrega') populateEntregaContratos();
   if(id==='modal-tarefa') populateTarefaClientes();
   if(id==='modal-financeiro'){ const d=document.getElementById('f-data'); if(d&&!d.value) d.value=today(); }
+  if(id==='modal-freelancer'){ _flRates=[]; addFlRateRow('Post Instagram',''); addFlRateRow('Reels / Vídeo',''); renderFlRatesEditor(); }
 }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
@@ -1013,7 +1142,7 @@ function switchTab(name,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   if(el) el.classList.add('active');
-  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',usuarios:'Gerenciador de Usuários'};
+  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',freelancers:'Freelancers',usuarios:'Gerenciador de Usuários'};
   document.getElementById('page-title').textContent=titles[name]||name;
 }
 
@@ -1024,10 +1153,11 @@ function canEdit(){ return currentRole==='admin'||currentRole==='editor'; }
 // ═══════════════════════════════════════════════
 function renderAll(){
   renderDashboard(); renderClientes(); renderContratos(); renderEntregas();
-  renderPipeline(); renderFinanceiro(); renderTarefas();
+  renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers();
   document.getElementById('badge-clientes').textContent=st.clientes.filter(c=>c.status==='ativo').length;
   document.getElementById('badge-contratos').textContent=st.contratos.filter(c=>c.status==='ativo').length;
   document.getElementById('badge-entregas').textContent=st.entregas.filter(e=>!e.concluida).length;
+  document.getElementById('badge-freelancers').textContent=st.freelancers.length;
 }
 
 // ═══════════════════════════════════════════════
@@ -1081,7 +1211,7 @@ function renderClientes(){
       <div class="client-meta-row"><span>📱 ${c.telefone||'—'}</span><span class="badge badge-${c.status==='ativo'?'active':c.status==='inativo'?'inactive':'prospect'}">${c.status}</span></div>
       <div class="client-meta-row"><span>📋 Contratos ativos</span><strong>${cts.length}</strong></div>
       <div class="client-meta-row"><span>💰 MRR</span><strong class="amount-green">R$ ${mrr.toLocaleString('pt-BR')}</strong></div>
-      ${c.segmento?`<div style="margin-top:8px;"><span class="tag">${c.segmento}</span></div>`:''}
+      ${c.segmento?`<div style="margin-top:8px;display:flex;gap:6px;align-items:center;"><span class="tag">${c.segmento}</span>${c.diagnostico?'<span class="tag" style="background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);">🔍 Diagnóstico</span>':''}</div>`:c.diagnostico?`<div style="margin-top:8px;"><span class="tag" style="background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);">🔍 Diagnóstico</span></div>`:''}
     </div>`;
   }).join('');
 }
@@ -1127,7 +1257,11 @@ function showClienteDetalhe(id){
     <div style="margin-top:16px;"><div class="card-title" style="margin-bottom:10px;">✅ Entregas (${ents.length})</div>
       ${ents.length===0?'<p style="color:var(--text3);font-size:13px;">Sem entregas.</p>':ents.map(e=>`<div class="finance-row"><span>${e.descricao}</span><span class="${e.concluida?'amount-green':'amount-yellow'}">${e.concluida?'✓ Concluída':'⏳ Pendente'}</span></div>`).join('')}
     </div>
-    ${canEdit()?`<div style="margin-top:16px;text-align:right;"><button class="btn btn-danger btn-sm" onclick="deleteCliente('${id}');closeModal('modal-cliente-detalhe');">🗑️ Excluir Cliente</button></div>`:''}`;
+    ${canEdit()?`<div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-sm" onclick="openDiagnostico('${id}')">🔍 ${c.diagnostico?'Editar':'Preencher'} Diagnóstico</button>
+      ${c.diagnostico?`<button class="btn btn-sm btn-success" onclick="closeModal('modal-cliente-detalhe');openDiagView('${id}')">📊 Ver Análise</button>`:''}
+      <button class="btn btn-danger btn-sm" onclick="deleteCliente('${id}');closeModal('modal-cliente-detalhe');">🗑️ Excluir</button>
+    </div>`:c.diagnostico?`<div style="margin-top:16px;text-align:right;"><button class="btn btn-sm btn-success" onclick="closeModal('modal-cliente-detalhe');openDiagView('${id}')">📊 Ver Diagnóstico</button></div>`:''}`;
   openModal('modal-cliente-detalhe');
 }
 
@@ -1290,7 +1424,7 @@ async function saveEntrega(){
   const btn=document.getElementById('btn-save-entrega');btn.disabled=true;btn.textContent='Salvando...';
   try{
     const cId=document.getElementById('e-contrato').value,ct=st.contratos.find(c=>c.id===cId);
-    await db.collection('entregas').add({contratoId:cId,contratoNome:ct?`${ct.clienteNome} — ${ct.nome}`:'',tipo:document.getElementById('e-tipo').value,descricao:desc,quantidade:+document.getElementById('e-quantidade').value||1,prazo:document.getElementById('e-prazo').value,responsavel:document.getElementById('e-responsavel').value,recorrencia:document.getElementById('e-recorrencia').value,obs:document.getElementById('e-obs').value,concluida:false,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});
+    await db.collection('entregas').add({contratoId:cId,contratoNome:ct?`${ct.clienteNome} — ${ct.nome}`:'',tipo:document.getElementById('e-tipo').value,descricao:desc,quantidade:+document.getElementById('e-quantidade').value||1,prazo:document.getElementById('e-prazo').value,responsavel:document.getElementById('e-responsavel').value,recorrencia:document.getElementById('e-recorrencia').value,freelancerId:document.getElementById('e-freelancer')?.value||'',obs:document.getElementById('e-obs').value,concluida:false,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});
     closeModal('modal-entrega');['e-descricao','e-prazo','e-responsavel','e-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('e-quantidade').value='1';
     toast('Entrega cadastrada!');
   }catch(e){toast('Erro.','❌');console.error(e);}
@@ -1440,39 +1574,468 @@ async function deleteUsuario(uid,nome){
 }
 
 // ═══════════════════════════════════════════════
-//  MOBILE MENU
+//  DIAGNÓSTICO
 // ═══════════════════════════════════════════════
-function toggleMobMenu(){
-  const sidebar=document.getElementById('sidebar');
-  const btn=document.getElementById('mob-menu-btn');
-  const overlay=document.getElementById('mob-overlay');
-  const isOpen=sidebar.classList.contains('mob-open');
-  if(isOpen){ closeMobMenu(); } else {
-    sidebar.classList.add('mob-open');
-    btn.classList.add('open');
-    overlay.classList.add('show');
-    document.body.style.overflow='hidden';
+const _diagStars = {}; // key -> value 1-5
+
+function openDiagnostico(clienteId){
+  closeModal('modal-cliente-detalhe');
+  document.getElementById('diag-cliente-id').value = clienteId;
+  // Reset chips
+  document.querySelectorAll('.diag-chip').forEach(c=>c.classList.remove('on'));
+  // Reset stars
+  document.querySelectorAll('.diag-stars .diag-star').forEach(s=>s.classList.remove('on'));
+  Object.keys(_diagStars).forEach(k=>delete _diagStars[k]);
+  // Reset inputs
+  ['diag-ticket','diag-publico','diag-concorrentes','diag-diferencial','diag-investimento','diag-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['diag-tempo','diag-site'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Load existing if any
+  const existing = st.clientes.find(c=>c.id===clienteId);
+  if(existing && existing.diagnostico){
+    const d = existing.diagnostico;
+    if(d.ticket) document.getElementById('diag-ticket').value=d.ticket;
+    if(d.publico) document.getElementById('diag-publico').value=d.publico;
+    if(d.concorrentes) document.getElementById('diag-concorrentes').value=d.concorrentes;
+    if(d.diferencial) document.getElementById('diag-diferencial').value=d.diferencial;
+    if(d.investimento) document.getElementById('diag-investimento').value=d.investimento;
+    if(d.obs) document.getElementById('diag-obs').value=d.obs;
+    if(d.tempo) document.getElementById('diag-tempo').value=d.tempo;
+    if(d.site) document.getElementById('diag-site').value=d.site;
+    // chips
+    if(d.trafego) document.querySelectorAll('#chips-trafego .diag-chip').forEach(c=>{if(c.dataset.v===d.trafego)c.classList.add('on');});
+    if(d.crm) document.querySelectorAll('#chips-crm .diag-chip').forEach(c=>{if(c.dataset.v===d.crm)c.classList.add('on');});
+    if(d.colabs) document.querySelectorAll('#chips-colabs .diag-chip').forEach(c=>{if(c.dataset.v===d.colabs)c.classList.add('on');});
+    if(d.objetivo) document.querySelectorAll('#chips-objetivo .diag-chip').forEach(c=>{if(c.dataset.v===d.objetivo)c.classList.add('on');});
+    if(d.plataformas) document.querySelectorAll('#chips-plataformas .diag-chip').forEach(c=>{if(d.plataformas.includes(c.dataset.v))c.classList.add('on');});
+    // stars
+    if(d.stars){Object.entries(d.stars).forEach(([k,v])=>{_diagStars[k]=v;renderStarGroup(k,v);});}
   }
-}
-function closeMobMenu(){
-  const sidebar=document.getElementById('sidebar');
-  const btn=document.getElementById('mob-menu-btn');
-  const overlay=document.getElementById('mob-overlay');
-  sidebar.classList.remove('mob-open');
-  btn.classList.remove('open');
-  overlay.classList.remove('show');
-  document.body.style.overflow='';
+  openModal('modal-diagnostico');
 }
 
-// Fecha sidebar ao clicar em qualquer nav-item no mobile
+function renderStarGroup(key,val){
+  document.querySelectorAll(`.diag-stars[data-key="${key}"] .diag-star`).forEach(s=>{
+    s.classList.toggle('on', +s.dataset.n <= val);
+  });
+}
+
+// star click events
 document.addEventListener('click', e=>{
-  if(window.innerWidth<=768 && e.target.closest('.nav-item')){
-    closeMobMenu();
-  }
+  const star = e.target.closest('.diag-star');
+  if(!star) return;
+  const group = star.closest('.diag-stars');
+  if(!group) return;
+  const key = group.dataset.key;
+  const val = +star.dataset.n;
+  _diagStars[key] = val;
+  renderStarGroup(key, val);
 });
 
-// Fecha ao girar a tela
-window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMobMenu(); });
+// chip click — single select groups
+['chips-trafego','chips-crm','chips-colabs','chips-objetivo'].forEach(gid=>{
+  document.addEventListener('click', e=>{
+    const chip = e.target.closest(`#${gid} .diag-chip`);
+    if(!chip) return;
+    document.querySelectorAll(`#${gid} .diag-chip`).forEach(c=>c.classList.remove('on'));
+    chip.classList.add('on');
+  });
+});
+// multi-select: plataformas
+document.addEventListener('click', e=>{
+  const chip = e.target.closest('#chips-plataformas .diag-chip');
+  if(!chip) return;
+  chip.classList.toggle('on');
+});
+
+function getDiagChip(gid){ const el=document.querySelector(`#${gid} .diag-chip.on`); return el?el.dataset.v:''; }
+function getDiagChips(gid){ return Array.from(document.querySelectorAll(`#${gid} .diag-chip.on`)).map(c=>c.dataset.v); }
+
+async function saveDiagnostico(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const clienteId = document.getElementById('diag-cliente-id').value;
+  const btn = document.getElementById('btn-save-diag');
+  btn.disabled=true; btn.textContent='Salvando...';
+  try{
+    const diagnostico = {
+      tempo: document.getElementById('diag-tempo').value,
+      ticket: document.getElementById('diag-ticket').value,
+      publico: document.getElementById('diag-publico').value,
+      concorrentes: document.getElementById('diag-concorrentes').value,
+      diferencial: document.getElementById('diag-diferencial').value,
+      trafego: getDiagChip('chips-trafego'),
+      plataformas: getDiagChips('chips-plataformas'),
+      investimento: document.getElementById('diag-investimento').value,
+      site: document.getElementById('diag-site').value,
+      crm: getDiagChip('chips-crm'),
+      colabs: getDiagChip('chips-colabs'),
+      objetivo: getDiagChip('chips-objetivo'),
+      obs: document.getElementById('diag-obs').value,
+      stars: {..._diagStars},
+      atualizadoEm: new Date().toLocaleDateString('pt-BR')
+    };
+    await db.collection('clientes').doc(clienteId).update({diagnostico});
+    closeModal('modal-diagnostico');
+    toast('Diagnóstico salvo!');
+  }catch(e){toast('Erro ao salvar.','❌');console.error(e);}
+  btn.disabled=false; btn.textContent='Salvar Diagnóstico';
+}
+
+function openDiagView(clienteId){
+  const c = st.clientes.find(x=>x.id===clienteId);
+  if(!c||!c.diagnostico){toast('Diagnóstico não preenchido ainda.','ℹ️');return;}
+  const d = c.diagnostico;
+  document.getElementById('diag-view-title').textContent=`📊 Diagnóstico — ${c.empresa}`;
+
+  // Build star scores
+  const starKeys = ['identidade','conteudo','engajamento','vendas','conversao','reputacao'];
+  const starLabels = {'identidade':'Identidade visual','conteudo':'Qualidade do conteúdo','engajamento':'Engajamento','vendas':'Maturidade de vendas','conversao':'Conversão','reputacao':'Reputação'};
+  const scores = starKeys.map(k=> (d.stars&&d.stars[k]) ? +d.stars[k] : 0);
+  const avg = scores.reduce((a,b)=>a+b,0)/scores.filter(s=>s>0).length||0;
+
+  // Generate insights
+  const insights = gerarInsights(d, scores, starKeys, starLabels);
+
+  document.getElementById('diag-view-body').innerHTML = `
+    <div class="grid-2" style="margin-bottom:16px;align-items:start;">
+      <div>
+        <div class="card-title" style="margin-bottom:12px;">📈 Maturidade de Marketing</div>
+        <div class="radar-wrap"><canvas id="radar-canvas"></canvas></div>
+        <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text2);">Média geral: <strong style="color:var(--accent)">${avg.toFixed(1)}/5</strong></div>
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:12px;">📋 Dados do Negócio</div>
+        ${infoRow('Tempo de mercado', d.tempo)}
+        ${infoRow('Ticket médio', d.ticket ? 'R$ '+Number(d.ticket).toLocaleString('pt-BR') : '')}
+        ${infoRow('Público-alvo', d.publico)}
+        ${infoRow('Concorrentes', d.concorrentes)}
+        ${infoRow('Diferencial', d.diferencial)}
+        ${infoRow('Já fez tráfego', d.trafego)}
+        ${infoRow('Plataformas', (d.plataformas||[]).join(', '))}
+        ${infoRow('Investimento atual', d.investimento ? 'R$ '+Number(d.investimento).toLocaleString('pt-BR')+'/mês' : '')}
+        ${infoRow('Site', d.site)}
+        ${infoRow('CRM', d.crm)}
+        ${infoRow('Responsável leads', d.colabs)}
+        ${infoRow('Objetivo principal', d.objetivo)}
+      </div>
+    </div>
+    ${d.obs?`<div class="note-card" style="margin-bottom:16px;"><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">OBSERVAÇÕES</div><div class="note-text">${d.obs}</div></div>`:''}
+    <div class="card-title" style="margin-bottom:12px;">🚀 Próximos Passos Recomendados</div>
+    ${insights.map(i=>`<div class="insight-card ${i.level}"><div class="insight-icon">${i.icon}</div><div><div class="insight-title">${i.title}</div><div class="insight-desc">${i.desc}</div></div></div>`).join('')}
+    <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-sm editor-action" onclick="closeModal('modal-diagnostico-view');openDiagnostico('${clienteId}')">✏️ Editar diagnóstico</button>
+    </div>
+  `;
+  openModal('modal-diagnostico-view');
+
+  // Draw radar
+  setTimeout(()=>{
+    const ctx = document.getElementById('radar-canvas');
+    if(!ctx) return;
+    if(window._radarChart) window._radarChart.destroy();
+    window._radarChart = new Chart(ctx, {
+      type:'radar',
+      data:{
+        labels: starKeys.map(k=>starLabels[k]),
+        datasets:[{
+          label:'Maturidade',
+          data: scores,
+          backgroundColor:'rgba(124,92,252,.2)',
+          borderColor:'#7c5cfc',
+          pointBackgroundColor:'#7c5cfc',
+          pointBorderColor:'#fff',
+          pointRadius:4,
+          borderWidth:2
+        }]
+      },
+      options:{
+        responsive:true,
+        scales:{r:{min:0,max:5,ticks:{stepSize:1,color:'#555570',font:{size:10}},grid:{color:'rgba(42,42,56,.6)'},pointLabels:{color:'#8888aa',font:{size:11}},angleLines:{color:'rgba(42,42,56,.6)'}}},
+        plugins:{legend:{display:false}},
+        elements:{line:{tension:.3}}
+      }
+    });
+  }, 100);
+}
+
+function infoRow(label, val){
+  if(!val) return '';
+  return `<div class="finance-row"><span style="color:var(--text2);font-size:12px;">${label}</span><span style="font-size:12px;font-weight:500;">${val}</span></div>`;
+}
+
+function gerarInsights(d, scores, starKeys, starLabels){
+  const ins = [];
+  const avg = scores.filter(s=>s>0).length ? scores.reduce((a,b)=>a+b,0)/scores.filter(s=>s>0).length : 0;
+
+  // Tráfego pago
+  if(d.trafego==='Nunca') ins.push({level:'high',icon:'🚀',title:'Oportunidade: iniciar tráfego pago',desc:'O cliente nunca investiu em tráfego pago. Existe grande potencial de crescimento com uma estratégia inicial bem estruturada.'});
+  else if(d.trafego==='Tentou e parou') ins.push({level:'med',icon:'🔄',title:'Retomar tráfego pago com estratégia',desc:'Tentativa anterior sem sucesso. Identifique o que falhou (segmentação, criativo, landing page) antes de reinvestir.'});
+
+  // Site
+  if(d.site==='Não tem') ins.push({level:'high',icon:'🌐',title:'Criar presença digital básica',desc:'Sem site, a conversão de leads pagos é muito mais difícil. Landing page simples já resolve no curto prazo.'});
+  else if(d.site==='Sim, mas desatualizado') ins.push({level:'med',icon:'🔧',title:'Atualizar o site',desc:'Site desatualizado prejudica a conversão. Priorizar uma revisão de conteúdo e velocidade de carregamento.'});
+
+  // CRM
+  if(d.crm==='Não') ins.push({level:'high',icon:'📋',title:'Implantar ferramenta de CRM',desc:'Sem CRM, leads gerados pelo tráfego pago se perdem. Indicar ferramentas como RD Station, Kommo ou até planilha estruturada.'});
+
+  // Colaborador para leads
+  if(d.colabs==='Não tem') ins.push({level:'high',icon:'👤',title:'Definir responsável pelo atendimento de leads',desc:'Sem um responsável dedicado, o tempo de resposta aumenta e a taxa de conversão cai drasticamente.'});
+  else if(d.colabs==='Parcial') ins.push({level:'med',icon:'⚡',title:'Otimizar fluxo de atendimento de leads',desc:'O responsável parcial pode perder leads por acúmulo de funções. Criar um SOP de atendimento ajuda muito.'});
+
+  // Identidade visual baixa
+  const idIdx = starKeys.indexOf('identidade');
+  if(scores[idIdx]>0 && scores[idIdx]<=2) ins.push({level:'high',icon:'🎨',title:'Fortalecer identidade visual',desc:'Identidade visual fraca impacta diretamente a percepção de valor e a taxa de cliques nos anúncios.'});
+
+  // Conteúdo baixo
+  const ctIdx = starKeys.indexOf('conteudo');
+  if(scores[ctIdx]>0 && scores[ctIdx]<=2) ins.push({level:'med',icon:'📝',title:'Melhorar qualidade de conteúdo',desc:'Conteúdo fraco reduz o engajamento orgânico e aumenta o custo dos anúncios. Investir em produção de qualidade.'});
+
+  // Engajamento baixo
+  const enIdx = starKeys.indexOf('engajamento');
+  if(scores[enIdx]>0 && scores[enIdx]<=2) ins.push({level:'med',icon:'📣',title:'Estratégia de engajamento orgânico',desc:'Baixo engajamento indica desconexão com o público. Revisar frequência, formatos e linguagem do conteúdo.'});
+
+  // Vendas baixo
+  const vnIdx = starKeys.indexOf('vendas');
+  if(scores[vnIdx]>0 && scores[vnIdx]<=2) ins.push({level:'med',icon:'💬',title:'Capacitar equipe de vendas',desc:'Maturidade de vendas baixa significa que os leads gerados não estão sendo convertidos adequadamente.'});
+
+  // Alta maturidade
+  if(avg>=4) ins.push({level:'high',icon:'⭐',title:'Cliente maduro — foco em escala',desc:'Boa base instalada. O momento é de escalar investimento, testar novos canais e expandir o funil de aquisição.'});
+
+  // Objetivo específico
+  if(d.objetivo==='Lançamento') ins.push({level:'high',icon:'🎯',title:'Planejamento de lançamento',desc:'Definir cronograma de pré-lançamento com 30 dias de aquecimento de audiência antes de ativar os anúncios.'});
+  if(d.objetivo==='Branding') ins.push({level:'med',icon:'💡',title:'Estratégia de branding',desc:'Para branding, priorizar conteúdo orgânico consistente e anúncios de reconhecimento antes de campanhas de conversão.'});
+
+  if(!ins.length) ins.push({level:'med',icon:'📊',title:'Complete o diagnóstico para ver os insights',desc:'Preencha mais campos do diagnóstico para receber recomendações personalizadas de próximos passos.'});
+  return ins;
+}
+
+// ═══════════════════════════════════════════════
+//  FREELANCERS
+// ═══════════════════════════════════════════════
+let _flRates = []; // [{tipo:'', valor:''}]
+
+function addFlRateRow(tipo='', valor=''){
+  _flRates.push({tipo, valor});
+  renderFlRatesEditor();
+}
+
+function renderFlRatesEditor(){
+  const container = document.getElementById('fl-rates-editor');
+  if(!container) return;
+  container.innerHTML = _flRates.map((r,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="text" value="${r.tipo}" placeholder="Tipo (ex: Post Instagram)" style="flex:2;" oninput="_flRates[${i}].tipo=this.value">
+      <input type="number" value="${r.valor}" placeholder="R$" style="flex:1;" oninput="_flRates[${i}].valor=this.value">
+      <button class="btn btn-sm btn-danger" onclick="_flRates.splice(${i},1);renderFlRatesEditor()">✕</button>
+    </div>`).join('');
+}
+
+function renderFreelancers(){
+  // Stats
+  const totalPendente = calcPendenteFl();
+  const totalPagoMes = calcPagoMes();
+  const totalFl = st.freelancers.length;
+  const entregasFl = st.entregas.filter(e=>e.freelancerId&&!e.concluida).length;
+
+  const fs = document.getElementById('fl-stats');
+  if(fs) fs.innerHTML=`
+    <div class="stat-card"><span class="stat-icon">🧑‍💻</span><div class="stat-label">Freelancers</div><div class="stat-value">${totalFl}</div><div class="stat-sub">cadastrados</div></div>
+    <div class="stat-card"><span class="stat-icon">💸</span><div class="stat-label">A Pagar</div><div class="stat-value" style="color:var(--warning)">R$ ${totalPendente.toLocaleString('pt-BR')}</div><div class="stat-sub">entregas concluídas</div></div>
+    <div class="stat-card"><span class="stat-icon">✅</span><div class="stat-label">Pago este mês</div><div class="stat-value" style="color:var(--success)">R$ ${totalPagoMes.toLocaleString('pt-BR')}</div><div class="stat-sub">mês atual</div></div>
+    <div class="stat-card"><span class="stat-icon">📦</span><div class="stat-label">Entregas Abertas</div><div class="stat-value">${entregasFl}</div><div class="stat-sub">atribuídas a freelancers</div></div>`;
+
+  // Lista pagamentos pendentes
+  const pendentes = st.entregas.filter(e=>e.freelancerId && e.concluida && !e.pagamentoFreelancer);
+  const pgl = document.getElementById('fl-pag-list');
+  if(pgl) pgl.innerHTML = pendentes.length===0
+    ? '<div class="empty-state"><div>🎉</div><p>Nenhum pagamento pendente!</p></div>'
+    : pendentes.map(e=>{
+        const fl = st.freelancers.find(f=>f.id===e.freelancerId);
+        const valor = getFlValorEntrega(fl, e.tipo);
+        return `<div class="pag-item" id="pagi-${e.id}">
+          <div class="pag-check" onclick="marcarPagamento('${e.id}')"></div>
+          <div class="pag-info">
+            <div class="pag-title">${e.descricao}</div>
+            <div class="pag-meta">
+              <span>👤 ${fl?fl.nome:'—'}</span>
+              <span>📂 ${e.tipo||'—'}</span>
+              <span>✅ Concluído em ${e.concluidaEm||'—'}</span>
+              ${valor ? `<span style="color:var(--accent4);font-weight:600;">R$ ${valor.toLocaleString('pt-BR')}</span>` : ''}
+              ${fl&&fl.pix?`<span>PIX: ${fl.pix}</span>`:''}
+            </div>
+          </div>
+          ${valor?`<div style="font-size:15px;font-weight:700;color:var(--accent4);flex-shrink:0;">R$ ${valor.toLocaleString('pt-BR')}</div>`:''}
+        </div>`;
+      }).join('');
+
+  // Pagos no mês
+  const agora = new Date();
+  const pagosMes = st.entregas.filter(e=>e.freelancerId && e.pagamentoFreelancer && e.pagamentoEm);
+  const pgm = document.getElementById('fl-pag-mes');
+  if(pgm) pgm.innerHTML = pagosMes.length===0
+    ? '<div class="empty-state"><div>📊</div><p>Nenhum pagamento registrado ainda.</p></div>'
+    : pagosMes.slice(-10).reverse().map(e=>{
+        const fl = st.freelancers.find(f=>f.id===e.freelancerId);
+        const valor = getFlValorEntrega(fl, e.tipo);
+        return `<div class="pag-item pago">
+          <div class="pag-check">✓</div>
+          <div class="pag-info">
+            <div class="pag-title">${e.descricao}</div>
+            <div class="pag-meta"><span>👤 ${fl?fl.nome:'—'}</span><span>💳 Pago em ${e.pagamentoEm}</span>${valor?`<span style="color:var(--success);font-weight:600;">R$ ${valor.toLocaleString('pt-BR')}</span>`:''}</div>
+          </div>
+        </div>`;
+      }).join('');
+
+  // Grid freelancers
+  const grid = document.getElementById('fl-grid');
+  if(!grid) return;
+  if(!st.freelancers.length){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div>🧑‍💻</div><p>Nenhum freelancer cadastrado ainda.</p></div>`;return;}
+  grid.innerHTML = st.freelancers.map(fl=>{
+    const entregasAbertas = st.entregas.filter(e=>e.freelancerId===fl.id&&!e.concluida).length;
+    const aPagar = calcPendenteFlId(fl.id);
+    return `<div class="fl-card" onclick="showFlDetalhe('${fl.id}')">
+      <div class="fl-avatar">${(fl.nome||'?').charAt(0).toUpperCase()}</div>
+      <div class="fl-name">${fl.nome}</div>
+      <div class="fl-role">${fl.especialidade||'—'}</div>
+      <div class="divider"></div>
+      <div class="fl-meta">
+        <div class="client-meta-row"><span>📦 Entregas abertas</span><strong>${entregasAbertas}</strong></div>
+        <div class="client-meta-row"><span>💸 A pagar</span><strong class="amount-yellow">R$ ${aPagar.toLocaleString('pt-BR')}</strong></div>
+        <div class="client-meta-row"><span>💳 Pagamento</span><strong style="font-size:11px;">${{por_entrega:'Por entrega',hora:'Por hora',projeto:'Por projeto'}[fl.pagamento]||fl.pagamento||'—'}</strong></div>
+        ${fl.pix?`<div class="client-meta-row"><span>PIX</span><strong style="font-size:11px;">${fl.pix}</strong></div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getFlValorEntrega(fl, tipo){
+  if(!fl||!fl.rates||!tipo) return 0;
+  const r = fl.rates.find(r=>r.tipo.toLowerCase()===tipo.toLowerCase());
+  return r ? +r.valor : 0;
+}
+
+function calcPendenteFl(){
+  return st.entregas.filter(e=>e.freelancerId&&e.concluida&&!e.pagamentoFreelancer).reduce((sum,e)=>{
+    const fl=st.freelancers.find(f=>f.id===e.freelancerId);
+    return sum + getFlValorEntrega(fl,e.tipo);
+  },0);
+}
+
+function calcPendenteFlId(flId){
+  return st.entregas.filter(e=>e.freelancerId===flId&&e.concluida&&!e.pagamentoFreelancer).reduce((sum,e)=>{
+    const fl=st.freelancers.find(f=>f.id===e.freelancerId);
+    return sum + getFlValorEntrega(fl,e.tipo);
+  },0);
+}
+
+function calcPagoMes(){
+  return st.entregas.filter(e=>e.freelancerId&&e.pagamentoFreelancer).reduce((sum,e)=>{
+    const fl=st.freelancers.find(f=>f.id===e.freelancerId);
+    return sum + getFlValorEntrega(fl,e.tipo);
+  },0);
+}
+
+async function marcarPagamento(entregaId){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  if(!confirm('Confirmar que este pagamento foi realizado?'))return;
+  try{
+    await db.collection('entregas').doc(entregaId).update({
+      pagamentoFreelancer:true,
+      pagamentoEm:new Date().toLocaleDateString('pt-BR'),
+      pagamentoPor:currentNome
+    });
+    toast('Pagamento registrado!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+}
+
+function showFlDetalhe(id){
+  const fl = st.freelancers.find(x=>x.id===id);
+  if(!fl) return;
+  const entregas = st.entregas.filter(e=>e.freelancerId===id);
+  const abertas = entregas.filter(e=>!e.concluida);
+  const concluidas = entregas.filter(e=>e.concluida);
+  const aPagar = calcPendenteFlId(id);
+  document.getElementById('fl-detalhe-title').textContent=`🧑‍💻 ${fl.nome}`;
+  document.getElementById('fl-detalhe-body').innerHTML=`
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Especialidade</label><div style="color:var(--text);font-size:13px;">${fl.especialidade||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>E-mail</label><div style="color:var(--text);font-size:13px;">${fl.email||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Telefone</label><div style="color:var(--text);font-size:13px;">${fl.telefone||'—'}</div></div>
+      </div>
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Pagamento</label><div style="color:var(--text);font-size:13px;">${{por_entrega:'Por entrega',hora:'Por hora',projeto:'Por projeto'}[fl.pagamento]||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Chave PIX</label><div style="color:var(--text);font-size:13px;">${fl.pix||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>A pagar (pendente)</label><div style="color:var(--warning);font-size:16px;font-weight:700;">R$ ${aPagar.toLocaleString('pt-BR')}</div></div>
+      </div>
+    </div>
+    ${(fl.rates&&fl.rates.length)?`
+      <div style="margin-bottom:16px;">
+        <label>Tabela de valores</label>
+        <div style="margin-top:8px;">
+          ${fl.rates.map(r=>`<div class="fl-rate-row"><span>${r.tipo}</span><strong class="amount-green">R$ ${Number(r.valor).toLocaleString('pt-BR')}</strong></div>`).join('')}
+        </div>
+      </div>`:''}
+    ${fl.obs?`<div class="note-card" style="margin-bottom:16px;"><div class="note-text">${fl.obs}</div></div>`:''}
+    <div style="margin-bottom:12px;"><label>Entregas atribuídas (${entregas.length})</label></div>
+    ${!entregas.length?'<p style="color:var(--text3);font-size:13px;">Nenhuma entrega atribuída ainda.</p>':
+      entregas.slice(-8).reverse().map(e=>`
+        <div class="finance-row">
+          <div><div style="font-size:13px;font-weight:500;">${e.descricao}</div><div style="font-size:11px;color:var(--text3);">${e.tipo||'—'} · ${e.prazo||'Sem prazo'}</div></div>
+          <span class="badge badge-${e.concluida?'done':'inprogress'}">${e.concluida?'Concluída':'Em aberto'}</span>
+        </div>`).join('')}
+    ${canEdit()?`<div style="margin-top:16px;text-align:right;"><button class="btn btn-danger btn-sm" onclick="deleteFreelancer('${id}');closeModal('modal-fl-detalhe');">🗑️ Remover</button></div>`:''}
+  `;
+  openModal('modal-fl-detalhe');
+}
+
+async function saveFreelancer(){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const nome = document.getElementById('fl-nome').value.trim();
+  const esp = document.getElementById('fl-especialidade').value;
+  if(!nome){toast('Nome obrigatório!','⚠️');return;}
+  const btn = document.getElementById('btn-save-fl');
+  btn.disabled=true; btn.textContent='Salvando...';
+  try{
+    await db.collection('freelancers').add({
+      nome, especialidade:esp,
+      email:document.getElementById('fl-email').value,
+      telefone:document.getElementById('fl-telefone').value,
+      pagamento:document.getElementById('fl-pagamento').value,
+      rates:_flRates.filter(r=>r.tipo),
+      pix:document.getElementById('fl-pix').value,
+      obs:document.getElementById('fl-obs').value,
+      criadoEm:new Date().toLocaleDateString('pt-BR'),
+      criadoPor:currentNome
+    });
+    closeModal('modal-freelancer');
+    _flRates=[];
+    ['fl-nome','fl-email','fl-telefone','fl-pix','fl-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    renderFlRatesEditor();
+    toast('Freelancer cadastrado!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false; btn.textContent='Salvar';
+}
+
+async function deleteFreelancer(id){
+  if(!canEdit())return;
+  if(!confirm('Remover este freelancer?'))return;
+  await db.collection('freelancers').doc(id).delete();
+  toast('Freelancer removido.','🗑️');
+}
+
+// Atualiza modal de entrega para incluir campo freelancer
+function populateEntregaContratos(){
+  document.getElementById('e-contrato').innerHTML='<option value="">Selecione...</option>'+st.contratos.filter(c=>c.status==='ativo').map(c=>`<option value="${c.id}">${c.clienteNome} — ${c.nome}</option>`).join('');
+  // Populate freelancer select if exists
+  const sel = document.getElementById('e-freelancer');
+  if(sel) sel.innerHTML='<option value="">Nenhum (interno)</option>'+st.freelancers.map(f=>`<option value="${f.id}">${f.nome} — ${f.especialidade}</option>`).join('');
+}
+
+// Inicializa a tabela de valores do modal freelancer
+document.addEventListener('DOMContentLoaded',()=>{
+  addFlRateRow('Post Instagram','');
+  addFlRateRow('Reels / Vídeo','');
+});
 </script>
 </body>
 </html>
