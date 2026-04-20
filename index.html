@@ -320,6 +320,17 @@ select option{background:var(--surface2);}
 .insight-title{font-weight:600;font-size:13px;margin-bottom:2px;}
 .insight-desc{font-size:12px;color:var(--text2);line-height:1.5;}
 
+/* Diagnostic tab nav */
+.diag-tab-nav{display:flex;gap:4px;margin-bottom:18px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-bottom:1px solid var(--border);padding-bottom:0;}
+.diag-tab-nav::-webkit-scrollbar{display:none;}
+.diag-tab-btn{padding:7px 13px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--text2);white-space:nowrap;transition:all .15s;position:relative;bottom:-1px;}
+.diag-tab-btn:hover{color:var(--text);background:var(--surface2);}
+.diag-tab-btn.active{background:var(--surface);border-color:var(--border);color:var(--accent);border-bottom:1px solid var(--surface);}
+.diag-pane{display:none;}.diag-pane.active{display:block;animation:fadeIn .15s ease;}
+.diag-progress{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:12px;color:var(--text2);}
+.diag-progress-bar{flex:1;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;}
+.diag-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent));border-radius:2px;transition:width .3s ease;}
+
 /* ── FREELANCERS ── */
 .fl-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all .15s;cursor:pointer;}
 .fl-card:hover{border-color:rgba(240,165,0,.4);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.15);}
@@ -456,6 +467,11 @@ select option{background:var(--surface2);}
   /* Perm table: compact */
   .perm-table{font-size:11px;}
   .perm-table th,.perm-table td{padding:7px 6px;}
+
+  /* Diagnostic tabs on mobile */
+  .diag-tab-btn{padding:6px 10px;font-size:11px;}
+  .diag-stars{gap:2px;}
+  .diag-star{font-size:26px;}
 
   /* Delivery meta */
   .delivery-meta{gap:6px;font-size:11px;}
@@ -931,132 +947,294 @@ select option{background:var(--surface2);}
 
 <!-- Modal Diagnóstico Cliente -->
 <div class="modal-overlay" id="modal-diagnostico">
-  <div class="modal" style="max-width:680px;">
-    <div class="modal-header"><h3>🔍 Diagnóstico do Cliente</h3><button class="close-btn" onclick="closeModal('modal-diagnostico')">✕</button></div>
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-header">
+      <h3>🔍 Diagnóstico do Cliente</h3>
+      <button class="close-btn" onclick="closeModal('modal-diagnostico')">✕</button>
+    </div>
     <div class="modal-body">
       <input type="hidden" id="diag-cliente-id">
-      <p style="font-size:13px;color:var(--text2);margin-bottom:18px;">Preenchimento opcional. Quanto mais informações, mais preciso o diagnóstico e os próximos passos sugeridos.</p>
 
-      <div class="diag-section">
-        <div class="diag-section-title">🏢 Sobre o negócio</div>
-        <div class="form-row">
-          <div class="form-group"><label>Tempo de mercado</label>
-            <select id="diag-tempo"><option value="">Selecione...</option><option>Menos de 1 ano</option><option>1 a 3 anos</option><option>3 a 5 anos</option><option>Mais de 5 anos</option></select>
-          </div>
-          <div class="form-group"><label>Ticket médio (R$)</label>
-            <input type="number" id="diag-ticket" placeholder="Ex: 500"></div>
-        </div>
-        <div class="form-group"><label>Público-alvo (descreva brevemente)</label>
-          <input type="text" id="diag-publico" placeholder="Ex: Mulheres 25-40 anos, classe B/C, interesse em saúde"></div>
-        <div class="form-group"><label>Principais concorrentes</label>
-          <input type="text" id="diag-concorrentes" placeholder="Ex: Empresa A, Empresa B"></div>
-        <div class="form-group"><label>Diferencial competitivo</label>
-          <input type="text" id="diag-diferencial" placeholder="O que torna o cliente único no mercado?"></div>
+      <!-- Barra de progresso -->
+      <div class="diag-progress">
+        <span id="diag-progress-label">Aba 1 de 6</span>
+        <div class="diag-progress-bar"><div class="diag-progress-fill" id="diag-pfill" style="width:16%"></div></div>
       </div>
 
-      <div class="diag-section">
-        <div class="diag-section-title">📣 Presença digital atual</div>
-        <div class="form-group"><label>Já fez tráfego pago?</label>
-          <div class="diag-chips" id="chips-trafego">
-            <span class="diag-chip" data-v="Nunca">Nunca</span>
-            <span class="diag-chip" data-v="Tentou e parou">Tentou e parou</span>
-            <span class="diag-chip" data-v="Faz atualmente">Faz atualmente</span>
-          </div>
-        </div>
-        <div class="form-group"><label>Plataformas utilizadas</label>
-          <div class="diag-chips" id="chips-plataformas">
-            <span class="diag-chip" data-v="Instagram">Instagram</span>
-            <span class="diag-chip" data-v="Facebook">Facebook</span>
-            <span class="diag-chip" data-v="Google">Google</span>
-            <span class="diag-chip" data-v="YouTube">YouTube</span>
-            <span class="diag-chip" data-v="TikTok">TikTok</span>
-            <span class="diag-chip" data-v="LinkedIn">LinkedIn</span>
-            <span class="diag-chip" data-v="Email">E-mail mkt</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Investimento mensal atual (R$)</label>
-            <input type="number" id="diag-investimento" placeholder="Ex: 1500"></div>
-          <div class="form-group"><label>Tem site?</label>
-            <select id="diag-site"><option value="">Selecione...</option><option>Sim, otimizado</option><option>Sim, mas desatualizado</option><option>Não tem</option></select>
-          </div>
-        </div>
-        <div class="form-group"><label>Tem CRM / ferramenta de leads?</label>
-          <div class="diag-chips" id="chips-crm">
-            <span class="diag-chip" data-v="Sim">Sim</span>
-            <span class="diag-chip" data-v="Não">Não</span>
-            <span class="diag-chip" data-v="Em implantação">Em implantação</span>
-          </div>
-        </div>
-        <div class="form-group"><label>Tem colaborador dedicado para tratar leads?</label>
-          <div class="diag-chips" id="chips-colabs">
-            <span class="diag-chip" data-v="Sim">Sim, exclusivo</span>
-            <span class="diag-chip" data-v="Parcial">Parcial (acumula funções)</span>
-            <span class="diag-chip" data-v="Não">Não tem</span>
-          </div>
-        </div>
+      <!-- Tab navigation -->
+      <div class="diag-tab-nav">
+        <button class="diag-tab-btn active" onclick="switchDiagTab(0,this)">🏢 Empresa</button>
+        <button class="diag-tab-btn" onclick="switchDiagTab(1,this)">📦 Produto</button>
+        <button class="diag-tab-btn" onclick="switchDiagTab(2,this)">👤 Cliente Ideal</button>
+        <button class="diag-tab-btn" onclick="switchDiagTab(3,this)">⚔️ Mercado</button>
+        <button class="diag-tab-btn" onclick="switchDiagTab(4,this)">📣 Digital</button>
+        <button class="diag-tab-btn" onclick="switchDiagTab(5,this)">🎯 Maturidade</button>
       </div>
 
-      <div class="diag-section">
-        <div class="diag-section-title">🎯 Maturidade de marketing (avalie de 1 a 5)</div>
-        <div class="form-row">
-          <div class="form-group"><label>Identidade visual</label>
-            <div class="diag-stars" data-key="identidade">
-              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
-            </div>
+      <!-- ABA 1: EMPRESA -->
+      <div class="diag-pane active" id="dpane-0">
+        <div class="diag-section">
+          <div class="diag-section-title">🏢 Sobre o Negócio</div>
+          <div class="form-row">
+            <div class="form-group"><label>Ano de fundação</label><input type="text" id="d-fundacao" placeholder="Ex: 2018"></div>
+            <div class="form-group"><label>Nº de colaboradores</label><input type="text" id="d-colaboradores" placeholder="Ex: 12"></div>
           </div>
-          <div class="form-group"><label>Qualidade do conteúdo</label>
-            <div class="diag-stars" data-key="conteudo">
-              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+          <div class="form-row">
+            <div class="form-group"><label>Tempo de mercado</label>
+              <select id="diag-tempo"><option value="">Selecione...</option><option>Menos de 1 ano</option><option>1 a 3 anos</option><option>3 a 5 anos</option><option>Mais de 5 anos</option></select>
             </div>
+            <div class="form-group"><label>Endereço / Lojas físicas</label><input type="text" id="d-endereco" placeholder="Ex: Unidade Centro, Shopping X"></div>
           </div>
+          <div class="form-group"><label>Setores do negócio</label><input type="text" id="d-setores" placeholder="Ex: Vendas, Atendimento, Produção, Financeiro"></div>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label>Engajamento nas redes</label>
-            <div class="diag-stars" data-key="engajamento">
-              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
-            </div>
-          </div>
-          <div class="form-group"><label>Maturidade de vendas</label>
-            <div class="diag-stars" data-key="vendas">
-              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
-            </div>
-          </div>
+        <div class="diag-section">
+          <div class="diag-section-title">🧭 Identidade Estratégica</div>
+          <div class="form-group"><label>Missão da empresa</label><textarea id="d-missao" placeholder="O que a empresa se propõe a fazer e para quem?" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Visão de longo prazo</label><textarea id="d-visao" placeholder="Onde a empresa quer chegar em 3–5 anos?" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Valores da marca</label><input type="text" id="d-valores" placeholder="Ex: Transparência, Inovação, Cuidado com o cliente"></div>
+          <div class="form-group"><label>Descreva a empresa em 3 palavras</label><input type="text" id="d-3palavras" placeholder="Ex: Ágil, Confiável, Humana"></div>
         </div>
-        <div class="form-row">
-          <div class="form-group"><label>Conversão / atendimento</label>
-            <div class="diag-stars" data-key="conversao">
-              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
-            </div>
-          </div>
-          <div class="form-group"><label>Reputação / reviews</label>
-            <div class="diag-stars" data-key="reputacao">
-              <span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span>
+        <div class="diag-section">
+          <div class="diag-section-title">🎯 Objetivos</div>
+          <div class="form-group"><label>Principais objetivos nos próximos 6–12 meses</label><textarea id="d-objetivos" placeholder="Ex: Aumentar faturamento 30%, lançar novo produto, expandir para outra cidade" style="min-height:60px;"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Meta de faturamento este ano (R$)</label><input type="number" id="d-meta-fat" placeholder="Ex: 500000"></div>
+            <div class="form-group"><label>Principal objetivo com a agência</label>
+              <div class="diag-chips" id="chips-objetivo" style="margin-top:6px;">
+                <span class="diag-chip" data-v="Gerar leads">Gerar leads</span>
+                <span class="diag-chip" data-v="Aumentar vendas">Aumentar vendas</span>
+                <span class="diag-chip" data-v="Branding">Fortalecer marca</span>
+                <span class="diag-chip" data-v="Seguidores">Crescer seguidores</span>
+                <span class="diag-chip" data-v="Retenção">Fidelizar clientes</span>
+                <span class="diag-chip" data-v="Lançamento">Lançar produto/serviço</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="diag-section">
-        <div class="diag-section-title">💬 Expectativas</div>
-        <div class="form-group"><label>Principal objetivo com a agência</label>
-          <div class="diag-chips" id="chips-objetivo">
-            <span class="diag-chip" data-v="Gerar leads">Gerar leads</span>
-            <span class="diag-chip" data-v="Aumentar vendas">Aumentar vendas</span>
-            <span class="diag-chip" data-v="Branding">Fortalecer marca</span>
-            <span class="diag-chip" data-v="Seguidores">Crescer seguidores</span>
-            <span class="diag-chip" data-v="Retenção">Fidelizar clientes</span>
-            <span class="diag-chip" data-v="Lançamento">Lançar produto/serviço</span>
+      <!-- ABA 2: PRODUTO -->
+      <div class="diag-pane" id="dpane-1">
+        <div class="diag-section">
+          <div class="diag-section-title">📦 Produtos e Serviços</div>
+          <div class="form-group"><label>Principal produto / serviço</label><input type="text" id="d-prod-principal" placeholder="Ex: Consultoria de marketing digital"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Ticket médio (R$)</label><input type="number" id="diag-ticket" placeholder="Ex: 1200"></div>
+            <div class="form-group"><label>Margem de lucro estimada</label><input type="text" id="d-margem" placeholder="Ex: 40%"></div>
+          </div>
+          <div class="form-group"><label>Produtos / serviços mais vendidos</label><textarea id="d-mais-vendidos" placeholder="Liste os 3 principais produtos ou serviços mais vendidos" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Produtos / serviços mais lucrativos</label><textarea id="d-mais-lucrativos" placeholder="Quais geram mais margem?" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Existe sazonalidade?</label>
+            <div class="diag-chips" id="chips-sazon">
+              <span class="diag-chip" data-v="Não">Não</span>
+              <span class="diag-chip" data-v="Sim, período de pico">Sim, período de pico</span>
+              <span class="diag-chip" data-v="Sim, período baixo">Sim, período baixo</span>
+              <span class="diag-chip" data-v="Alta variação">Alta variação</span>
+            </div>
           </div>
         </div>
-        <div class="form-group"><label>Observações adicionais</label>
-          <textarea id="diag-obs" placeholder="Qualquer informação relevante sobre o cliente, seus desafios ou oportunidades..."></textarea>
+        <div class="diag-section">
+          <div class="diag-section-title">💡 Proposta de Valor</div>
+          <div class="form-group"><label>Por que um cliente escolhe você?</label><textarea id="d-porq-escolhe" placeholder="O que te diferencia na decisão de compra?" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Qual problema você resolve?</label><textarea id="d-problema" placeholder="Descreva a dor principal que seu produto/serviço resolve" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Qual transformação você entrega?</label><textarea id="d-transformacao" placeholder="Antes e depois: como o cliente fica após usar seu produto/serviço?" style="min-height:60px;"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Tempo de entrega do produto/serviço</label><input type="text" id="d-tempo-entrega" placeholder="Ex: 24h, 7 dias, 30 dias"></div>
+            <div class="form-group"><label>Existe pós-venda estruturado?</label>
+              <div class="diag-chips" id="chips-posvenda" style="margin-top:6px;">
+                <span class="diag-chip" data-v="Sim">Sim</span>
+                <span class="diag-chip" data-v="Não">Não</span>
+                <span class="diag-chip" data-v="Em construção">Em construção</span>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- ABA 3: CLIENTE IDEAL -->
+      <div class="diag-pane" id="dpane-2">
+        <div class="diag-section">
+          <div class="diag-section-title">👤 Perfil do Cliente Ideal</div>
+          <div class="form-group"><label>Descrição do cliente ideal</label><input type="text" id="diag-publico" placeholder="Ex: Donos de pequenas empresas, 30–45 anos, faturamento 100–500k/ano"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Idade média</label><input type="text" id="d-idade" placeholder="Ex: 28–40 anos"></div>
+            <div class="form-group"><label>Gênero predominante</label>
+              <div class="diag-chips" id="chips-genero" style="margin-top:6px;">
+                <span class="diag-chip" data-v="Masculino">Masculino</span>
+                <span class="diag-chip" data-v="Feminino">Feminino</span>
+                <span class="diag-chip" data-v="Equilibrado">Equilibrado</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group"><label>Onde ele passa tempo online?</label>
+            <div class="diag-chips" id="chips-plataformas">
+              <span class="diag-chip" data-v="Instagram">Instagram</span>
+              <span class="diag-chip" data-v="Facebook">Facebook</span>
+              <span class="diag-chip" data-v="TikTok">TikTok</span>
+              <span class="diag-chip" data-v="YouTube">YouTube</span>
+              <span class="diag-chip" data-v="LinkedIn">LinkedIn</span>
+              <span class="diag-chip" data-v="Google">Google</span>
+              <span class="diag-chip" data-v="Email">E-mail</span>
+              <span class="diag-chip" data-v="WhatsApp">WhatsApp</span>
+            </div>
+          </div>
+        </div>
+        <div class="diag-section">
+          <div class="diag-section-title">🧠 Comportamento de Compra</div>
+          <div class="form-group"><label>Quais dores seu cliente tem?</label><textarea id="d-dores" placeholder="Liste as principais frustrações, medos e problemas do seu cliente ideal" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>O que impede ele de comprar?</label><textarea id="d-objecoes" placeholder="Principais objeções de venda: preço, tempo, confiança, etc." style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>Como ele toma a decisão de compra?</label>
+            <div class="diag-chips" id="chips-decisao">
+              <span class="diag-chip" data-v="Impulsivo">Impulsivo</span>
+              <span class="diag-chip" data-v="Pesquisa muito">Pesquisa muito</span>
+              <span class="diag-chip" data-v="Indicação">Por indicação</span>
+              <span class="diag-chip" data-v="Comparação de preço">Compara preços</span>
+              <span class="diag-chip" data-v="Avaliações online">Avaliações online</span>
+              <span class="diag-chip" data-v="Autoridade">Autoridade/conteúdo</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Como o cliente descobre a empresa?</label><input type="text" id="d-descoberta" placeholder="Ex: Instagram, Google, indicação, eventos"></div>
+          <div class="form-group"><label>O que faz ele confiar?</label><input type="text" id="d-confianca" placeholder="Ex: Depoimentos, cases, certificações, presença nas redes"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Tempo médio até a compra</label><input type="text" id="d-tempo-compra" placeholder="Ex: 1 semana, 30 dias, na hora"></div>
+            <div class="form-group"><label>Quais desejos ele busca?</label><input type="text" id="d-desejos" placeholder="Ex: Status, economia, praticidade, segurança"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Existe recompra? Com que frequência?</label><input type="text" id="d-recompra" placeholder="Ex: Sim, mensal / Não / Eventual"></div>
+            <div class="form-group"><label>Tempo médio de fechamento</label><input type="text" id="d-fechamento" placeholder="Ex: 2–7 dias após proposta"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA 4: MERCADO -->
+      <div class="diag-pane" id="dpane-3">
+        <div class="diag-section">
+          <div class="diag-section-title">⚔️ Análise Competitiva</div>
+          <div class="form-group"><label>Principais concorrentes</label><input type="text" id="diag-concorrentes" placeholder="Ex: Empresa A, Empresa B, Empresa C"></div>
+          <div class="form-group"><label>O que eles fazem bem?</label><textarea id="d-concorr-bem" placeholder="Pontos fortes dos concorrentes que você precisa considerar" style="min-height:60px;"></textarea></div>
+          <div class="form-group"><label>O que eles fazem mal?</label><textarea id="d-concorr-mal" placeholder="Gaps e pontos fracos dos concorrentes" style="min-height:60px;"></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Onde você ganha deles?</label><textarea id="d-ganha" placeholder="Seus pontos fortes em relação à concorrência" style="min-height:60px;"></textarea></div>
+            <div class="form-group"><label>Onde você perde para eles?</label><textarea id="d-perde" placeholder="O que você ainda precisa melhorar" style="min-height:60px;"></textarea></div>
+          </div>
+        </div>
+        <div class="diag-section">
+          <div class="diag-section-title">💎 Posicionamento</div>
+          <div class="form-group"><label>Diferencial competitivo principal</label><input type="text" id="diag-diferencial" placeholder="O que torna sua marca única?"></div>
+          <div class="form-group"><label>O que você faz melhor que seus concorrentes?</label><input type="text" id="d-melhor" placeholder="Seu superpoder de mercado"></div>
+          <div class="form-group"><label>Qual é o maior diferencial percebido hoje pelos clientes?</label><input type="text" id="d-diferencial-percebido" placeholder="O que os clientes mais elogiam?"></div>
+          <div class="form-group"><label>CAC (Custo de Aquisição por Cliente)</label><input type="text" id="d-cac" placeholder="Ex: R$ 150 / cliente ou 'Não sei ainda'"></div>
+        </div>
+        <div class="diag-section">
+          <div class="diag-section-title">🗣️ Tom de Voz e Percepção</div>
+          <div class="form-group"><label>Qual é o tom de voz da marca?</label>
+            <div class="diag-chips" id="chips-tom">
+              <span class="diag-chip" data-v="Formal">Formal</span>
+              <span class="diag-chip" data-v="Próximo e informal">Próximo/informal</span>
+              <span class="diag-chip" data-v="Técnico/especialista">Técnico</span>
+              <span class="diag-chip" data-v="Inspirador">Inspirador</span>
+              <span class="diag-chip" data-v="Divertido">Divertido</span>
+              <span class="diag-chip" data-v="Sério e direto">Sério e direto</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Como você quer ser percebido?</label><input type="text" id="d-percebido" placeholder="Ex: Referência no mercado, empresa humana e confiável"></div>
+            <div class="form-group"><label>Palavras que representam a marca</label><input type="text" id="d-palavras-sim" placeholder="Ex: Confiança, Inovação, Resultado"></div>
+          </div>
+          <div class="form-group"><label>Palavras que NÃO representam a marca</label><input type="text" id="d-palavras-nao" placeholder="Ex: Barato, Genérico, Amador"></div>
+        </div>
+      </div>
+
+      <!-- ABA 5: DIGITAL -->
+      <div class="diag-pane" id="dpane-4">
+        <div class="diag-section">
+          <div class="diag-section-title">📣 Presença Digital Atual</div>
+          <div class="form-group"><label>Já fez tráfego pago?</label>
+            <div class="diag-chips" id="chips-trafego">
+              <span class="diag-chip" data-v="Nunca">Nunca</span>
+              <span class="diag-chip" data-v="Tentou e parou">Tentou e parou</span>
+              <span class="diag-chip" data-v="Faz atualmente">Faz atualmente</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Investimento mensal atual (R$)</label><input type="number" id="diag-investimento" placeholder="Ex: 1500"></div>
+            <div class="form-group"><label>Tem site?</label>
+              <select id="diag-site"><option value="">Selecione...</option><option>Sim, otimizado</option><option>Sim, mas desatualizado</option><option>Não tem</option></select>
+            </div>
+          </div>
+          <div class="form-group"><label>Tem CRM / ferramenta de leads?</label>
+            <div class="diag-chips" id="chips-crm">
+              <span class="diag-chip" data-v="Sim">Sim</span>
+              <span class="diag-chip" data-v="Não">Não</span>
+              <span class="diag-chip" data-v="Em implantação">Em implantação</span>
+            </div>
+          </div>
+          <div class="form-group"><label>Tem colaborador dedicado para tratar leads?</label>
+            <div class="diag-chips" id="chips-colabs">
+              <span class="diag-chip" data-v="Sim">Sim, exclusivo</span>
+              <span class="diag-chip" data-v="Parcial">Parcial (acumula funções)</span>
+              <span class="diag-chip" data-v="Não">Não tem</span>
+            </div>
+          </div>
+        </div>
+        <div class="diag-section">
+          <div class="diag-section-title">💬 Observações Finais</div>
+          <div class="form-group"><label>Observações adicionais</label>
+            <textarea id="diag-obs" placeholder="Qualquer informação relevante sobre o cliente, seus desafios ou oportunidades..." style="min-height:80px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA 6: MATURIDADE -->
+      <div class="diag-pane" id="dpane-5">
+        <div class="diag-section">
+          <div class="diag-section-title">🎯 Avalie a Maturidade de Marketing (1 a 5 estrelas)</div>
+          <p style="font-size:12px;color:var(--text2);margin-bottom:14px;">Clique nas estrelas para pontuar cada dimensão. Isso gera o radar de diagnóstico.</p>
+          <div class="form-row">
+            <div class="form-group"><label>Identidade visual</label>
+              <div class="diag-stars" data-key="identidade"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+            <div class="form-group"><label>Qualidade do conteúdo</label>
+              <div class="diag-stars" data-key="conteudo"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Engajamento nas redes</label>
+              <div class="diag-stars" data-key="engajamento"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+            <div class="form-group"><label>Maturidade de vendas</label>
+              <div class="diag-stars" data-key="vendas"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Conversão / atendimento</label>
+              <div class="diag-stars" data-key="conversao"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+            <div class="form-group"><label>Reputação / reviews</label>
+              <div class="diag-stars" data-key="reputacao"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Posicionamento de marca</label>
+              <div class="diag-stars" data-key="posicionamento"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+            <div class="form-group"><label>Estratégia de conteúdo</label>
+              <div class="diag-stars" data-key="estrategia"><span class="diag-star" data-n="1">⭐</span><span class="diag-star" data-n="2">⭐</span><span class="diag-star" data-n="3">⭐</span><span class="diag-star" data-n="4">⭐</span><span class="diag-star" data-n="5">⭐</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navegação entre abas -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);">
+        <button class="btn btn-sm" id="diag-btn-prev" onclick="navDiagTab(-1)" style="visibility:hidden;">← Anterior</button>
+        <span id="diag-pane-indicator" style="font-size:12px;color:var(--text3);">1 / 6</span>
+        <button class="btn btn-sm btn-primary" id="diag-btn-next" onclick="navDiagTab(1)">Próximo →</button>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-diagnostico')">Cancelar</button>
-      <button class="btn btn-primary" id="btn-save-diag" onclick="saveDiagnostico()">Salvar Diagnóstico</button>
+      <button class="btn btn-primary" id="btn-save-diag" onclick="saveDiagnostico()">💾 Salvar Diagnóstico</button>
     </div>
   </div>
 </div>
@@ -1773,235 +1951,331 @@ async function deleteUsuario(uid,nome){
 // ═══════════════════════════════════════════════
 //  DIAGNÓSTICO
 // ═══════════════════════════════════════════════
-const _diagStars = {}; // key -> value 1-5
+const _diagStars = {};
+let _diagTab = 0;
+const DIAG_TABS = 6;
 
-function openDiagnostico(clienteId){
-  closeModal('modal-cliente-detalhe');
-  document.getElementById('diag-cliente-id').value = clienteId;
-  // Reset chips
-  document.querySelectorAll('.diag-chip').forEach(c=>c.classList.remove('on'));
-  // Reset stars
-  document.querySelectorAll('.diag-stars .diag-star').forEach(s=>s.classList.remove('on'));
-  Object.keys(_diagStars).forEach(k=>delete _diagStars[k]);
-  // Reset inputs
-  ['diag-ticket','diag-publico','diag-concorrentes','diag-diferencial','diag-investimento','diag-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['diag-tempo','diag-site'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  // Load existing if any
-  const existing = st.clientes.find(c=>c.id===clienteId);
-  if(existing && existing.diagnostico){
-    const d = existing.diagnostico;
-    if(d.ticket) document.getElementById('diag-ticket').value=d.ticket;
-    if(d.publico) document.getElementById('diag-publico').value=d.publico;
-    if(d.concorrentes) document.getElementById('diag-concorrentes').value=d.concorrentes;
-    if(d.diferencial) document.getElementById('diag-diferencial').value=d.diferencial;
-    if(d.investimento) document.getElementById('diag-investimento').value=d.investimento;
-    if(d.obs) document.getElementById('diag-obs').value=d.obs;
-    if(d.tempo) document.getElementById('diag-tempo').value=d.tempo;
-    if(d.site) document.getElementById('diag-site').value=d.site;
-    // chips
-    if(d.trafego) document.querySelectorAll('#chips-trafego .diag-chip').forEach(c=>{if(c.dataset.v===d.trafego)c.classList.add('on');});
-    if(d.crm) document.querySelectorAll('#chips-crm .diag-chip').forEach(c=>{if(c.dataset.v===d.crm)c.classList.add('on');});
-    if(d.colabs) document.querySelectorAll('#chips-colabs .diag-chip').forEach(c=>{if(c.dataset.v===d.colabs)c.classList.add('on');});
-    if(d.objetivo) document.querySelectorAll('#chips-objetivo .diag-chip').forEach(c=>{if(c.dataset.v===d.objetivo)c.classList.add('on');});
-    if(d.plataformas) document.querySelectorAll('#chips-plataformas .diag-chip').forEach(c=>{if(d.plataformas.includes(c.dataset.v))c.classList.add('on');});
-    // stars
-    if(d.stars){Object.entries(d.stars).forEach(([k,v])=>{_diagStars[k]=v;renderStarGroup(k,v);});}
-  }
-  openModal('modal-diagnostico');
+function switchDiagTab(idx, el){
+  _diagTab = idx;
+  document.querySelectorAll('.diag-pane').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  document.querySelectorAll('.diag-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  const pct = Math.round((idx+1)/DIAG_TABS*100);
+  document.getElementById('diag-pfill').style.width = pct+'%';
+  document.getElementById('diag-progress-label').textContent = `Aba ${idx+1} de ${DIAG_TABS}`;
+  document.getElementById('diag-pane-indicator').textContent = `${idx+1} / ${DIAG_TABS}`;
+  document.getElementById('diag-btn-prev').style.visibility = idx===0?'hidden':'visible';
+  document.getElementById('diag-btn-next').textContent = idx===DIAG_TABS-1?'✓ Revisar':'Próximo →';
+  // Scroll modal body to top
+  const mb = document.querySelector('#modal-diagnostico .modal-body');
+  if(mb) mb.scrollTop=0;
+}
+
+function navDiagTab(dir){
+  const next = Math.max(0, Math.min(DIAG_TABS-1, _diagTab+dir));
+  const btn = document.querySelectorAll('.diag-tab-btn')[next];
+  switchDiagTab(next, btn);
 }
 
 function renderStarGroup(key,val){
   document.querySelectorAll(`.diag-stars[data-key="${key}"] .diag-star`).forEach(s=>{
-    s.classList.toggle('on', +s.dataset.n <= val);
+    s.classList.toggle('on',+s.dataset.n<=val);
   });
 }
 
-// star click events
-document.addEventListener('click', e=>{
-  const star = e.target.closest('.diag-star');
-  if(!star) return;
-  const group = star.closest('.diag-stars');
-  if(!group) return;
-  const key = group.dataset.key;
-  const val = +star.dataset.n;
-  _diagStars[key] = val;
-  renderStarGroup(key, val);
+// Star clicks
+document.addEventListener('click',e=>{
+  const star=e.target.closest('.diag-star');
+  if(!star)return;
+  const group=star.closest('.diag-stars');
+  if(!group)return;
+  const key=group.dataset.key, val=+star.dataset.n;
+  _diagStars[key]=val;
+  renderStarGroup(key,val);
 });
 
-// chip click — single select groups
-['chips-trafego','chips-crm','chips-colabs','chips-objetivo'].forEach(gid=>{
-  document.addEventListener('click', e=>{
-    const chip = e.target.closest(`#${gid} .diag-chip`);
-    if(!chip) return;
+// Single-select chips
+['chips-trafego','chips-crm','chips-colabs','chips-objetivo','chips-sazon',
+ 'chips-posvenda','chips-genero','chips-decisao','chips-tom'].forEach(gid=>{
+  document.addEventListener('click',e=>{
+    const chip=e.target.closest(`#${gid} .diag-chip`);
+    if(!chip)return;
     document.querySelectorAll(`#${gid} .diag-chip`).forEach(c=>c.classList.remove('on'));
     chip.classList.add('on');
   });
 });
-// multi-select: plataformas
-document.addEventListener('click', e=>{
-  const chip = e.target.closest('#chips-plataformas .diag-chip');
-  if(!chip) return;
+
+// Multi-select chips
+document.addEventListener('click',e=>{
+  const chip=e.target.closest('#chips-plataformas .diag-chip');
+  if(!chip)return;
   chip.classList.toggle('on');
 });
 
 function getDiagChip(gid){ const el=document.querySelector(`#${gid} .diag-chip.on`); return el?el.dataset.v:''; }
 function getDiagChips(gid){ return Array.from(document.querySelectorAll(`#${gid} .diag-chip.on`)).map(c=>c.dataset.v); }
+function gv(id){ const el=document.getElementById(id); return el?el.value.trim():''; }
+
+function openDiagnostico(clienteId){
+  closeModal('modal-cliente-detalhe');
+  document.getElementById('diag-cliente-id').value=clienteId;
+
+  // Reset all inputs
+  const ids=['d-fundacao','d-colaboradores','d-endereco','d-setores','d-missao','d-visao',
+    'd-valores','d-3palavras','d-objetivos','d-meta-fat','d-prod-principal','diag-ticket',
+    'd-margem','d-mais-vendidos','d-mais-lucrativos','d-tempo-entrega',
+    'd-dores','d-objecoes','d-descoberta','d-confianca','d-tempo-compra','d-desejos',
+    'd-recompra','d-fechamento','diag-concorrentes','d-concorr-bem','d-concorr-mal',
+    'd-ganha','d-perde','diag-diferencial','d-melhor','d-diferencial-percebido','d-cac',
+    'd-percebido','d-palavras-sim','d-palavras-nao','diag-investimento','diag-obs',
+    'diag-publico','d-idade'];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['diag-tempo','diag-site'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+
+  // Reset chips & stars
+  document.querySelectorAll('.diag-chip').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.diag-star').forEach(s=>s.classList.remove('on'));
+  Object.keys(_diagStars).forEach(k=>delete _diagStars[k]);
+
+  // Load existing data if any
+  const c=st.clientes.find(x=>x.id===clienteId);
+  if(c&&c.diagnostico){
+    const d=c.diagnostico;
+    // Text/number fields
+    const fieldMap={
+      'd-fundacao':'fundacao','d-colaboradores':'colaboradores','d-endereco':'endereco',
+      'd-setores':'setores','d-missao':'missao','d-visao':'visao','d-valores':'valores',
+      'd-3palavras':'tres_palavras','d-objetivos':'objetivos','d-meta-fat':'meta_fat',
+      'd-prod-principal':'prod_principal','diag-ticket':'ticket','d-margem':'margem',
+      'd-mais-vendidos':'mais_vendidos','d-mais-lucrativos':'mais_lucrativos',
+      'd-tempo-entrega':'tempo_entrega','d-dores':'dores','d-objecoes':'objecoes',
+      'd-descoberta':'descoberta','d-confianca':'confianca','d-tempo-compra':'tempo_compra',
+      'd-desejos':'desejos','d-recompra':'recompra','d-fechamento':'fechamento',
+      'diag-concorrentes':'concorrentes','d-concorr-bem':'concorr_bem',
+      'd-concorr-mal':'concorr_mal','d-ganha':'ganha','d-perde':'perde',
+      'diag-diferencial':'diferencial','d-melhor':'melhor',
+      'd-diferencial-percebido':'diferencial_percebido','d-cac':'cac',
+      'd-percebido':'percebido','d-palavras-sim':'palavras_sim',
+      'd-palavras-nao':'palavras_nao','diag-investimento':'investimento',
+      'diag-obs':'obs','diag-publico':'publico','d-idade':'idade'
+    };
+    Object.entries(fieldMap).forEach(([elId,key])=>{
+      const el=document.getElementById(elId);
+      if(el&&d[key]) el.value=d[key];
+    });
+    if(d.tempo){const el=document.getElementById('diag-tempo');if(el)el.value=d.tempo;}
+    if(d.site){const el=document.getElementById('diag-site');if(el)el.value=d.site;}
+
+    // Single chips
+    const singleChips={
+      'chips-trafego':'trafego','chips-crm':'crm','chips-colabs':'colabs',
+      'chips-objetivo':'objetivo','chips-sazon':'sazon','chips-posvenda':'posvenda',
+      'chips-genero':'genero','chips-decisao':'decisao','chips-tom':'tom'
+    };
+    Object.entries(singleChips).forEach(([gid,key])=>{
+      if(d[key]) document.querySelectorAll(`#${gid} .diag-chip`).forEach(c=>{if(c.dataset.v===d[key])c.classList.add('on');});
+    });
+    // Multi chips
+    if(d.plataformas) document.querySelectorAll('#chips-plataformas .diag-chip').forEach(c=>{if(d.plataformas.includes(c.dataset.v))c.classList.add('on');});
+    // Stars
+    if(d.stars) Object.entries(d.stars).forEach(([k,v])=>{_diagStars[k]=v;renderStarGroup(k,v);});
+  }
+
+  // Reset to first tab
+  switchDiagTab(0, document.querySelectorAll('.diag-tab-btn')[0]);
+  openModal('modal-diagnostico');
+}
 
 async function saveDiagnostico(){
   if(!canEdit()){toast('Sem permissão.','🚫');return;}
-  const clienteId = document.getElementById('diag-cliente-id').value;
-  const btn = document.getElementById('btn-save-diag');
+  const clienteId=document.getElementById('diag-cliente-id').value;
+  const btn=document.getElementById('btn-save-diag');
   btn.disabled=true; btn.textContent='Salvando...';
   try{
-    const diagnostico = {
-      tempo: document.getElementById('diag-tempo').value,
-      ticket: document.getElementById('diag-ticket').value,
-      publico: document.getElementById('diag-publico').value,
-      concorrentes: document.getElementById('diag-concorrentes').value,
-      diferencial: document.getElementById('diag-diferencial').value,
-      trafego: getDiagChip('chips-trafego'),
-      plataformas: getDiagChips('chips-plataformas'),
-      investimento: document.getElementById('diag-investimento').value,
-      site: document.getElementById('diag-site').value,
-      crm: getDiagChip('chips-crm'),
-      colabs: getDiagChip('chips-colabs'),
-      objetivo: getDiagChip('chips-objetivo'),
-      obs: document.getElementById('diag-obs').value,
-      stars: {..._diagStars},
-      atualizadoEm: new Date().toLocaleDateString('pt-BR')
+    const diagnostico={
+      // Aba 1 - Empresa
+      fundacao:gv('d-fundacao'), colaboradores:gv('d-colaboradores'),
+      endereco:gv('d-endereco'), setores:gv('d-setores'),
+      missao:gv('d-missao'), visao:gv('d-visao'),
+      valores:gv('d-valores'), tres_palavras:gv('d-3palavras'),
+      objetivos:gv('d-objetivos'), meta_fat:gv('d-meta-fat'),
+      objetivo:getDiagChip('chips-objetivo'), tempo:gv('diag-tempo')??document.getElementById('diag-tempo')?.value,
+      // Aba 2 - Produto
+      prod_principal:gv('d-prod-principal'), ticket:gv('diag-ticket'),
+      margem:gv('d-margem'), mais_vendidos:gv('d-mais-vendidos'),
+      mais_lucrativos:gv('d-mais-lucrativos'), sazon:getDiagChip('chips-sazon'),
+      porq_escolhe:gv('d-porq-escolhe'), problema:gv('d-problema'),
+      transformacao:gv('d-transformacao'), tempo_entrega:gv('d-tempo-entrega'),
+      posvenda:getDiagChip('chips-posvenda'),
+      // Aba 3 - Cliente
+      publico:gv('diag-publico'), idade:gv('d-idade'),
+      genero:getDiagChip('chips-genero'), plataformas:getDiagChips('chips-plataformas'),
+      dores:gv('d-dores'), objecoes:gv('d-objecoes'),
+      decisao:getDiagChip('chips-decisao'), descoberta:gv('d-descoberta'),
+      confianca:gv('d-confianca'), tempo_compra:gv('d-tempo-compra'),
+      desejos:gv('d-desejos'), recompra:gv('d-recompra'), fechamento:gv('d-fechamento'),
+      // Aba 4 - Mercado
+      concorrentes:gv('diag-concorrentes'), concorr_bem:gv('d-concorr-bem'),
+      concorr_mal:gv('d-concorr-mal'), ganha:gv('d-ganha'), perde:gv('d-perde'),
+      diferencial:gv('diag-diferencial'), melhor:gv('d-melhor'),
+      diferencial_percebido:gv('d-diferencial-percebido'), cac:gv('d-cac'),
+      tom:getDiagChip('chips-tom'), percebido:gv('d-percebido'),
+      palavras_sim:gv('d-palavras-sim'), palavras_nao:gv('d-palavras-nao'),
+      // Aba 5 - Digital
+      trafego:getDiagChip('chips-trafego'), investimento:gv('diag-investimento'),
+      site:(()=>{const el=document.getElementById('diag-site');return el?el.value:'';})(),
+      crm:getDiagChip('chips-crm'), colabs:getDiagChip('chips-colabs'),
+      obs:gv('diag-obs'),
+      // Aba 6 - Maturidade
+      stars:{..._diagStars},
+      atualizadoEm:new Date().toLocaleDateString('pt-BR')
     };
     await db.collection('clientes').doc(clienteId).update({diagnostico});
     closeModal('modal-diagnostico');
     toast('Diagnóstico salvo!');
   }catch(e){toast('Erro ao salvar.','❌');console.error(e);}
-  btn.disabled=false; btn.textContent='Salvar Diagnóstico';
+  btn.disabled=false; btn.textContent='💾 Salvar Diagnóstico';
 }
 
 function openDiagView(clienteId){
-  const c = st.clientes.find(x=>x.id===clienteId);
+  const c=st.clientes.find(x=>x.id===clienteId);
   if(!c||!c.diagnostico){toast('Diagnóstico não preenchido ainda.','ℹ️');return;}
-  const d = c.diagnostico;
+  const d=c.diagnostico;
   document.getElementById('diag-view-title').textContent=`📊 Diagnóstico — ${c.empresa}`;
 
-  // Build star scores
-  const starKeys = ['identidade','conteudo','engajamento','vendas','conversao','reputacao'];
-  const starLabels = {'identidade':'Identidade visual','conteudo':'Qualidade do conteúdo','engajamento':'Engajamento','vendas':'Maturidade de vendas','conversao':'Conversão','reputacao':'Reputação'};
-  const scores = starKeys.map(k=> (d.stars&&d.stars[k]) ? +d.stars[k] : 0);
-  const avg = scores.reduce((a,b)=>a+b,0)/scores.filter(s=>s>0).length||0;
+  const starKeys=['identidade','conteudo','engajamento','vendas','conversao','reputacao','posicionamento','estrategia'];
+  const starLabels={identidade:'Identidade',conteudo:'Conteúdo',engajamento:'Engajamento',vendas:'Vendas',conversao:'Conversão',reputacao:'Reputação',posicionamento:'Posicionamento',estrategia:'Estratégia'};
+  const scores=starKeys.map(k=>(d.stars&&d.stars[k])?+d.stars[k]:0);
+  const validScores=scores.filter(s=>s>0);
+  const avg=validScores.length?validScores.reduce((a,b)=>a+b,0)/validScores.length:0;
 
-  // Generate insights
-  const insights = gerarInsights(d, scores, starKeys, starLabels);
+  const insights=gerarInsights(d,scores,starKeys,starLabels);
 
-  document.getElementById('diag-view-body').innerHTML = `
+  const row=(label,val)=>val?`<div class="finance-row"><span style="color:var(--text2);font-size:12px;min-width:140px;">${label}</span><span style="font-size:12px;font-weight:500;text-align:right;">${val}</span></div>`:'';
+
+  document.getElementById('diag-view-body').innerHTML=`
+    <!-- Radar + dados principais -->
     <div class="grid-2" style="margin-bottom:16px;align-items:start;">
       <div>
-        <div class="card-title" style="margin-bottom:12px;">📈 Maturidade de Marketing</div>
+        <div class="card-title" style="margin-bottom:10px;">📈 Maturidade</div>
         <div class="radar-wrap"><canvas id="radar-canvas"></canvas></div>
-        <div style="text-align:center;margin-top:8px;font-size:12px;color:var(--text2);">Média geral: <strong style="color:var(--accent)">${avg.toFixed(1)}/5</strong></div>
+        <div style="text-align:center;margin-top:6px;font-size:12px;color:var(--text2);">Média: <strong style="color:var(--accent)">${avg.toFixed(1)}/5</strong></div>
       </div>
       <div>
-        <div class="card-title" style="margin-bottom:12px;">📋 Dados do Negócio</div>
-        ${infoRow('Tempo de mercado', d.tempo)}
-        ${infoRow('Ticket médio', d.ticket ? 'R$ '+Number(d.ticket).toLocaleString('pt-BR') : '')}
-        ${infoRow('Público-alvo', d.publico)}
-        ${infoRow('Concorrentes', d.concorrentes)}
-        ${infoRow('Diferencial', d.diferencial)}
-        ${infoRow('Já fez tráfego', d.trafego)}
-        ${infoRow('Plataformas', (d.plataformas||[]).join(', '))}
-        ${infoRow('Investimento atual', d.investimento ? 'R$ '+Number(d.investimento).toLocaleString('pt-BR')+'/mês' : '')}
-        ${infoRow('Site', d.site)}
-        ${infoRow('CRM', d.crm)}
-        ${infoRow('Responsável leads', d.colabs)}
-        ${infoRow('Objetivo principal', d.objetivo)}
+        <div class="card-title" style="margin-bottom:10px;">🏢 Empresa</div>
+        ${row('Tempo de mercado',d.tempo)}
+        ${row('Fundação',d.fundacao)}
+        ${row('Colaboradores',d.colaboradores)}
+        ${row('Ticket médio',d.ticket?'R$ '+Number(d.ticket).toLocaleString('pt-BR'):'')}
+        ${row('Meta faturamento',d.meta_fat?'R$ '+Number(d.meta_fat).toLocaleString('pt-BR'):'')}
+        ${row('Objetivo principal',d.objetivo)}
+        ${row('Tom de voz',d.tom)}
+        ${row('CAC',d.cac)}
       </div>
     </div>
-    ${d.obs?`<div class="note-card" style="margin-bottom:16px;"><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">OBSERVAÇÕES</div><div class="note-text">${d.obs}</div></div>`:''}
+
+    <!-- Acordeão de seções -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div class="card" style="padding:14px;">
+        <div class="card-title" style="margin-bottom:10px;font-size:13px;">🧭 Identidade</div>
+        ${row('Missão',d.missao)} ${row('Visão',d.visao)}
+        ${row('Valores',d.valores)} ${row('3 palavras',d.tres_palavras)}
+      </div>
+      <div class="card" style="padding:14px;">
+        <div class="card-title" style="margin-bottom:10px;font-size:13px;">📦 Produto</div>
+        ${row('Principal',d.prod_principal)} ${row('Margem',d.margem)}
+        ${row('Mais vendidos',d.mais_vendidos)} ${row('Sazonalidade',d.sazon)}
+        ${row('Pós-venda',d.posvenda)}
+      </div>
+      <div class="card" style="padding:14px;">
+        <div class="card-title" style="margin-bottom:10px;font-size:13px;">👤 Cliente Ideal</div>
+        ${row('Perfil',d.publico)} ${row('Idade',d.idade)} ${row('Gênero',d.genero)}
+        ${row('Onde está online',(d.plataformas||[]).join(', '))}
+        ${row('Como descobre',d.descoberta)} ${row('O que confia',d.confianca)}
+        ${row('Decisão de compra',d.decisao)} ${row('Tempo até compra',d.tempo_compra)}
+        ${row('Recompra',d.recompra)}
+      </div>
+      <div class="card" style="padding:14px;">
+        <div class="card-title" style="margin-bottom:10px;font-size:13px;">⚔️ Concorrência</div>
+        ${row('Concorrentes',d.concorrentes)} ${row('O que fazem bem',d.concorr_bem)}
+        ${row('O que fazem mal',d.concorr_mal)} ${row('Onde você ganha',d.ganha)}
+        ${row('Onde você perde',d.perde)} ${row('Diferencial',d.diferencial)}
+        ${row('Percebido',d.diferencial_percebido)}
+      </div>
+    </div>
+
+    ${d.obs?`<div class="note-card" style="margin-bottom:16px;"><div style="font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Observações</div><div class="note-text">${d.obs}</div></div>`:''}
+
+    <!-- Próximos passos -->
     <div class="card-title" style="margin-bottom:12px;">🚀 Próximos Passos Recomendados</div>
     ${insights.map(i=>`<div class="insight-card ${i.level}"><div class="insight-icon">${i.icon}</div><div><div class="insight-title">${i.title}</div><div class="insight-desc">${i.desc}</div></div></div>`).join('')}
+
     <div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
-      <button class="btn btn-sm editor-action" onclick="closeModal('modal-diagnostico-view');openDiagnostico('${clienteId}')">✏️ Editar diagnóstico</button>
+      <button class="btn btn-sm editor-action" onclick="closeModal('modal-diagnostico-view');openDiagnostico('${clienteId}')">✏️ Editar</button>
     </div>
   `;
+
   openModal('modal-diagnostico-view');
 
-  // Draw radar
   setTimeout(()=>{
-    const ctx = document.getElementById('radar-canvas');
-    if(!ctx) return;
+    const ctx=document.getElementById('radar-canvas');
+    if(!ctx)return;
     if(window._radarChart) window._radarChart.destroy();
-    window._radarChart = new Chart(ctx, {
+    const isDark=document.documentElement.getAttribute('data-theme')!=='light';
+    const gridColor=isDark?'rgba(60,58,48,.6)':'rgba(200,195,180,.4)';
+    const textColor=isDark?'#9a9888':'#6a6050';
+    window._radarChart=new Chart(ctx,{
       type:'radar',
       data:{
-        labels: starKeys.map(k=>starLabels[k]),
-        datasets:[{
-          label:'Maturidade',
-          data: scores,
-          backgroundColor:'rgba(124,92,252,.2)',
-          borderColor:'#7c5cfc',
-          pointBackgroundColor:'#7c5cfc',
-          pointBorderColor:'#fff',
-          pointRadius:4,
-          borderWidth:2
-        }]
+        labels:starKeys.map(k=>starLabels[k]),
+        datasets:[{label:'Maturidade',data:scores,backgroundColor:'rgba(240,165,0,.15)',borderColor:'#f0a500',pointBackgroundColor:'#f0a500',pointBorderColor:'#fff',pointRadius:4,borderWidth:2}]
       },
       options:{
         responsive:true,
-        scales:{r:{min:0,max:5,ticks:{stepSize:1,color:'#555570',font:{size:10}},grid:{color:'rgba(42,42,56,.6)'},pointLabels:{color:'#8888aa',font:{size:11}},angleLines:{color:'rgba(42,42,56,.6)'}}},
+        scales:{r:{min:0,max:5,ticks:{stepSize:1,color:textColor,font:{size:9},backdropColor:'transparent'},grid:{color:gridColor},pointLabels:{color:textColor,font:{size:10}},angleLines:{color:gridColor}}},
         plugins:{legend:{display:false}},
-        elements:{line:{tension:.3}}
+        elements:{line:{tension:.2}}
       }
     });
-  }, 100);
+  },120);
 }
 
-function infoRow(label, val){
-  if(!val) return '';
-  return `<div class="finance-row"><span style="color:var(--text2);font-size:12px;">${label}</span><span style="font-size:12px;font-weight:500;">${val}</span></div>`;
-}
+function gerarInsights(d,scores,starKeys,starLabels){
+  const ins=[];
+  const valid=scores.filter(s=>s>0);
+  const avg=valid.length?valid.reduce((a,b)=>a+b,0)/valid.length:0;
 
-function gerarInsights(d, scores, starKeys, starLabels){
-  const ins = [];
-  const avg = scores.filter(s=>s>0).length ? scores.reduce((a,b)=>a+b,0)/scores.filter(s=>s>0).length : 0;
+  if(d.trafego==='Nunca') ins.push({level:'high',icon:'🚀',title:'Iniciar tráfego pago',desc:'Nunca investiu em anúncios. Grande oportunidade de crescimento com uma estratégia inicial bem estruturada.'});
+  else if(d.trafego==='Tentou e parou') ins.push({level:'med',icon:'🔄',title:'Retomar tráfego com estratégia',desc:'Tentativa anterior sem sucesso. Identificar o que falhou (segmentação, criativo, landing page) antes de reinvestir.'});
 
-  // Tráfego pago
-  if(d.trafego==='Nunca') ins.push({level:'high',icon:'🚀',title:'Oportunidade: iniciar tráfego pago',desc:'O cliente nunca investiu em tráfego pago. Existe grande potencial de crescimento com uma estratégia inicial bem estruturada.'});
-  else if(d.trafego==='Tentou e parou') ins.push({level:'med',icon:'🔄',title:'Retomar tráfego pago com estratégia',desc:'Tentativa anterior sem sucesso. Identifique o que falhou (segmentação, criativo, landing page) antes de reinvestir.'});
+  if(d.site==='Não tem') ins.push({level:'high',icon:'🌐',title:'Criar presença digital básica',desc:'Sem site, a conversão de leads é muito mais difícil. Uma landing page simples já resolve no curto prazo.'});
+  else if(d.site==='Sim, mas desatualizado') ins.push({level:'med',icon:'🔧',title:'Atualizar o site',desc:'Site desatualizado prejudica a conversão. Priorizar revisão de conteúdo e velocidade.'});
 
-  // Site
-  if(d.site==='Não tem') ins.push({level:'high',icon:'🌐',title:'Criar presença digital básica',desc:'Sem site, a conversão de leads pagos é muito mais difícil. Landing page simples já resolve no curto prazo.'});
-  else if(d.site==='Sim, mas desatualizado') ins.push({level:'med',icon:'🔧',title:'Atualizar o site',desc:'Site desatualizado prejudica a conversão. Priorizar uma revisão de conteúdo e velocidade de carregamento.'});
+  if(d.crm==='Não') ins.push({level:'high',icon:'📋',title:'Implantar CRM de leads',desc:'Sem CRM, leads gerados pelo tráfego pago se perdem. RD Station, Kommo ou planilha estruturada já resolvem.'});
 
-  // CRM
-  if(d.crm==='Não') ins.push({level:'high',icon:'📋',title:'Implantar ferramenta de CRM',desc:'Sem CRM, leads gerados pelo tráfego pago se perdem. Indicar ferramentas como RD Station, Kommo ou até planilha estruturada.'});
+  if(d.colabs==='Não tem') ins.push({level:'high',icon:'👤',title:'Definir responsável pelo atendimento',desc:'Sem responsável dedicado, o tempo de resposta aumenta e a taxa de conversão cai drasticamente.'});
+  else if(d.colabs==='Parcial') ins.push({level:'med',icon:'⚡',title:'Otimizar fluxo de leads',desc:'Responsável parcial pode perder leads por acúmulo de funções. Um SOP de atendimento ajuda muito.'});
 
-  // Colaborador para leads
-  if(d.colabs==='Não tem') ins.push({level:'high',icon:'👤',title:'Definir responsável pelo atendimento de leads',desc:'Sem um responsável dedicado, o tempo de resposta aumenta e a taxa de conversão cai drasticamente.'});
-  else if(d.colabs==='Parcial') ins.push({level:'med',icon:'⚡',title:'Otimizar fluxo de atendimento de leads',desc:'O responsável parcial pode perder leads por acúmulo de funções. Criar um SOP de atendimento ajuda muito.'});
+  if(d.posvenda==='Não') ins.push({level:'med',icon:'🤝',title:'Estruturar pós-venda',desc:'Pós-venda estruturado aumenta retenção e gera indicações. Considerar pesquisa NPS e fluxo de nutrição.'});
 
-  // Identidade visual baixa
-  const idIdx = starKeys.indexOf('identidade');
-  if(scores[idIdx]>0 && scores[idIdx]<=2) ins.push({level:'high',icon:'🎨',title:'Fortalecer identidade visual',desc:'Identidade visual fraca impacta diretamente a percepção de valor e a taxa de cliques nos anúncios.'});
+  const idIdx=starKeys.indexOf('identidade');
+  if(scores[idIdx]>0&&scores[idIdx]<=2) ins.push({level:'high',icon:'🎨',title:'Fortalecer identidade visual',desc:'Identidade fraca impacta diretamente a percepção de valor e o CTR dos anúncios.'});
 
-  // Conteúdo baixo
-  const ctIdx = starKeys.indexOf('conteudo');
-  if(scores[ctIdx]>0 && scores[ctIdx]<=2) ins.push({level:'med',icon:'📝',title:'Melhorar qualidade de conteúdo',desc:'Conteúdo fraco reduz o engajamento orgânico e aumenta o custo dos anúncios. Investir em produção de qualidade.'});
+  const ctIdx=starKeys.indexOf('conteudo');
+  if(scores[ctIdx]>0&&scores[ctIdx]<=2) ins.push({level:'med',icon:'📝',title:'Melhorar qualidade do conteúdo',desc:'Conteúdo fraco reduz engajamento orgânico e aumenta o custo dos anúncios pagos.'});
 
-  // Engajamento baixo
-  const enIdx = starKeys.indexOf('engajamento');
-  if(scores[enIdx]>0 && scores[enIdx]<=2) ins.push({level:'med',icon:'📣',title:'Estratégia de engajamento orgânico',desc:'Baixo engajamento indica desconexão com o público. Revisar frequência, formatos e linguagem do conteúdo.'});
+  const posIdx=starKeys.indexOf('posicionamento');
+  if(scores[posIdx]>0&&scores[posIdx]<=2) ins.push({level:'high',icon:'💎',title:'Trabalhar posicionamento de marca',desc:'Posicionamento fraco dificulta diferenciação. Definir claramente proposta de valor, público e mensagem central.'});
 
-  // Vendas baixo
-  const vnIdx = starKeys.indexOf('vendas');
-  if(scores[vnIdx]>0 && scores[vnIdx]<=2) ins.push({level:'med',icon:'💬',title:'Capacitar equipe de vendas',desc:'Maturidade de vendas baixa significa que os leads gerados não estão sendo convertidos adequadamente.'});
+  if(d.missao&&d.visao&&d.valores) ins.push({level:'high',icon:'✅',title:'Identidade estratégica definida',desc:'Missão, visão e valores registrados. Use esses pilares para guiar conteúdo e comunicação da marca.'});
 
-  // Alta maturidade
-  if(avg>=4) ins.push({level:'high',icon:'⭐',title:'Cliente maduro — foco em escala',desc:'Boa base instalada. O momento é de escalar investimento, testar novos canais e expandir o funil de aquisição.'});
+  if(d.dores&&d.problema) ins.push({level:'high',icon:'🎯',title:'Dores e problema mapeados',desc:`Problema central: "${d.problema?.substring(0,80)}". Use isso como base para os criativos de anúncio.`});
 
-  // Objetivo específico
-  if(d.objetivo==='Lançamento') ins.push({level:'high',icon:'🎯',title:'Planejamento de lançamento',desc:'Definir cronograma de pré-lançamento com 30 dias de aquecimento de audiência antes de ativar os anúncios.'});
-  if(d.objetivo==='Branding') ins.push({level:'med',icon:'💡',title:'Estratégia de branding',desc:'Para branding, priorizar conteúdo orgânico consistente e anúncios de reconhecimento antes de campanhas de conversão.'});
+  if(avg>=4) ins.push({level:'high',icon:'⭐',title:'Cliente maduro — foco em escala',desc:'Boa base instalada. Momento de escalar investimento, testar novos canais e expandir funil de aquisição.'});
 
-  if(!ins.length) ins.push({level:'med',icon:'📊',title:'Complete o diagnóstico para ver os insights',desc:'Preencha mais campos do diagnóstico para receber recomendações personalizadas de próximos passos.'});
+  if(d.objetivo==='Lançamento') ins.push({level:'high',icon:'🎯',title:'Planejamento de lançamento',desc:'Definir cronograma com 30 dias de aquecimento de audiência antes de ativar os anúncios.'});
+  if(d.objetivo==='Branding') ins.push({level:'med',icon:'💡',title:'Estratégia de branding',desc:'Priorizar conteúdo orgânico consistente e anúncios de reconhecimento antes de conversão.'});
+
+  if(!ins.length) ins.push({level:'med',icon:'📊',title:'Continue preenchendo o diagnóstico',desc:'Preencha mais campos para receber recomendações personalizadas de próximos passos.'});
   return ins;
 }
 
