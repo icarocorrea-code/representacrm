@@ -300,6 +300,90 @@ select option{background:var(--surface2);}
 .perm-table td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .perm-table tr:last-child td{border-bottom:none;}
 
+
+/* ── LEADS ── */
+.lead-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;transition:all .15s;cursor:pointer;display:flex;align-items:flex-start;gap:14px;}
+.lead-card:hover{border-color:rgba(240,165,0,.4);background:var(--accent-glow);}
+.lead-status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.lead-status-novo{background:#3cbfff;}
+.lead-status-em_atendimento{background:var(--accent);}
+.lead-status-agendado{background:var(--accent2);}
+.lead-status-convertido{background:var(--success);}
+.lead-status-perdido{background:var(--danger);}
+.lead-info{flex:1;min-width:0;}
+.lead-name{font-weight:600;font-size:14px;}
+.lead-meta{font-size:12px;color:var(--text2);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;}
+.lead-actions{display:flex;gap:6px;flex-shrink:0;}
+.lead-origem-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;background:var(--surface3);color:var(--text2);border:1px solid var(--border);}
+.contato-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.contato-item:last-child{border-bottom:none;}
+.contato-icon{font-size:18px;flex-shrink:0;}
+.contato-body{flex:1;}
+.contato-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+.comparativo-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.comp-col{padding:16px;}
+.comp-col:first-child{border-right:1px solid var(--border);}
+.comp-label{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:10px;}
+.comp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.comp-row:last-child{border-bottom:none;}
+.comp-delta{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;}
+.delta-up{background:rgba(92,244,160,.12);color:var(--success);}
+.delta-down{background:rgba(252,92,92,.1);color:var(--danger);}
+.delta-eq{background:var(--surface3);color:var(--text3);}
+/* ══════════════════════════════════════
+   LEADS — MÓDULO COMPLETO
+══════════════════════════════════════ */
+.leads-view-toggle{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;}
+.lvt-btn{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);background:transparent;border:none;cursor:pointer;transition:all .15s;}
+.lvt-btn:hover{color:var(--text);}
+.lvt-btn.active{background:var(--surface3);color:var(--accent);border:1px solid var(--border);}
+.leads-filter-bar{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.leads-period-select{font-size:12px;padding:6px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;}
+/* Kanban */
+.leads-kanban-wrap{overflow-x:auto;padding-bottom:8px;}
+.leads-kanban{display:flex;gap:12px;min-width:max-content;padding:4px 0 12px;}
+.lk-col{width:220px;flex-shrink:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px;}
+.lk-col-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.lk-col-title{font-size:12px;font-weight:700;letter-spacing:.3px;}
+.lk-count{font-size:11px;font-weight:700;background:var(--surface3);border:1px solid var(--border);padding:2px 7px;border-radius:10px;color:var(--text2);}
+.lk-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin-bottom:7px;cursor:pointer;transition:all .15s;}
+.lk-card:hover{border-color:rgba(240,165,0,.4);background:var(--accent-glow);transform:translateY(-1px);}
+.lk-card-name{font-size:13px;font-weight:600;line-height:1.3;}
+.lk-card-meta{font-size:11px;color:var(--text3);margin-top:5px;display:flex;flex-direction:column;gap:3px;}
+.lk-card-valor{font-size:12px;font-weight:700;color:var(--success);margin-top:6px;}
+.lk-card-time{font-size:10px;color:var(--text3);margin-top:4px;}
+/* Indicadores */
+.funnel-bar{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}
+.funnel-bar:last-child{border-bottom:none;}
+.funnel-label{width:110px;font-size:12px;color:var(--text2);flex-shrink:0;}
+.funnel-track{flex:1;height:20px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.funnel-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;font-weight:700;color:rgba(0,0,0,.7);transition:width .4s ease;min-width:4px;}
+/* Histórico de contatos */
+.lead-hist-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.lead-hist-item:last-child{border-bottom:none;}
+.lead-hist-dot{width:10px;height:10px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+.lead-hist-body{flex:1;}
+.lead-hist-action{font-size:13px;font-weight:500;}
+.lead-hist-obs{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5;}
+.lead-hist-time{font-size:11px;color:var(--text3);margin-top:3px;}
+/* Contato items in detalhe */
+.contato-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.contato-item:last-child{border-bottom:none;}
+.contato-icon{font-size:18px;flex-shrink:0;}
+.contato-body{flex:1;}
+.contato-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+/* Comparativo */
+.comparativo-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.comp-col{padding:16px;}
+.comp-col:first-child{border-right:1px solid var(--border);}
+.comp-label{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:10px;}
+.comp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.comp-row:last-child{border-bottom:none;}
+.comp-delta{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;}
+.delta-up{background:rgba(92,244,160,.12);color:var(--success);}
+.delta-down{background:rgba(252,92,92,.1);color:var(--danger);}
+.delta-eq{background:var(--surface3);color:var(--text3);}
+
 /* ── TOAST ── */
 #toast{position:fixed;bottom:20px;right:20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;z-index:9998;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.3);max-width:320px;}
 [data-theme="dark"] #toast{box-shadow:0 8px 32px rgba(0,0,0,.6);}
@@ -561,6 +645,7 @@ select option{background:var(--surface2);}
     <div class="nav-item internal-only" onclick="switchTab('contratos',this)"><span class="icon">📋</span>Contratos<span class="nav-badge" id="badge-contratos">0</span></div>
     <div class="nav-item cliente-only" style="display:none;" onclick="switchTab('meus-contratos',this)"><span class="icon">📋</span>Meus Contratos</div>
     <div class="nav-item" onclick="switchTab('entregas',this)"><span class="icon">✅</span>Entregas<span class="nav-badge" id="badge-entregas">0</span></div>
+    <div class="nav-item" onclick="switchTab('leads',this)" id="nav-leads"><span class="icon">📣</span>Leads<span class="nav-badge" id="badge-leads">0</span></div>
     <div class="nav-section-label internal-only">Gestão</div>
     <div class="nav-item financial-nav internal-only" onclick="switchTab('financeiro',this)"><span class="icon">💰</span>Financeiro</div>
     <div class="nav-item internal-only" onclick="switchTab('tarefas',this)"><span class="icon">📌</span>Tarefas</div>
@@ -652,6 +737,94 @@ select option{background:var(--surface2);}
         <table><thead><tr><th>Cliente</th><th>Contrato</th><th>Serviços</th><th>Valor/mês</th><th>Início</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
         <tbody id="contratos-tbody"></tbody></table>
       </div></div>
+    </div>
+
+    <!-- LEADS -->
+    <div id="tab-leads" class="tab">
+      <!-- Header -->
+      <div class="section-header">
+        <div>
+          <div class="section-title">📡 Gestão de Leads</div>
+          <div class="section-sub" id="leads-sub">Leads gerados pelas campanhas de tráfego pago</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <div class="leads-view-toggle">
+            <button class="lvt-btn active" id="lvt-kanban" onclick="setLeadsView('kanban',this)">🗂 Kanban</button>
+            <button class="lvt-btn" id="lvt-lista" onclick="setLeadsView('lista',this)">☰ Lista</button>
+            <button class="lvt-btn" id="lvt-indicadores" onclick="setLeadsView('indicadores',this)">📊 Indicadores</button>
+          </div>
+          <button class="btn btn-primary" onclick="openModalLead()">+ Novo Lead</button>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="leads-filter-bar">
+        <div class="search-bar" style="max-width:240px;"><span class="search-icon">🔍</span><input type="text" placeholder="Buscar lead..." id="search-leads" oninput="renderLeads()"></div>
+        <select class="leads-period-select" id="leads-contrato-filter" onchange="renderLeads()">
+          <option value="">Todos os contratos</option>
+        </select>
+        <select class="leads-period-select" id="leads-origem-filter" onchange="renderLeads()">
+          <option value="">Todas as origens</option>
+          <option>Instagram</option><option>Facebook</option><option>Google</option>
+          <option>TikTok</option><option>YouTube</option><option>WhatsApp</option><option>Outro</option>
+        </select>
+        <select class="leads-period-select" id="leads-periodo-filter" onchange="renderLeads()">
+          <option value="30">Últimos 30 dias</option>
+          <option value="7">Últimos 7 dias</option>
+          <option value="60">Últimos 60 dias</option>
+          <option value="90">Últimos 90 dias</option>
+          <option value="0">Todos</option>
+        </select>
+      </div>
+
+      <!-- KANBAN VIEW -->
+      <div id="leads-kanban-view">
+        <div class="leads-kanban-wrap">
+          <div class="leads-kanban" id="leads-kanban-board"></div>
+        </div>
+      </div>
+
+      <!-- LISTA VIEW -->
+      <div id="leads-lista-view" style="display:none;">
+        <div class="card"><div class="table-wrap">
+          <table><thead><tr><th>Lead</th><th>Contato</th><th>Origem</th><th>Contrato</th><th>Valor Est.</th><th>Status</th><th>Cadastrado</th><th>Ações</th></tr></thead>
+          <tbody id="leads-tbody"></tbody></table>
+        </div></div>
+      </div>
+
+      <!-- INDICADORES VIEW -->
+      <div id="leads-indicadores-view" style="display:none;">
+        <!-- Comparativo de período -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <span class="card-title">📅 Comparativo por Período</span>
+            <div style="display:flex;gap:6px;">
+              <select class="leads-period-select" id="ind-periodo-a" onchange="renderIndicadores()">
+                <option value="30">Últimos 30 dias</option>
+                <option value="7">Últimos 7 dias</option>
+                <option value="60">Últimos 60 dias</option>
+                <option value="90">Últimos 90 dias</option>
+              </select>
+              <select class="leads-period-select" id="ind-contrato-filter" onchange="renderIndicadores()">
+                <option value="">Todos os contratos</option>
+              </select>
+            </div>
+          </div>
+          <div id="ind-comparativo"></div>
+        </div>
+        <!-- KPIs grid -->
+        <div id="leads-kpi-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px;"></div>
+        <!-- Funil + origem -->
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="card"><div class="card-header"><span class="card-title">🎯 Funil de Conversão</span></div><div id="leads-funil"></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">📣 Leads por Origem</span></div><div id="leads-por-origem"></div></div>
+        </div>
+        <!-- Motivos de perda + tempo médio -->
+        <div class="grid-2">
+          <div class="card"><div class="card-header"><span class="card-title">❌ Motivos de Perda</span></div><div id="leads-motivos-perda"></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">⏱ Tempo Médio de Atendimento</span></div><div id="leads-tempo-atendimento"></div></div>
+        </div>
+      </div>
     </div>
 
     <!-- ENTREGAS -->
@@ -767,8 +940,130 @@ select option{background:var(--surface2);}
 
   </div>
 </div>
-
 <!-- ══════════════════ MODAIS ══════════════════ -->
+<!-- Modal Novo/Editar Lead -->
+<div class="modal-overlay" id="modal-lead">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header">
+      <h3 id="lead-modal-title">📣 Novo Lead</h3>
+      <button class="close-btn" onclick="closeModal('modal-lead')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="lead-id">
+      <div class="form-row">
+        <div class="form-group"><label>Nome*</label><input type="text" id="lead-nome" placeholder="Nome do lead"></div>
+        <div class="form-group"><label>Telefone / WhatsApp*</label><input type="text" id="lead-telefone" placeholder="(11) 99999-9999"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>E-mail</label><input type="email" id="lead-email" placeholder="email@exemplo.com"></div>
+        <div class="form-group"><label>Origem*</label>
+          <select id="lead-origem">
+            <option value="">Selecione...</option>
+            <option>Instagram</option><option>Facebook</option><option>Google</option>
+            <option>TikTok</option><option>YouTube</option><option>WhatsApp</option>
+            <option>Indicação</option><option>Outro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Contrato / Campanha</label><select id="lead-contrato"></select></div>
+        <div class="form-group"><label>Responsável pelo atendimento</label><input type="text" id="lead-responsavel" placeholder="Nome do atendente"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Valor Estimado (R$)</label><input type="number" id="lead-valor" placeholder="0,00"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="lead-status" onchange="onLeadStatusChange(this.value)">
+            <option value="novo">🆕 Novo</option>
+            <option value="em_atendimento">📞 Em atendimento</option>
+            <option value="agendado">📅 Agendado</option>
+            <option value="convertido">✅ Convertido</option>
+            <option value="perdido">❌ Perdido</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="lead-agend-group" style="display:none;">
+        <label>Data/Hora do Agendamento</label>
+        <input type="datetime-local" id="lead-agendamento">
+      </div>
+      <div class="form-group" id="lead-motivo-group" style="display:none;">
+        <label>Motivo da Perda</label>
+        <select id="lead-motivo">
+          <option value="">Selecione...</option>
+          <option>Preço alto</option><option>Comprou concorrente</option><option>Sem interesse</option>
+          <option>Sem orçamento</option><option>Não atendeu</option><option>Lead frio</option><option>Outro</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Data do Lead</label><input type="date" id="lead-data"></div>
+      <div class="form-group"><label>Observações</label><textarea id="lead-obs" placeholder="Detalhes do contato, produto de interesse..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-lead')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-lead-modal" onclick="saveLeadModal()">Salvar Lead</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detalhe Lead -->
+<div class="modal-overlay" id="modal-lead-detalhe">
+  <div class="modal" style="max-width:660px;">
+    <div class="modal-header">
+      <h3 id="lead-detalhe-title">Lead</h3>
+      <button class="close-btn" onclick="closeModal('modal-lead-detalhe')">✕</button>
+    </div>
+    <div class="modal-body" id="lead-detalhe-body"></div>
+  </div>
+</div>
+
+<!-- Modal Registrar Contato -->
+<div class="modal-overlay" id="modal-lead-contato">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3>📞 Registrar Contato</h3>
+      <button class="close-btn" onclick="closeModal('modal-lead-contato')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="contato-lead-id">
+      <div class="form-row">
+        <div class="form-group"><label>Tipo de contato*</label>
+          <select id="contato-tipo">
+            <option>Ligação</option><option>WhatsApp</option><option>E-mail</option>
+            <option>Presencial</option><option>Vídeo chamada</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Resultado*</label>
+          <select id="contato-resultado">
+            <option>Atendeu</option><option>Não atendeu</option><option>Agendou</option>
+            <option>Sem interesse</option><option>Callback</option><option>Fechou</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Observações</label>
+        <textarea id="contato-obs" placeholder="Notas do contato, o que foi conversado..."></textarea>
+      </div>
+      <div class="form-group"><label>Atualizar status para</label>
+        <select id="contato-novo-status">
+          <option value="">Manter status atual</option>
+          <option value="em_atendimento">📞 Em atendimento</option>
+          <option value="agendado">📅 Agendado</option>
+          <option value="convertido">✅ Convertido</option>
+          <option value="perdido">❌ Perdido</option>
+        </select>
+      </div>
+      <div class="form-group" id="contato-motivo-group" style="display:none;">
+        <label>Motivo da Perda</label>
+        <select id="contato-motivo">
+          <option value="">Selecione...</option>
+          <option>Preço alto</option><option>Comprou concorrente</option><option>Sem interesse</option>
+          <option>Sem orçamento</option><option>Não atendeu</option><option>Lead frio</option><option>Outro</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-lead-contato')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveContato()">Registrar Contato</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal Cliente -->
 <div class="modal-overlay" id="modal-cliente">
@@ -1401,8 +1696,8 @@ const authSec = secondaryApp.auth();
 // ═══════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════
-const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[],freelancers:[]};
-const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas','freelancers'];
+const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[],freelancers:[],leads:[]};
+const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas','freelancers','leads'];
 const readyCols = new Set();
 let currentUser = null;
 let currentRole = null;
@@ -1481,6 +1776,9 @@ function startApp(userData){
   document.querySelectorAll('.cliente-only').forEach(el=>el.style.display=isCliente?'':'none');
   // Store contratos vinculados for client
   window.clienteContratos = userData.contratosVinculados || [];
+  // Nav leads — visible to clients and internal (always visible)
+  const navLeads = document.getElementById('nav-leads');
+  if(navLeads) navLeads.style.display = '';
   // Apply permission to editor-action buttons
   applyPermissions(userData);
   // Start Firestore listeners
@@ -1607,6 +1905,7 @@ function openModal(id){
   if(id==='modal-tarefa') populateTarefaClientes();
   if(id==='modal-financeiro'){ const d=document.getElementById('f-data'); if(d&&!d.value) d.value=today(); }
   if(id==='modal-freelancer'){ _flRates=[]; addFlRateRow('Post Instagram',''); addFlRateRow('Reels / Vídeo',''); renderFlRatesEditor(); }
+  if(id==='modal-lead') openModalLead();
 }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
@@ -1618,9 +1917,10 @@ function switchTab(name,el){
   const tabEl = document.getElementById('tab-'+name);
   if(tabEl) tabEl.classList.add('active');
   if(el) el.classList.add('active');
-  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',freelancers:'Freelancers',usuarios:'Gerenciador de Usuários','meus-contratos':'Meus Contratos'};
+  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',freelancers:'Freelancers',usuarios:'Gerenciador de Usuários','meus-contratos':'Meus Contratos',leads:'Gestão de Leads'};
   document.getElementById('page-title').textContent=titles[name]||name;
   if(name==='meus-contratos') renderMeusContratos();
+  if(name==='leads'){ populateLeadFiltros(); renderLeads(); }
 }
 
 function canEdit(){ return currentRole==='admin'||currentRole==='editor'; }
@@ -1630,11 +1930,13 @@ function canEdit(){ return currentRole==='admin'||currentRole==='editor'; }
 // ═══════════════════════════════════════════════
 function renderAll(){
   renderDashboard(); renderClientes(); renderContratos(); renderEntregas();
-  renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers();
+  renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers(); renderLeads();
   document.getElementById('badge-clientes').textContent=st.clientes.filter(c=>c.status==='ativo').length;
   document.getElementById('badge-contratos').textContent=st.contratos.filter(c=>c.status==='ativo').length;
   document.getElementById('badge-entregas').textContent=st.entregas.filter(e=>!e.concluida).length;
   document.getElementById('badge-freelancers').textContent=st.freelancers.length;
+  document.getElementById('badge-leads').textContent=st.leads.filter(l=>l.status==='novo'||l.status==='contato').length;
+  populateLeadFiltros();
 }
 
 // ═══════════════════════════════════════════════
@@ -2747,6 +3049,493 @@ document.addEventListener('DOMContentLoaded',()=>{
   addFlRateRow('Post Instagram','');
   addFlRateRow('Reels / Vídeo','');
 });
+
+// ═══════════════════════════════════════════════
+//  LEADS — MÓDULO COMPLETO
+// ═══════════════════════════════════════════════
+
+// Config de status
+const LEAD_STATUS = {
+  novo:      {label:'Novo',           color:'#3cbfff', bg:'rgba(60,191,255,.12)', icon:'🆕'},
+  contato:   {label:'Em contato',     color:'#f0a500', bg:'rgba(240,165,0,.12)',  icon:'📞'},
+  agendado:  {label:'Agendado',       color:'#7c5cfc', bg:'rgba(124,92,252,.12)', icon:'📅'},
+  proposta:  {label:'Proposta',       color:'#fcb85c', bg:'rgba(252,184,92,.12)', icon:'📄'},
+  ganho:     {label:'Ganho',          color:'#5cf4a0', bg:'rgba(92,244,160,.12)', icon:'✅'},
+  perdido:   {label:'Perdido',        color:'#fc5c5c', bg:'rgba(252,92,92,.12)',  icon:'❌'},
+};
+const LEAD_STATUS_ORDER = ['novo','contato','agendado','proposta','ganho','perdido'];
+
+let _leadsView = 'kanban';
+let _leadsCurrentId = null;
+
+function setLeadsView(view, btn){
+  _leadsView = view;
+  document.querySelectorAll('.lvt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('leads-kanban-view').style.display = view==='kanban' ? '' : 'none';
+  document.getElementById('leads-lista-view').style.display  = view==='lista'  ? '' : 'none';
+  document.getElementById('leads-indicadores-view').style.display = view==='indicadores' ? '' : 'none';
+  renderLeads();
+  if(view==='indicadores') renderIndicadores();
+}
+
+function getLeadsFiltrados(){
+  const q   = (document.getElementById('search-leads')?.value||'').toLowerCase();
+  const ct  = document.getElementById('leads-contrato-filter')?.value||'';
+  const ori = document.getElementById('leads-origem-filter')?.value||'';
+  const per = parseInt(document.getElementById('leads-periodo-filter')?.value||'30');
+
+  let list = st.leads;
+
+  // Clientes só veem seus contratos vinculados
+  if(currentRole==='cliente'){
+    const ids = window.clienteContratos||[];
+    list = list.filter(l=>ids.includes(l.contratoId));
+  }
+
+  if(ct)  list = list.filter(l=>l.contratoId===ct);
+  if(ori) list = list.filter(l=>l.origem===ori);
+  if(per>0){
+    const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-per);
+    list = list.filter(l=>{ const d=new Date(l.data||l.criadoEm?.split('/').reverse().join('-')); return d>=cutoff; });
+  }
+  if(q)   list = list.filter(l=>(l.nome+l.telefone+(l.email||'')+(l.responsavel||'')).toLowerCase().includes(q));
+  return list;
+}
+
+function populateLeadFiltros(){
+  // Contrato filter in leads tab
+  const sel1 = document.getElementById('leads-contrato-filter');
+  const sel2 = document.getElementById('ind-contrato-filter');
+  const contratos = currentRole==='cliente'
+    ? st.contratos.filter(c=>(window.clienteContratos||[]).includes(c.id))
+    : st.contratos;
+  const opts = '<option value="">Todos os contratos</option>' + contratos.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
+  if(sel1) sel1.innerHTML = opts;
+  if(sel2) sel2.innerHTML = opts;
+}
+
+function populateLeadContratos(){
+  const sel = document.getElementById('l-contrato');
+  if(!sel) return;
+  const contratos = currentRole==='cliente'
+    ? st.contratos.filter(c=>(window.clienteContratos||[]).includes(c.id))
+    : st.contratos.filter(c=>c.status==='ativo');
+  sel.innerHTML = '<option value="">Selecione...</option>' + contratos.map(c=>`<option value="${c.id}">${c.clienteNome||'—'} — ${c.nome}</option>`).join('');
+  // Default data
+  const d = document.getElementById('l-data'); if(d&&!d.value) d.value = today();
+  // Show/hide motivo perda
+  const st_sel = document.getElementById('l-status');
+  if(st_sel) st_sel.onchange = function(){ document.getElementById('l-motivo-perda-group').style.display = this.value==='perdido'?'':'none'; };
+}
+
+function renderLeads(){
+  if(_leadsView==='kanban') renderLeadsKanban();
+  else if(_leadsView==='lista') renderLeadsLista();
+  else if(_leadsView==='indicadores') renderIndicadores();
+}
+
+function renderLeadsKanban(){
+  const list = getLeadsFiltrados();
+  const board = document.getElementById('leads-kanban-board');
+  if(!board) return;
+  const colors = ['#7c5cfc','#fc5c7d','#5cf4c0','#fcb85c','#3cbfff','#f0a500'];
+  board.innerHTML = LEAD_STATUS_ORDER.map(status=>{
+    const s = LEAD_STATUS[status];
+    const items = list.filter(l=>l.status===status);
+    const total = items.reduce((sum,l)=>sum+(+l.valor||0),0);
+    return `<div class="lk-col">
+      <div class="lk-col-header">
+        <div class="lk-col-title" style="color:${s.color}">${s.icon} ${s.label}</div>
+        <span class="lk-count">${items.length}</span>
+      </div>
+      ${total>0?`<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">R$ ${total.toLocaleString('pt-BR')}</div>`:''}
+      ${!items.length?`<div style="font-size:12px;color:var(--text3);text-align:center;padding:16px 0;">Nenhum lead</div>`
+        : items.map(l=>{
+          const ini = (l.nome||'?').charAt(0).toUpperCase();
+          const dias = l.data ? Math.floor((Date.now()-new Date(l.data))/(1000*60*60*24)) : null;
+          return `<div class="lk-card" onclick="showLeadDetalhe('${l.id}')">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:${colors[l.nome?.charCodeAt(0)%colors.length]||colors[0]};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0a0a08;flex-shrink:0;">${ini}</div>
+              <div class="lk-card-name">${l.nome}</div>
+            </div>
+            <div class="lk-card-meta">
+              ${l.telefone?`<span>📱 ${l.telefone}</span>`:''}
+              ${l.origem?`<span>📣 ${l.origem}</span>`:''}
+              ${l.responsavel?`<span>👤 ${l.responsavel}</span>`:''}
+            </div>
+            ${l.valor?`<div class="lk-card-valor">R$ ${(+l.valor).toLocaleString('pt-BR')}</div>`:''}
+            ${dias!==null?`<div class="lk-card-time">${dias===0?'Hoje':dias===1?'Ontem':dias+' dias atrás'}</div>`:''}
+          </div>`;
+        }).join('')}
+    </div>`;
+  }).join('');
+}
+
+function renderLeadsLista(){
+  const list = getLeadsFiltrados();
+  const tbody = document.getElementById('leads-tbody');
+  if(!tbody) return;
+  if(!list.length){ tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px;">Nenhum lead encontrado.</td></tr>`; return; }
+  tbody.innerHTML = list.map(l=>{
+    const s = LEAD_STATUS[l.status]||LEAD_STATUS.novo;
+    const ct = st.contratos.find(c=>c.id===l.contratoId);
+    return `<tr onclick="showLeadDetalhe('${l.id}')" style="cursor:pointer;">
+      <td><div style="font-weight:600;font-size:13px;">${l.nome}</div><div style="font-size:11px;color:var(--text3);">${l.email||'—'}</div></td>
+      <td>${l.telefone||'—'}</td>
+      <td>${l.origem||'—'}</td>
+      <td style="font-size:12px;">${ct?ct.nome:'—'}</td>
+      <td>${l.valor?`<span class="amount-green">R$ ${(+l.valor).toLocaleString('pt-BR')}</span>`:'—'}</td>
+      <td><span class="badge" style="background:${s.bg};color:${s.color};border:1px solid ${s.color}40;">${s.icon} ${s.label}</span></td>
+      <td style="font-size:12px;color:var(--text3);">${l.data||'—'}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteLead('${l.id}')">🗑️</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderIndicadores(){
+  const per = parseInt(document.getElementById('ind-periodo-a')?.value||'30');
+  const ct  = document.getElementById('ind-contrato-filter')?.value||'';
+  const now = Date.now();
+
+  function getLeadsForPeriod(days, contratoId){
+    const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-days);
+    let list = st.leads;
+    if(currentRole==='cliente') list = list.filter(l=>(window.clienteContratos||[]).includes(l.contratoId));
+    if(contratoId) list = list.filter(l=>l.contratoId===contratoId);
+    if(days>0) list = list.filter(l=>{ const d=new Date(l.data||l.criadoEm?.split('/').reverse().join('-')); return d>=cutoff; });
+    return list;
+  }
+
+  const cur  = getLeadsForPeriod(per, ct);
+  const prev = getLeadsForPeriod(per*2, ct).filter(l=>{ const d=new Date(l.data||l.criadoEm?.split('/').reverse().join('-')); const cutPrev=new Date(); cutPrev.setDate(cutPrev.getDate()-per*2); const cutCur=new Date(); cutCur.setDate(cutCur.getDate()-per); return d>=cutPrev&&d<cutCur; });
+
+  const total   = cur.length;
+  const ganhos  = cur.filter(l=>l.status==='ganho').length;
+  const perdidos= cur.filter(l=>l.status==='perdido').length;
+  const ativos  = cur.filter(l=>!['ganho','perdido'].includes(l.status)).length;
+  const txConv  = total>0 ? (ganhos/total*100).toFixed(1) : 0;
+  const valorTotal = cur.filter(l=>l.status==='ganho').reduce((s,l)=>s+(+l.valor||0),0);
+
+  // KPIs
+  function trend(cur,prev){ if(!prev) return ''; const d=cur-prev; const p=prev>0?((d/prev)*100).toFixed(0):0; return `<div class="ic-trend ${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${Math.abs(p)}% vs período anterior</div>`; }
+  const kpiGrid = document.getElementById('leads-kpi-grid');
+  if(kpiGrid) kpiGrid.innerHTML=`
+    <div class="indicator-card ic-blue"><div class="ic-label">Total de Leads</div><div class="ic-value">${total}</div><div class="ic-sub">no período</div>${trend(total,prev.length)}</div>
+    <div class="indicator-card ic-green"><div class="ic-label">Convertidos</div><div class="ic-value">${ganhos}</div><div class="ic-sub">leads ganhos</div>${trend(ganhos,prev.filter(l=>l.status==='ganho').length)}</div>
+    <div class="indicator-card ic-amber"><div class="ic-label">Taxa de Conversão</div><div class="ic-value">${txConv}%</div><div class="ic-sub">leads → venda</div></div>
+    <div class="indicator-card ic-red"><div class="ic-label">Perdidos</div><div class="ic-value">${perdidos}</div><div class="ic-sub">sem conversão</div></div>
+    <div class="indicator-card ic-purple"><div class="ic-label">Valor Convertido</div><div class="ic-value" style="font-size:18px;">R$ ${valorTotal.toLocaleString('pt-BR')}</div><div class="ic-sub">estimado</div></div>`;
+
+  // Comparativo
+  const comp = document.getElementById('ind-comparativo');
+  if(comp) comp.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📅 Período atual (${per} dias)</div>
+        <div class="finance-row"><span>Total de leads</span><strong>${total}</strong></div>
+        <div class="finance-row"><span>Ganhos</span><strong class="amount-green">${ganhos}</strong></div>
+        <div class="finance-row"><span>Perdidos</span><strong class="amount-red">${perdidos}</strong></div>
+        <div class="finance-row"><span>Em andamento</span><strong class="amount-yellow">${ativos}</strong></div>
+        <div class="finance-row"><span>Conversão</span><strong>${txConv}%</strong></div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📅 Período anterior</div>
+        <div class="finance-row"><span>Total de leads</span><strong>${prev.length}</strong></div>
+        <div class="finance-row"><span>Ganhos</span><strong class="amount-green">${prev.filter(l=>l.status==='ganho').length}</strong></div>
+        <div class="finance-row"><span>Perdidos</span><strong class="amount-red">${prev.filter(l=>l.status==='perdido').length}</strong></div>
+        <div class="finance-row"><span>Em andamento</span><strong class="amount-yellow">${prev.filter(l=>!['ganho','perdido'].includes(l.status)).length}</strong></div>
+        <div class="finance-row"><span>Conversão</span><strong>${prev.length>0?(prev.filter(l=>l.status==='ganho').length/prev.length*100).toFixed(1):0}%</strong></div>
+      </div>
+    </div>`;
+
+  // Funil
+  const funil = document.getElementById('leads-funil');
+  if(funil){
+    const maxF = total||1;
+    const funnelData = LEAD_STATUS_ORDER.map(s=>({ s, count: cur.filter(l=>l.status===s).length, ...LEAD_STATUS[s] }));
+    funil.innerHTML = funnelData.map(f=>`
+      <div class="funnel-bar">
+        <div class="funnel-label">${f.icon} ${f.label}</div>
+        <div class="funnel-track"><div class="funnel-fill" style="width:${(f.count/maxF*100).toFixed(0)}%;background:${f.color};">${f.count>0?f.count:''}</div></div>
+        <div style="font-size:12px;font-weight:700;width:30px;text-align:right;">${f.count}</div>
+      </div>`).join('');
+  }
+
+  // Por origem
+  const origem = document.getElementById('leads-por-origem');
+  if(origem){
+    const origens = {};
+    cur.forEach(l=>{ const o=l.origem||'Outro'; origens[o]=(origens[o]||0)+1; });
+    const maxO = Math.max(...Object.values(origens),1);
+    const oriColors = {'Instagram':'#fc5c7d','Facebook':'#3cbfff','Google':'#fcb85c','TikTok':'#5cf4c0','YouTube':'#fc5c5c','WhatsApp':'#5cf4a0','Outro':'#9a9888'};
+    origem.innerHTML = !Object.keys(origens).length ? '<div class="empty-state" style="padding:20px;"><div>📣</div><p>Sem dados.</p></div>'
+      : Object.entries(origens).sort((a,b)=>b[1]-a[1]).map(([o,n])=>`
+        <div class="funnel-bar">
+          <div class="funnel-label">${o}</div>
+          <div class="funnel-track"><div class="funnel-fill" style="width:${(n/maxO*100).toFixed(0)}%;background:${oriColors[o]||'#7c5cfc'};">${n>0?n:''}</div></div>
+          <div style="font-size:12px;font-weight:700;width:40px;text-align:right;">${n} <span style="font-weight:400;color:var(--text3);">(${(n/total*100).toFixed(0)}%)</span></div>
+        </div>`).join('');
+  }
+
+  // Motivos de perda
+  const motivos = document.getElementById('leads-motivos-perda');
+  if(motivos){
+    const mots = {};
+    cur.filter(l=>l.status==='perdido').forEach(l=>{ const m=l.motivoPerda||'Não informado'; mots[m]=(mots[m]||0)+1; });
+    const totPerda = perdidos||1;
+    motivos.innerHTML = !Object.keys(mots).length ? '<div class="empty-state" style="padding:20px;"><div>✅</div><p>Sem perdas no período!</p></div>'
+      : Object.entries(mots).sort((a,b)=>b[1]-a[1]).map(([m,n])=>`
+        <div class="finance-row">
+          <span>${m}</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:80px;background:var(--surface3);border-radius:4px;height:6px;overflow:hidden;"><div style="width:${(n/totPerda*100).toFixed(0)}%;height:100%;background:var(--danger);border-radius:4px;"></div></div>
+            <span class="amount-red">${n}</span>
+          </div>
+        </div>`).join('');
+  }
+
+  // Tempo médio de atendimento (dias entre data do lead e primeiro contato)
+  const tempo = document.getElementById('leads-tempo-atendimento');
+  if(tempo){
+    const comHistorico = cur.filter(l=>l.historico&&l.historico.length>0);
+    if(!comHistorico.length){
+      tempo.innerHTML='<div class="empty-state" style="padding:20px;"><div>⏱</div><p>Sem dados de atendimento ainda.</p></div>';
+    } else {
+      const tempos = comHistorico.map(l=>{
+        const dLead = new Date(l.data||'2024-01-01');
+        const dFirst = new Date(l.historico[0]?.data||l.data||'2024-01-01');
+        return Math.max(0, Math.floor((dFirst-dLead)/(1000*60*60*24)));
+      });
+      const avg = (tempos.reduce((a,b)=>a+b,0)/tempos.length).toFixed(1);
+      const min = Math.min(...tempos);
+      const max = Math.max(...tempos);
+      tempo.innerHTML=`
+        <div class="finance-row"><span>⏱ Tempo médio</span><strong>${avg} dias</strong></div>
+        <div class="finance-row"><span>⚡ Mais rápido</span><strong class="amount-green">${min} dia${min!==1?'s':''}</strong></div>
+        <div class="finance-row"><span>🐢 Mais lento</span><strong class="amount-red">${max} dias</strong></div>
+        <div class="finance-row"><span>📊 Leads com histórico</span><strong>${comHistorico.length}/${cur.length}</strong></div>`;
+    }
+  }
+}
+
+async function saveLead(){
+  const nome = document.getElementById('l-nome').value.trim();
+  const tel  = document.getElementById('l-telefone').value.trim();
+  const ori  = document.getElementById('l-origem').value;
+  const ctId = document.getElementById('l-contrato').value;
+  if(!nome||!tel||!ori){toast('Nome, telefone e origem são obrigatórios!','⚠️');return;}
+  const btn = document.getElementById('btn-save-lead'); btn.disabled=true; btn.textContent='Salvando...';
+  try{
+    const ct = st.contratos.find(c=>c.id===ctId);
+    const status = document.getElementById('l-status').value;
+    await db.collection('leads').add({
+      nome, telefone:tel,
+      email: document.getElementById('l-email').value,
+      origem: ori,
+      contratoId: ctId,
+      contratoNome: ct?ct.nome:'',
+      clienteNome: ct?ct.clienteNome:'',
+      responsavel: document.getElementById('l-responsavel').value,
+      valor: document.getElementById('l-valor').value,
+      status,
+      motivoPerda: status==='perdido'?document.getElementById('l-motivo-perda').value:'',
+      obs: document.getElementById('l-obs').value,
+      data: document.getElementById('l-data').value,
+      historico: [],
+      criadoEm: new Date().toLocaleDateString('pt-BR'),
+      criadoPor: currentNome
+    });
+    closeModal('modal-lead');
+    ['l-nome','l-telefone','l-email','l-responsavel','l-valor','l-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    toast('Lead cadastrado!');
+  }catch(e){toast('Erro ao salvar.','❌');console.error(e);}
+  btn.disabled=false; btn.textContent='Cadastrar Lead';
+}
+
+async function showLeadDetalhe(id){
+  const l = st.leads.find(x=>x.id===id);
+  if(!l) return;
+  _leadsCurrentId = id;
+  const s   = LEAD_STATUS[l.status]||LEAD_STATUS.novo;
+  const ct  = st.contratos.find(c=>c.id===l.contratoId);
+  const hist = [...(l.historico||[])].reverse();
+
+  document.getElementById('lead-detalhe-title').textContent = `${s.icon} ${l.nome||'Lead'}`;
+
+  const agend = l.agendamento ? `<div class="form-group" style="margin-bottom:8px;"><label>Agendamento</label><div style="font-size:13px;color:var(--accent2);">📆 ${l.agendamento.replace('T',' ')}</div></div>` : '';
+  const motivo = l.motivo ? `<div class="form-group" style="margin-bottom:8px;"><label>Motivo perda</label><div style="font-size:13px;color:var(--danger);">${l.motivo}</div></div>` : '';
+  const obs    = l.obs   ? `<div class="note-card" style="margin-bottom:16px;"><div style="font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;">Observações</div><div class="note-text">${l.obs}</div></div>` : '';
+
+  const histHtml = !hist.length
+    ? '<p style="font-size:13px;color:var(--text3);">Nenhum contato registrado ainda.</p>'
+    : hist.map(h=>`<div class="contato-item">
+        <div class="contato-icon">${{Ligação:'📞',WhatsApp:'💬','E-mail':'📧',Presencial:'🤝','Vídeo chamada':'🎥'}[h.tipo]||'📌'}</div>
+        <div class="contato-body">
+          <div style="font-size:13px;font-weight:500;">${h.tipo||'Contato'} — <span style="color:${['Atendeu','Agendou','Fechou'].includes(h.resultado)?'var(--success)':'var(--text2)'};">${h.resultado||''}</span></div>
+          ${h.obs?`<div class="note-text" style="margin-top:4px;">${h.obs}</div>`:''}
+          <div class="contato-meta">${h.data||''} ${h.por?'· '+h.por:''}</div>
+        </div>
+      </div>`).join('');
+
+  document.getElementById('lead-detalhe-body').innerHTML = `
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Status</label>
+          <div><span class="badge" style="background:${s.bg||'var(--surface3)'};color:${s.color||'var(--text)'};border:1px solid ${s.color||'var(--border)'}40;font-size:13px;padding:5px 12px;">${s.icon} ${s.label}</span></div>
+        </div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Telefone</label><div style="font-size:13px;">📱 ${l.telefone||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>E-mail</label><div style="font-size:13px;">✉️ ${l.email||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Origem</label><div style="font-size:13px;">📣 ${l.origem||'—'}</div></div>
+      </div>
+      <div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Campanha</label><div style="font-size:13px;">📋 ${ct?ct.nome:'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Responsável</label><div style="font-size:13px;">👤 ${l.responsavel||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Valor estimado</label><div style="color:var(--success);font-weight:700;font-size:15px;">${l.valor?'R$ '+(+l.valor).toLocaleString('pt-BR'):'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Data entrada</label><div style="font-size:13px;">${l.data||l.criadoEm||'—'}</div></div>
+        ${agend}${motivo}
+      </div>
+    </div>
+    ${obs}
+    <div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+      <label style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;">📋 Histórico de Contatos (${hist.length})</label>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-sm btn-warning" onclick="closeModal('modal-lead-detalhe');openModalLead('${id}')">✏️ Editar</button>
+        <button class="btn btn-sm btn-primary" onclick="closeModal('modal-lead-detalhe');openModalContato('${id}')">+ Registrar contato</button>
+      </div>
+    </div>
+    <div>${histHtml}</div>`;
+
+  openModal('modal-lead-detalhe');
+}
+
+
+async function deleteLead(id){
+  if(currentRole!=='admin'){toast('Sem permissão.','🚫');return;}
+  if(!confirm('Excluir este lead permanentemente?'))return;
+  await db.collection('leads').doc(id).delete();
+  toast('Lead removido.','🗑️');
+}
+
+// ── Modal Lead — Novo/Editar ──
+function onLeadStatusChange(val){
+  const ag = document.getElementById('lead-agend-group');
+  const mo = document.getElementById('lead-motivo-group');
+  if(ag) ag.style.display = val==='agendado' ? '' : 'none';
+  if(mo) mo.style.display = val==='perdido'   ? '' : 'none';
+}
+
+function openModalLead(id=''){
+  const lead = id ? st.leads.find(l=>l.id===id) : null;
+  document.getElementById('lead-id').value = id;
+  document.getElementById('lead-modal-title').textContent = id ? '✏️ Editar Lead' : '📣 Novo Lead';
+  document.getElementById('lead-nome').value        = lead?.nome||'';
+  document.getElementById('lead-telefone').value    = lead?.telefone||'';
+  document.getElementById('lead-email').value       = lead?.email||'';
+  document.getElementById('lead-origem').value      = lead?.origem||'';
+  document.getElementById('lead-responsavel').value = lead?.responsavel||'';
+  document.getElementById('lead-status').value      = lead?.status||'novo';
+  document.getElementById('lead-valor').value       = lead?.valor||'';
+  document.getElementById('lead-obs').value         = lead?.obs||'';
+  document.getElementById('lead-data').value        = lead?.data||today();
+  document.getElementById('lead-agendamento').value = lead?.agendamento||'';
+  document.getElementById('lead-motivo').value      = lead?.motivo||'';
+  onLeadStatusChange(lead?.status||'novo');
+  // Populate contracts
+  const sel = document.getElementById('lead-contrato');
+  if(sel){
+    const contratos = currentRole==='cliente'
+      ? st.contratos.filter(c=>(window.clienteContratos||[]).includes(c.id))
+      : st.contratos.filter(c=>c.status==='ativo');
+    sel.innerHTML = '<option value="">Sem campanha específica</option>' +
+      contratos.map(c=>`<option value="${c.id}"${lead?.contratoId===c.id?' selected':''}>${c.clienteNome||'—'} — ${c.nome}</option>`).join('');
+  }
+  document.getElementById('modal-lead').classList.add('open');
+}
+
+async function saveLeadModal(){
+  const id    = document.getElementById('lead-id').value;
+  const nome  = document.getElementById('lead-nome').value.trim();
+  const tel   = document.getElementById('lead-telefone').value.trim();
+  const ori   = document.getElementById('lead-origem').value;
+  if(!nome||!tel){toast('Nome e telefone são obrigatórios!','⚠️');return;}
+  const btn = document.getElementById('btn-save-lead-modal');
+  btn.disabled=true; btn.textContent='Salvando...';
+  const ctId = document.getElementById('lead-contrato').value;
+  const ct = st.contratos.find(c=>c.id===ctId);
+  const status = document.getElementById('lead-status').value;
+  const data = {
+    nome, telefone:tel,
+    email:        document.getElementById('lead-email').value,
+    origem:       ori,
+    contratoId:   ctId,
+    contratoNome: ct?ct.nome:'',
+    clienteNome:  ct?ct.clienteNome:'',
+    responsavel:  document.getElementById('lead-responsavel').value,
+    valor:        document.getElementById('lead-valor').value,
+    status,
+    agendamento:  document.getElementById('lead-agendamento').value,
+    motivo:       status==='perdido'?document.getElementById('lead-motivo').value:'',
+    obs:          document.getElementById('lead-obs').value,
+    data:         document.getElementById('lead-data').value,
+    atualizadoEm: new Date().toLocaleDateString('pt-BR'),
+    atualizadoPor: currentNome
+  };
+  try{
+    if(id){
+      await db.collection('leads').doc(id).update(data);
+      toast('Lead atualizado!');
+    } else {
+      data.criadoEm = new Date().toLocaleDateString('pt-BR');
+      data.criadoPor = currentNome;
+      data.historico = [];
+      await db.collection('leads').add(data);
+      toast('Lead cadastrado!');
+    }
+    closeModal('modal-lead');
+  }catch(e){toast('Erro ao salvar.','❌');console.error(e);}
+  btn.disabled=false; btn.textContent='Salvar Lead';
+}
+
+// ── Registrar Contato ──
+function openModalContato(leadId){
+  document.getElementById('contato-lead-id').value = leadId;
+  document.getElementById('contato-tipo').value = 'Ligação';
+  document.getElementById('contato-resultado').value = 'Atendeu';
+  document.getElementById('contato-obs').value = '';
+  document.getElementById('contato-novo-status').value = '';
+  document.getElementById('contato-motivo-group').style.display = 'none';
+  document.getElementById('contato-novo-status').onchange = function(){
+    document.getElementById('contato-motivo-group').style.display = this.value==='perdido' ? '' : 'none';
+  };
+  openModal('modal-lead-contato');
+}
+
+async function saveContato(){
+  const leadId = document.getElementById('contato-lead-id').value;
+  const lead   = st.leads.find(l=>l.id===leadId);
+  if(!lead) return;
+  const contato = {
+    tipo:      document.getElementById('contato-tipo').value,
+    resultado: document.getElementById('contato-resultado').value,
+    obs:       document.getElementById('contato-obs').value,
+    data:      new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    por:       currentNome,
+    ts:        Date.now()
+  };
+  const novoStatus  = document.getElementById('contato-novo-status').value;
+  const motivoPerda = novoStatus==='perdido' ? document.getElementById('contato-motivo').value : '';
+  const hist = [...(lead.historico||[]), contato];
+  const upd  = {historico:hist, atualizadoEm:new Date().toLocaleDateString('pt-BR'), atualizadoPor:currentNome};
+  if(novoStatus){ upd.status=novoStatus; if(motivoPerda) upd.motivo=motivoPerda; }
+  try{
+    await db.collection('leads').doc(leadId).update(upd);
+    toast('Contato registrado!');
+    closeModal('modal-lead-contato');
+    setTimeout(()=>showLeadDetalhe(leadId), 300);
+  }catch(e){toast('Erro.','❌');console.error(e);}
+}
+
 
 // ═══════════════════════════════════════════════
 //  TEMA CLARO / ESCURO
