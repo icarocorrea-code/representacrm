@@ -465,6 +465,8 @@ select option{background:var(--surface2);}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .kanban{grid-template-columns:repeat(2,1fr);}
   #fin-stats{grid-template-columns:repeat(2,1fr);}
+  .leads-kanban{gap:10px;}
+  .lk-col{width:200px;}
 }
 
 /* ════════════════════════════════════════
@@ -511,28 +513,47 @@ select option{background:var(--surface2);}
 
   /* Section header */
   .section-header{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:14px;}
-  .section-header>div:last-child{display:flex;gap:8px;width:100%;}
+  .section-header>div:last-child{display:flex;gap:8px;width:100%;flex-wrap:wrap;}
   .search-bar{max-width:none;flex:1;}
 
-  /* Kanban: 1 col */
+  /* Kanban pipeline: 1 col */
   .kanban{grid-template-columns:1fr;}
+
+  /* Leads Kanban: scroll horizontal */
+  .leads-kanban-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .leads-kanban{gap:10px;}
+  .lk-col{width:240px;flex-shrink:0;}
+
+  /* Leads filter bar: scroll */
+  .leads-filter-bar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:6px;}
+  .leads-filter-bar::-webkit-scrollbar{display:none;}
+  .leads-period-select{flex-shrink:0;font-size:11px;}
+  .leads-view-toggle{flex-shrink:0;}
+  .lvt-btn{padding:4px 8px;font-size:11px;}
+
+  /* Leads indicadores: 1 col */
+  .comparativo-grid{grid-template-columns:1fr;}
+  .comp-col:first-child{border-right:none;border-bottom:1px solid var(--border);}
 
   /* Clientes grid: 1 col */
   #clientes-grid{grid-template-columns:1fr !important;}
   #fl-grid{grid-template-columns:1fr !important;}
+  #usuarios-grid{grid-template-columns:1fr !important;}
 
   /* Tabelas: scroll horizontal */
-  .table-wrap{border-radius:8px;}
-  thead th{padding:8px 10px;font-size:10px;}
+  .table-wrap{border-radius:8px;overflow-x:auto;}
+  thead th{padding:8px 10px;font-size:10px;white-space:nowrap;}
   tbody td{padding:9px 10px;font-size:12px;}
+  /* Hide less critical columns on mobile */
+  .hide-mobile{display:none !important;}
 
-  /* Modais: full-width */
+  /* Modais: bottom sheet */
   .modal-overlay{padding:0;align-items:flex-end;}
-  .modal{width:100%;max-width:100%;border-radius:20px 20px 0 0;max-height:92vh;}
-  .modal-header{padding:16px 18px 12px;}
+  .modal{width:100%;max-width:100%;border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto;}
+  .modal-header{padding:16px 18px 12px;position:sticky;top:0;z-index:1;background:var(--surface);}
   .modal-body{padding:14px 18px;}
-  .modal-footer{padding:12px 18px;flex-wrap:wrap;}
-  .modal-footer .btn{flex:1;justify-content:center;}
+  .modal-footer{padding:12px 18px;flex-wrap:wrap;position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);}
+  .modal-footer .btn{flex:1;justify-content:center;min-height:44px;}
 
   /* Forms */
   .form-row,.form-row-3{grid-template-columns:1fr;}
@@ -544,6 +565,7 @@ select option{background:var(--surface2);}
   /* User cards */
   .user-card{flex-wrap:wrap;}
   .user-card-actions{width:100%;justify-content:flex-end;margin-top:4px;}
+  .user-card-avatar{width:38px;height:38px;font-size:15px;}
 
   /* Filter row: scroll horizontal */
   .filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -551,31 +573,53 @@ select option{background:var(--surface2);}
   .filter-btn{flex-shrink:0;}
 
   /* Toast: full width bottom */
-  #toast{left:12px;right:12px;bottom:12px;max-width:none;border-radius:12px;}
+  #toast{left:12px;right:12px;bottom:72px;max-width:none;border-radius:12px;}
 
   /* Progress bar */
   .progress-bar{width:100% !important;}
 
   /* Perm table: compact */
-  .perm-table{font-size:11px;}
-  .perm-table th,.perm-table td{padding:7px 6px;}
+  .perm-table{font-size:10px;}
+  .perm-table th,.perm-table td{padding:6px 4px;}
 
   /* Diagnostic tabs on mobile */
   .diag-tab-btn{padding:6px 10px;font-size:11px;}
   .diag-stars{gap:2px;}
   .diag-star{font-size:26px;}
 
-  /* Delivery meta */
+  /* Delivery items */
   .delivery-meta{gap:6px;font-size:11px;}
+  .delivery-item{padding:10px 0;}
 
-  /* Buttons no mobile: maiores para toque */
-  .btn{min-height:38px;}
-  .btn-sm{min-height:32px;}
+  /* Buttons: maiores para toque */
+  .btn{min-height:40px;padding:8px 14px;}
+  .btn-sm{min-height:34px;padding:5px 10px;}
+
+  /* Finance row */
+  .finance-row{flex-wrap:wrap;gap:6px;}
+  .amount-green,.amount-red,.amount-yellow{font-size:13px;}
+
+  /* Nav sidebar */
+  .sidebar-nav{padding:8px 0;}
+  .nav-item{padding:10px 16px;font-size:13px;}
+  .nav-section-label{padding:12px 16px 4px;font-size:9px;}
+
+  /* Section sub */
+  .section-sub{font-size:11px;}
+
+  /* Meus contratos */
+  #meus-contratos-content .card{padding:14px;}
+
+  /* Leads kanban card: botões de ação maiores */
+  .lk-card{padding:12px;}
+  .lk-card-name{font-size:13px;}
 }
-
 @media(max-width:400px){
   .stats-grid,#fin-stats{grid-template-columns:1fr;}
   .topbar h2{font-size:14px;}
+  .stat-value{font-size:18px;}
+  .lk-col{width:220px;}
+  .modal-footer .btn{font-size:13px;}
 }
 </style>
 </head>
@@ -753,15 +797,15 @@ select option{background:var(--surface2);}
             <button class="lvt-btn" id="lvt-lista" onclick="setLeadsView('lista',this)">☰ Lista</button>
             <button class="lvt-btn" id="lvt-indicadores" onclick="setLeadsView('indicadores',this)">📊 Indicadores</button>
           </div>
-          <button class="btn btn-primary" onclick="openModalLead()">+ Novo Lead</button>
+          <button class="btn btn-primary editor-action" onclick="openModalLead()">+ Novo Lead</button>
         </div>
       </div>
 
       <!-- Filter bar -->
       <div class="leads-filter-bar">
         <div class="search-bar" style="max-width:240px;"><span class="search-icon">🔍</span><input type="text" placeholder="Buscar lead..." id="search-leads" oninput="renderLeads()"></div>
-        <select class="leads-period-select" id="leads-contrato-filter" onchange="renderLeads()">
-          <option value="">Todos os contratos</option>
+        <select class="leads-period-select" id="leads-cliente-filter" onchange="renderLeads()">
+          <option value="">Todos os clientes</option>
         </select>
         <select class="leads-period-select" id="leads-origem-filter" onchange="renderLeads()">
           <option value="">Todas as origens</option>
@@ -805,8 +849,8 @@ select option{background:var(--surface2);}
                 <option value="60">Últimos 60 dias</option>
                 <option value="90">Últimos 90 dias</option>
               </select>
-              <select class="leads-period-select" id="ind-contrato-filter" onchange="renderIndicadores()">
-                <option value="">Todos os contratos</option>
+              <select class="leads-period-select" id="ind-cliente-filter" onchange="renderIndicadores()">
+                <option value="">Todos os clientes</option>
               </select>
             </div>
           </div>
@@ -965,8 +1009,9 @@ select option{background:var(--surface2);}
           </select>
         </div>
       </div>
+      <div class="form-group"><label>Cliente*</label><select id="lead-cliente"><option value="">Selecione o cliente*</option></select></div>
       <div class="form-row">
-        <div class="form-group"><label>Contrato / Campanha</label><select id="lead-contrato"></select></div>
+        <div class="form-group"><label>Campanha / Contrato</label><select id="lead-campanha"><option value="">Sem campanha específica</option></select></div>
         <div class="form-group"><label>Responsável pelo atendimento</label><input type="text" id="lead-responsavel" placeholder="Nome do atendente"></div>
       </div>
       <div class="form-row">
@@ -1294,6 +1339,11 @@ select option{background:var(--surface2);}
   <div class="modal" style="max-width:640px;">
     <div class="modal-header"><h3 id="detalhe-title"></h3><button class="close-btn" onclick="closeModal('modal-cliente-detalhe')">✕</button></div>
     <div class="modal-body" id="detalhe-body"></div>
+    <div class="modal-footer" id="detalhe-footer" style="display:none;">
+      <button class="btn" onclick="closeModal('modal-cliente-detalhe')">Fechar</button>
+      <button class="btn btn-warning" id="detalhe-edit-btn" onclick="">✏️ Editar Cliente</button>
+      <button class="btn btn-danger" id="detalhe-delete-btn" onclick="">🗑️ Excluir</button>
+    </div>
   </div>
 </div>
 
@@ -2013,8 +2063,9 @@ function renderClientes(){
       <div class="divider"></div>
       <div class="client-meta-row"><span>📱 ${c.telefone||'—'}</span><span class="badge badge-${c.status==='ativo'?'active':c.status==='inativo'?'inactive':'prospect'}">${c.status}</span></div>
       <div class="client-meta-row"><span>📋 Contratos ativos</span><strong>${cts.length}</strong></div>
-      <div class="client-meta-row"><span>💰 MRR</span><strong class="amount-green">R$ ${mrr.toLocaleString('pt-BR')}</strong></div>
+      ${canFinanceiro()?`<div class="client-meta-row"><span>💰 MRR</span><strong class="amount-green">R$ ${mrr.toLocaleString('pt-BR')}</strong></div>`:''}
       ${c.segmento?`<div style="margin-top:8px;display:flex;gap:6px;align-items:center;"><span class="tag">${c.segmento}</span>${c.diagnostico?'<span class="tag" style="background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);">🔍 Diagnóstico</span>':''}</div>`:c.diagnostico?`<div style="margin-top:8px;"><span class="tag" style="background:rgba(92,244,160,.12);color:var(--success);border:1px solid rgba(92,244,160,.25);">🔍 Diagnóstico</span></div>`:''}
+      ${canEdit()?`<div class="card-actions" style="margin-top:10px;display:flex;gap:6px;"><button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openEditCliente('${c.id}')">✏️ Editar</button>${currentRole==='admin'?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteCliente('${c.id}','${c.nome}')">🗑️</button>`:''}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -2063,9 +2114,20 @@ function showClienteDetalhe(id){
     ${canEdit()?`<div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
       <button class="btn btn-sm" onclick="openDiagnostico('${id}')">🔍 ${c.diagnostico?'Editar':'Preencher'} Diagnóstico</button>
       ${c.diagnostico?`<button class="btn btn-sm btn-success" onclick="closeModal('modal-cliente-detalhe');openDiagView('${id}')">📊 Ver Análise</button>`:''}
-      <button class="btn btn-danger btn-sm" onclick="deleteCliente('${id}');closeModal('modal-cliente-detalhe');">🗑️ Excluir</button>
+      <button class="btn btn-danger btn-sm" onclick="if(canEdit())deleteCliente('${id}');else toast('Sem permissão.','🚫');closeModal('modal-cliente-detalhe');">🗑️ Excluir</button>
     </div>`:c.diagnostico?`<div style="margin-top:16px;text-align:right;"><button class="btn btn-sm btn-success" onclick="closeModal('modal-cliente-detalhe');openDiagView('${id}')">📊 Ver Diagnóstico</button></div>`:''}`;
   openModal('modal-cliente-detalhe');
+  // Show/hide edit controls based on permission
+  const df = document.getElementById('detalhe-footer');
+  const eb = document.getElementById('detalhe-edit-btn');
+  const db2 = document.getElementById('detalhe-delete-btn');
+  if(df){
+    if(canEdit()){
+      df.style.display='';
+      if(eb) eb.onclick = ()=>{ closeModal('modal-cliente-detalhe'); openEditCliente(id); };
+      if(db2){ db2.style.display=currentRole==='admin'?'':'none'; db2.onclick=()=>deleteCliente(id,c.nome); }
+    } else { df.style.display='none'; }
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -2140,7 +2202,7 @@ function renderContratos(){
       <td><strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong></td>
       <td>${c.inicio||'—'}</td><td>${c.fim||'—'}</td>
       <td><span class="badge badge-${c.status==='ativo'?'active':c.status==='pausado'?'paused':'inactive'}">${c.status}</span></td>
-      <td><div style="display:flex;gap:4px;"><button class="btn btn-sm" onclick="showContratoDetalhe('${c.id}')">👁</button>${canEdit()?`<button class="btn btn-sm btn-danger" onclick="deleteContrato('${c.id}')">✕</button>`:''}</div></td></tr>`;
+      <td><div style="display:flex;gap:4px;"><button class="btn btn-sm" onclick="showContratoDetalhe('${c.id}')">👁</button>${canEdit()?`<button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openEditContrato('${c.id}')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteContrato('${c.id}')">✕</button>`:''}</div></td></tr>`;
   }).join('');
 }
 async function saveContrato(){
@@ -2258,9 +2320,9 @@ function renderFinanceiro(){
     <div class="stat-card"><span class="stat-icon">💰</span><div class="stat-label">Saldo</div><div class="stat-value" style="color:${tR-tD>=0?'var(--success)':'var(--danger)'}">R$ ${(tR-tD).toLocaleString('pt-BR')}</div><div class="stat-sub">Lucro líquido</div></div>
     <div class="stat-card"><span class="stat-icon">📊</span><div class="stat-label">Margem</div><div class="stat-value">${tR>0?Math.round((tR-tD)/tR*100):0}%</div><div class="stat-sub">Margem de lucro</div></div>`;
   const rl=document.getElementById('receitas-list');
-  if(rl) rl.innerHTML=rec.length===0?'<div class="empty-state"><div>📥</div><p>Nenhuma receita</p></div>':[...rec].sort((a,b)=>b.data>a.data?1:-1).map(f=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${f.descricao}</div><div style="font-size:11px;color:var(--text3);">${f.categoria} · ${f.data||'—'}${f.ref?' · '+f.ref:''}</div></div><div style="display:flex;align-items:center;gap:8px;"><div><div class="amount-green">R$ ${(+f.valor).toLocaleString('pt-BR')}</div><span class="badge badge-${f.status==='pago'?'active':'pending'}">${f.status}</span></div>${canEdit()?`<button class="btn btn-sm btn-danger" onclick="deleteFinanceiro('${f.id}')">✕</button>`:''}</div></div>`).join('');
+  if(rl) rl.innerHTML=rec.length===0?'<div class="empty-state"><div>📥</div><p>Nenhuma receita</p></div>':[...rec].sort((a,b)=>b.data>a.data?1:-1).map(f=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${f.descricao}</div><div style="font-size:11px;color:var(--text3);">${f.categoria} · ${f.data||'—'}${f.ref?' · '+f.ref:''}</div></div><div style="display:flex;align-items:center;gap:8px;"><div><div class="amount-green">R$ ${(+f.valor).toLocaleString('pt-BR')}</div><span class="badge badge-${f.status==='pago'?'active':'pending'}">${f.status}</span></div>${canEdit()?`<button class="btn btn-sm btn-warning" onclick="openEditFinanceiro('${f.id}')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteFinanceiro('${f.id}')">✕</button>`:''}</div></div>`).join('');
   const dl=document.getElementById('despesas-list');
-  if(dl) dl.innerHTML=des.length===0?'<div class="empty-state"><div>📤</div><p>Nenhuma despesa</p></div>':[...des].sort((a,b)=>b.data>a.data?1:-1).map(f=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${f.descricao}</div><div style="font-size:11px;color:var(--text3);">${f.categoria} · ${f.data||'—'}</div></div><div style="display:flex;align-items:center;gap:8px;"><div><div class="amount-red">R$ ${(+f.valor).toLocaleString('pt-BR')}</div><span class="badge badge-${f.status==='pago'?'inactive':'pending'}">${f.status}</span></div>${canEdit()?`<button class="btn btn-sm btn-danger" onclick="deleteFinanceiro('${f.id}')">✕</button>`:''}</div></div>`).join('');
+  if(dl) dl.innerHTML=des.length===0?'<div class="empty-state"><div>📤</div><p>Nenhuma despesa</p></div>':[...des].sort((a,b)=>b.data>a.data?1:-1).map(f=>`<div class="finance-row"><div><div style="font-size:13px;font-weight:500;">${f.descricao}</div><div style="font-size:11px;color:var(--text3);">${f.categoria} · ${f.data||'—'}</div></div><div style="display:flex;align-items:center;gap:8px;"><div><div class="amount-red">R$ ${(+f.valor).toLocaleString('pt-BR')}</div><span class="badge badge-${f.status==='pago'?'inactive':'pending'}">${f.status}</span></div>${canEdit()?`<button class="btn btn-sm btn-warning" onclick="openEditFinanceiro('${f.id}')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteFinanceiro('${f.id}')">✕</button>`:''}</div></div>`).join('');
 }
 async function saveFinanceiro(){
   if(!canEdit()){toast('Sem permissão.','🚫');return;}
@@ -2819,6 +2881,11 @@ function renderMeusContratos(){
                 ${e.concluida?`<span style="color:var(--success);">✓ Concluída ${e.concluidaEm?'em '+e.concluidaEm:''}</span>`:'<span style="color:var(--accent);">⏳ Em andamento</span>'}
               </div>
             </div>
+          <div style="display:flex;gap:5px;margin-top:7px;" onclick="event.stopPropagation()">
+            <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;" onclick="openModalContato('${l.id}')">📞</button>
+            ${canEdit()?`<button class="btn btn-sm btn-warning" style="font-size:10px;padding:3px 8px;" onclick="openModalLead('${l.id}')">✏️</button>`:''}
+            ${currentRole==='admin'?`<button class="btn btn-sm btn-danger" style="font-size:10px;padding:3px 8px;" onclick="deleteLead('${l.id}')">🗑️</button>`''}
+          </div>
           </div>`;
         }).join('')}
     </div>`;
@@ -3081,19 +3148,20 @@ function setLeadsView(view, btn){
 
 function getLeadsFiltrados(){
   const q   = (document.getElementById('search-leads')?.value||'').toLowerCase();
-  const ct  = document.getElementById('leads-contrato-filter')?.value||'';
+  const cli = document.getElementById('leads-cliente-filter')?.value||'';
   const ori = document.getElementById('leads-origem-filter')?.value||'';
   const per = parseInt(document.getElementById('leads-periodo-filter')?.value||'30');
 
   let list = st.leads;
 
-  // Clientes só veem seus contratos vinculados
+  // Clientes só veem seus próprios leads
   if(currentRole==='cliente'){
     const ids = window.clienteContratos||[];
-    list = list.filter(l=>ids.includes(l.contratoId));
+    const myClienteIds = st.clientes.filter(cl=>st.contratos.some(ct=>ids.includes(ct.id)&&ct.clienteId===cl.id)).map(cl=>cl.id);
+    list = list.filter(l=>myClienteIds.includes(l.clienteId));
   }
 
-  if(ct)  list = list.filter(l=>l.contratoId===ct);
+  if(cli) list = list.filter(l=>l.clienteId===cli);
   if(ori) list = list.filter(l=>l.origem===ori);
   if(per>0){
     const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-per);
@@ -3104,13 +3172,17 @@ function getLeadsFiltrados(){
 }
 
 function populateLeadFiltros(){
-  // Contrato filter in leads tab
-  const sel1 = document.getElementById('leads-contrato-filter');
-  const sel2 = document.getElementById('ind-contrato-filter');
-  const contratos = currentRole==='cliente'
-    ? st.contratos.filter(c=>(window.clienteContratos||[]).includes(c.id))
-    : st.contratos;
-  const opts = '<option value="">Todos os contratos</option>' + contratos.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
+  const sel1 = document.getElementById('leads-cliente-filter');
+  const sel2 = document.getElementById('ind-cliente-filter');
+  let clientes;
+  if(currentRole==='cliente'){
+    // Show only the client's own name
+    const meuCliente = st.clientes.find(cl=>(window.clienteContratos||[]).some(cid=>st.contratos.find(ct=>ct.id===cid&&ct.clienteId===cl.id)));
+    clientes = meuCliente ? [meuCliente] : [];
+  } else {
+    clientes = st.clientes;
+  }
+  const opts = '<option value="">Todos os clientes</option>' + clientes.map(cl=>`<option value="${cl.id}">${cl.nome}${cl.empresa?' — '+cl.empresa:''}</option>`).join('');
   if(sel1) sel1.innerHTML = opts;
   if(sel2) sel2.innerHTML = opts;
 }
@@ -3184,31 +3256,35 @@ function renderLeadsLista(){
       <td><div style="font-weight:600;font-size:13px;">${l.nome}</div><div style="font-size:11px;color:var(--text3);">${l.email||'—'}</div></td>
       <td>${l.telefone||'—'}</td>
       <td>${l.origem||'—'}</td>
-      <td style="font-size:12px;">${ct?ct.nome:'—'}</td>
+      <td style="font-size:12px;">${l.clienteNome||'—'}</td>
       <td>${l.valor?`<span class="amount-green">R$ ${(+l.valor).toLocaleString('pt-BR')}</span>`:'—'}</td>
       <td><span class="badge" style="background:${s.bg};color:${s.color};border:1px solid ${s.color}40;">${s.icon} ${s.label}</span></td>
       <td style="font-size:12px;color:var(--text3);">${l.data||'—'}</td>
-      <td><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteLead('${l.id}')">🗑️</button></td>
+      <td style="white-space:nowrap;">
+        <button class="btn btn-sm" style="font-size:11px;" onclick="event.stopPropagation();openModalContato('${l.id}')">📞</button>
+        ${canEdit()?`<button class="btn btn-sm btn-warning" style="font-size:11px;" onclick="event.stopPropagation();openModalLead('${l.id}')">✏️</button>`:''}
+        ${currentRole==='admin'?`<button class="btn btn-sm btn-danger" style="font-size:11px;" onclick="event.stopPropagation();deleteLead('${l.id}')">🗑️</button>`:''}
+      </td>
     </tr>`;
   }).join('');
 }
 
 function renderIndicadores(){
   const per = parseInt(document.getElementById('ind-periodo-a')?.value||'30');
-  const ct  = document.getElementById('ind-contrato-filter')?.value||'';
+  const cli  = document.getElementById('ind-cliente-filter')?.value||'';
   const now = Date.now();
 
   function getLeadsForPeriod(days, contratoId){
     const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-days);
     let list = st.leads;
     if(currentRole==='cliente') list = list.filter(l=>(window.clienteContratos||[]).includes(l.contratoId));
-    if(contratoId) list = list.filter(l=>l.contratoId===contratoId);
+    if(contratoId) list = list.filter(l=>l.clienteId===contratoId); // filter by clienteId
     if(days>0) list = list.filter(l=>{ const d=new Date(l.data||l.criadoEm?.split('/').reverse().join('-')); return d>=cutoff; });
     return list;
   }
 
-  const cur  = getLeadsForPeriod(per, ct);
-  const prev = getLeadsForPeriod(per*2, ct).filter(l=>{ const d=new Date(l.data||l.criadoEm?.split('/').reverse().join('-')); const cutPrev=new Date(); cutPrev.setDate(cutPrev.getDate()-per*2); const cutCur=new Date(); cutCur.setDate(cutCur.getDate()-per); return d>=cutPrev&&d<cutCur; });
+  const cur  = getLeadsForPeriod(per, cli);
+  const prev = getLeadsForPeriod(per*2, cli).filter(l=>{ const d=new Date(l.data||l.criadoEm?.split('/').reverse().join('-')); const cutPrev=new Date(); cutPrev.setDate(cutPrev.getDate()-per*2); const cutCur=new Date(); cutCur.setDate(cutCur.getDate()-per); return d>=cutPrev&&d<cutCur; });
 
   const total   = cur.length;
   const ganhos  = cur.filter(l=>l.status==='ganho').length;
@@ -3358,7 +3434,7 @@ async function showLeadDetalhe(id){
   if(!l) return;
   _leadsCurrentId = id;
   const s   = LEAD_STATUS[l.status]||LEAD_STATUS.novo;
-  const ct  = st.contratos.find(c=>c.id===l.contratoId);
+  const cliNome = l.clienteNome||st.clientes.find(x=>x.id===l.clienteId)?.nome||'—';
   const hist = [...(l.historico||[])].reverse();
 
   document.getElementById('lead-detalhe-title').textContent = `${s.icon} ${l.nome||'Lead'}`;
@@ -3389,7 +3465,8 @@ async function showLeadDetalhe(id){
         <div class="form-group" style="margin-bottom:8px;"><label>Origem</label><div style="font-size:13px;">📣 ${l.origem||'—'}</div></div>
       </div>
       <div>
-        <div class="form-group" style="margin-bottom:8px;"><label>Campanha</label><div style="font-size:13px;">📋 ${ct?ct.nome:'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Cliente</label><div style="font-size:13px;">👤 ${l.clienteNome||'—'}</div></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Campanha</label><div style="font-size:13px;">📋 ${l.contratoNome||'—'}</div></div>
         <div class="form-group" style="margin-bottom:8px;"><label>Responsável</label><div style="font-size:13px;">👤 ${l.responsavel||'—'}</div></div>
         <div class="form-group" style="margin-bottom:8px;"><label>Valor estimado</label><div style="color:var(--success);font-weight:700;font-size:15px;">${l.valor?'R$ '+(+l.valor).toLocaleString('pt-BR'):'—'}</div></div>
         <div class="form-group" style="margin-bottom:8px;"><label>Data entrada</label><div style="font-size:13px;">${l.data||l.criadoEm||'—'}</div></div>
@@ -3441,14 +3518,22 @@ function openModalLead(id=''){
   document.getElementById('lead-agendamento').value = lead?.agendamento||'';
   document.getElementById('lead-motivo').value      = lead?.motivo||'';
   onLeadStatusChange(lead?.status||'novo');
-  // Populate contracts
-  const sel = document.getElementById('lead-contrato');
-  if(sel){
-    const contratos = currentRole==='cliente'
-      ? st.contratos.filter(c=>(window.clienteContratos||[]).includes(c.id))
-      : st.contratos.filter(c=>c.status==='ativo');
-    sel.innerHTML = '<option value="">Sem campanha específica</option>' +
-      contratos.map(c=>`<option value="${c.id}"${lead?.contratoId===c.id?' selected':''}>${c.clienteNome||'—'} — ${c.nome}</option>`).join('');
+  // Populate clientes
+  const selCli = document.getElementById('lead-cliente');
+  if(selCli){
+    const clientes = currentRole==='cliente'
+      ? st.clientes.filter(cl=>(window.clienteContratos||[]).some(cid=>st.contratos.find(ct=>ct.id===cid&&ct.clienteId===cl.id)))
+      : st.clientes.filter(cl=>cl.status==='ativo'||cl.status==='prospect');
+    selCli.innerHTML = '<option value="">Selecione o cliente*</option>' +
+      clientes.map(cl=>`<option value="${cl.id}"${lead?.clienteId===cl.id?' selected':''}>${cl.nome}${cl.empresa?' — '+cl.empresa:''}</option>`).join('');
+    selCli.onchange = function(){
+      // populate campaigns for selected client
+      const selCamp = document.getElementById('lead-campanha');
+      if(!selCamp) return;
+      const myContratos = st.contratos.filter(ct=>ct.clienteId===this.value&&ct.status==='ativo');
+      selCamp.innerHTML = '<option value="">Sem campanha específica</option>' + myContratos.map(ct=>`<option value="${ct.id}">${ct.nome}</option>`).join('');
+    };
+    selCli.dispatchEvent(new Event('change'));
   }
   document.getElementById('modal-lead').classList.add('open');
 }
@@ -3461,16 +3546,20 @@ async function saveLeadModal(){
   if(!nome||!tel){toast('Nome e telefone são obrigatórios!','⚠️');return;}
   const btn = document.getElementById('btn-save-lead-modal');
   btn.disabled=true; btn.textContent='Salvando...';
-  const ctId = document.getElementById('lead-contrato').value;
-  const ct = st.contratos.find(c=>c.id===ctId);
+  const cliId  = document.getElementById('lead-cliente').value;
+  const cli    = st.clientes.find(c=>c.id===cliId);
+  const ctId   = document.getElementById('lead-campanha').value;
+  const ct     = st.contratos.find(c=>c.id===ctId);
   const status = document.getElementById('lead-status').value;
+  if(!cliId){toast('Selecione o cliente!','⚠️');btn.disabled=false;btn.textContent='Salvar Lead';return;}
   const data = {
     nome, telefone:tel,
     email:        document.getElementById('lead-email').value,
     origem:       ori,
+    clienteId:    cliId,
+    clienteNome:  cli?cli.nome:'',
     contratoId:   ctId,
     contratoNome: ct?ct.nome:'',
-    clienteNome:  ct?ct.clienteNome:'',
     responsavel:  document.getElementById('lead-responsavel').value,
     valor:        document.getElementById('lead-valor').value,
     status,
@@ -3536,6 +3625,63 @@ async function saveContato(){
   }catch(e){toast('Erro.','❌');console.error(e);}
 }
 
+
+
+// ── Edit helpers ──
+function openEditContrato(id){
+  const ct = st.contratos.find(x=>x.id===id);
+  if(!ct) return;
+  populateContratoClientes();
+  setTimeout(()=>{
+    const set=(i,v)=>{const el=document.getElementById(i);if(el)el.value=v||'';};
+    set('ct-cliente',ct.clienteId); set('ct-nome',ct.nome); set('ct-valor',ct.valor);
+    set('ct-inicio',ct.inicio); set('ct-fim',ct.fim); set('ct-diavcto',ct.diaVcto);
+    set('ct-status',ct.status||'ativo'); set('ct-obs',ct.obs);
+    document.querySelectorAll('#servicos-check input[type=checkbox]').forEach(cb=>{cb.checked=(ct.servicos||[]).includes(cb.value);});
+    const btn=document.getElementById('btn-save-contrato');
+    if(btn){btn.textContent='Salvar Alterações';btn.onclick=()=>updateContrato(id);}
+    document.getElementById('modal-contrato').classList.add('open');
+  },80);
+}
+async function updateContrato(id){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const cId=document.getElementById('ct-cliente').value,nome=document.getElementById('ct-nome').value.trim();
+  if(!cId||!nome){toast('Selecione o cliente e informe o nome!','⚠️');return;}
+  const btn=document.getElementById('btn-save-contrato');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    const cli=st.clientes.find(c=>c.id===cId);
+    const servicos=Array.from(document.querySelectorAll('#servicos-check input:checked')).map(cb=>cb.value);
+    await db.collection('contratos').doc(id).update({clienteId:cId,clienteNome:cli?cli.empresa:nome,nome,valor:document.getElementById('ct-valor').value,inicio:document.getElementById('ct-inicio').value,fim:document.getElementById('ct-fim').value,diaVcto:document.getElementById('ct-diavcto').value,status:document.getElementById('ct-status').value,servicos,obs:document.getElementById('ct-obs').value});
+    closeModal('modal-contrato');
+    const sb=document.getElementById('btn-save-contrato');if(sb){sb.textContent='Salvar Contrato';sb.onclick=saveContrato;}
+    toast('Contrato atualizado!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar Alterações';
+}
+
+function openEditFinanceiro(id){
+  if(!canFinanceiro()){toast('Sem permissão financeira.','🚫');return;}
+  const f=st.financeiro.find(x=>x.id===id);if(!f)return;
+  const set=(i,v)=>{const el=document.getElementById(i);if(el)el.value=v||'';};
+  set('f-tipo',f.tipo);set('f-descricao',f.descricao);set('f-valor',f.valor);
+  set('f-data',f.data);set('f-categoria',f.categoria);set('f-ref',f.ref);set('f-status',f.status);
+  const btn=document.getElementById('btn-save-fin');
+  if(btn){btn.textContent='Salvar Alterações';btn.onclick=()=>updateFinanceiro(id);}
+  document.getElementById('modal-financeiro').classList.add('open');
+}
+async function updateFinanceiro(id){
+  if(!canFinanceiro()){toast('Sem permissão financeira.','🚫');return;}
+  const desc=document.getElementById('f-descricao').value.trim(),valor=document.getElementById('f-valor').value;
+  if(!desc||!valor){toast('Descrição e valor obrigatórios!','⚠️');return;}
+  const btn=document.getElementById('btn-save-fin');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    await db.collection('financeiro').doc(id).update({tipo:document.getElementById('f-tipo').value,valor,descricao:desc,data:document.getElementById('f-data').value,categoria:document.getElementById('f-categoria').value,ref:document.getElementById('f-ref').value,status:document.getElementById('f-status').value});
+    closeModal('modal-financeiro');
+    const sb=document.getElementById('btn-save-fin');if(sb){sb.textContent='Salvar';sb.onclick=saveFinanceiro;}
+    toast('Lançamento atualizado!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;
+}
 
 // ═══════════════════════════════════════════════
 //  TEMA CLARO / ESCURO
