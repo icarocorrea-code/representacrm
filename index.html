@@ -2882,9 +2882,9 @@ function renderMeusContratos(){
               </div>
             </div>
           <div style="display:flex;gap:5px;margin-top:7px;" onclick="event.stopPropagation()">
-            <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;" onclick="openModalContato('${l.id}')">📞</button>
-            ${canEdit()?`<button class="btn btn-sm btn-warning" style="font-size:10px;padding:3px 8px;" onclick="openModalLead('${l.id}')">✏️</button>`:''}
-            ${currentRole==='admin'?`<button class="btn btn-sm btn-danger" style="font-size:10px;padding:3px 8px;" onclick="deleteLead('${l.id}')">🗑️</button>`''}
+            <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;" onclick="openModalContato('${e.id}')">📞</button>
+            ${canEdit()?`<button class="btn btn-sm btn-warning" style="font-size:10px;padding:3px 8px;" onclick="openModalLead('${e.id}')">✏️</button>`:''}
+            ${currentRole==='admin'?`<button class="btn btn-sm btn-danger" style="font-size:10px;padding:3px 8px;" onclick="deleteLead('${e.id}')">🗑️</button>`:''}
           </div>
           </div>`;
         }).join('')}
