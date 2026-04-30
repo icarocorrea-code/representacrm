@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Representa — Gestão Completa</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -394,14 +394,29 @@ select option{background:var(--surface2);}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
 
+/* ── INDICATOR CARDS (leads KPI) ── */
+.indicator-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;}
+.indicator-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.ic-blue::before{background:#3cbfff;}
+.ic-green::before{background:var(--success);}
+.ic-amber::before{background:var(--accent);}
+.ic-red::before{background:var(--danger);}
+.ic-purple::before{background:#7c5cfc;}
+.ic-label{font-size:10.5px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.6px;}
+.ic-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin:6px 0 2px;letter-spacing:-1px;line-height:1;}
+.ic-sub{font-size:11px;color:var(--text3);}
+.ic-trend{font-size:10px;font-weight:700;margin-top:6px;padding:2px 6px;border-radius:4px;display:inline-block;}
+.ic-trend.up{background:rgba(92,244,160,.12);color:var(--success);}
+.ic-trend.down{background:rgba(252,92,92,.1);color:var(--danger);}
+
 /* ── DIAGNÓSTICO ── */
 .diag-section{margin-bottom:20px;}
 .diag-section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
 .diag-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
-.diag-chip{padding:4px 10px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;}
+.diag-chip{padding:6px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;min-height:36px;display:flex;align-items:center;}
 .diag-chip.on{border-color:var(--accent);background:var(--accent-glow);color:var(--accent);}
 .diag-stars{display:flex;gap:4px;margin-top:4px;}
-.diag-star{font-size:22px;cursor:pointer;opacity:.2;transition:opacity .12s;user-select:none;}
+.diag-star{font-size:28px;cursor:pointer;opacity:.2;transition:opacity .12s;user-select:none;min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center;}
 .diag-star.on{opacity:1;}
 .radar-wrap{position:relative;width:100%;max-width:300px;margin:0 auto;}
 .insight-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;}
@@ -445,10 +460,11 @@ select option{background:var(--surface2);}
    MOBILE HAMBURGER
 ════════════════════════════════════════ */
 .mob-menu-btn{
-  display:none;position:fixed;top:14px;left:14px;z-index:400;
+  display:none;position:fixed;top:11px;left:12px;z-index:400;
   background:var(--surface);border:1px solid var(--border);border-radius:8px;
-  width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;
+  width:44px;height:44px;align-items:center;justify-content:center;cursor:pointer;
   flex-direction:column;gap:5px;padding:8px;transition:border-color .15s;
+  -webkit-tap-highlight-color:transparent;
 }
 .mob-menu-btn:hover{border-color:var(--accent);}
 .mob-menu-btn span{display:block;width:18px;height:2px;background:var(--text);border-radius:1px;transition:all .25s;}
@@ -459,12 +475,13 @@ select option{background:var(--surface2);}
 .mob-overlay.show{display:block;}
 
 /* ════════════════════════════════════════
-   RESPONSIVE — Tablet 1024px
+   RESPONSIVE — Tablet 1200px
 ════════════════════════════════════════ */
 @media(max-width:1200px){
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .kanban{grid-template-columns:repeat(2,1fr);}
   #fin-stats{grid-template-columns:repeat(2,1fr);}
+  #leads-kpi-grid{grid-template-columns:repeat(3,1fr) !important;}
   .leads-kanban{gap:10px;}
   .lk-col{width:200px;}
 }
@@ -473,40 +490,52 @@ select option{background:var(--surface2);}
    RESPONSIVE — Mobile 768px
 ════════════════════════════════════════ */
 @media(max-width:768px){
-  :root{--sidebar-w:260px;--topbar-h:57px;}
+  :root{--sidebar-w:272px;--topbar-h:56px;}
   body{overflow-x:hidden;}
 
   /* Hamburger visível */
   .mob-menu-btn{display:flex;}
 
-  /* Sidebar: drawer lateral escondido por padrão */
+  /* Sidebar: drawer lateral escondido */
   .sidebar{transform:translateX(-100%);z-index:300;box-shadow:none;}
-  .sidebar.mob-open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,.4);}
+  .sidebar.mob-open{transform:translateX(0);box-shadow:4px 0 40px rgba(0,0,0,.5);}
 
-  /* Main: ocupa tela toda */
+  /* Main: tela toda */
   .main{margin-left:0;}
 
   /* Topbar compacta */
-  .topbar{padding:0 14px 0 62px;}
-  .topbar h2{font-size:16px;}
+  .topbar{padding:0 14px 0 64px;gap:8px;}
+  .topbar h2{font-size:15px;}
   #topbar-role-badge{display:none;}
   #topbar-user-name{display:none;}
 
-  /* Content */
-  .content{padding:14px 14px 80px;height:calc(100vh - var(--topbar-h));overflow-y:auto;}
+  /* Content com padding bottom para não cobrir toast */
+  .content{padding:16px 14px 88px;height:calc(100vh - var(--topbar-h));overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  /* Safe area para iPhone com notch */
+  .content{padding-bottom:max(88px, calc(88px + env(safe-area-inset-bottom)));}
+  .modal-footer{padding-bottom:max(20px, calc(12px + env(safe-area-inset-bottom)));}
 
   /* Login */
-  #login-screen{align-items:flex-start;padding:24px 16px;overflow-y:auto;}
+  #login-screen{align-items:flex-start;padding:20px 16px 40px;overflow-y:auto;}
   .login-box{padding:0;}
-  .login-logo{margin-bottom:24px;}
+  .login-logo{margin-bottom:20px;}
   .login-logo h1{font-size:28px;}
-  .login-card{padding:24px 18px;border-radius:16px;}
+  .login-card{padding:22px 18px;border-radius:16px;}
 
-  /* Stats: 2 cols */
+  /* Inputs e selects: tap-friendly */
+  input,select,textarea{font-size:16px !important;min-height:44px;padding:10px 12px;}
+  input[type=checkbox]{min-height:auto;}
+
+  /* Stats: 2 colunas */
   .stats-grid,#fin-stats{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
-  .stat-card{padding:14px;}
+  .stat-card{padding:14px 12px;}
   .stat-value{font-size:22px;}
-  .stat-label{font-size:10px;}
+  .stat-label{font-size:9.5px;}
+  .stat-icon{font-size:18px;right:10px;top:10px;}
+
+  /* Indicator cards (leads KPI): 2 colunas */
+  #leads-kpi-grid{grid-template-columns:repeat(2,1fr) !important;gap:10px !important;}
+  .ic-value{font-size:22px;}
 
   /* Grids: 1 coluna */
   .grid-2,.grid-3{grid-template-columns:1fr;gap:12px;}
@@ -514,112 +543,129 @@ select option{background:var(--surface2);}
   /* Section header */
   .section-header{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:14px;}
   .section-header>div:last-child{display:flex;gap:8px;width:100%;flex-wrap:wrap;}
-  .search-bar{max-width:none;flex:1;}
+  .search-bar{max-width:none;flex:1;min-width:0;}
 
-  /* Kanban pipeline: 1 col */
+  /* Pipeline Kanban: 1 col */
   .kanban{grid-template-columns:1fr;}
 
-  /* Leads Kanban: scroll horizontal */
-  .leads-kanban-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .leads-kanban{gap:10px;}
-  .lk-col{width:240px;flex-shrink:0;}
+  /* Leads Kanban: scroll horizontal com snap */
+  .leads-kanban-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;}
+  .leads-kanban{gap:10px;padding:4px 2px 16px;}
+  .lk-col{width:80vw;max-width:300px;flex-shrink:0;scroll-snap-align:start;}
 
   /* Leads filter bar: scroll */
-  .leads-filter-bar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:6px;}
+  .leads-filter-bar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:6px;}
   .leads-filter-bar::-webkit-scrollbar{display:none;}
-  .leads-period-select{flex-shrink:0;font-size:11px;}
+  .leads-period-select{flex-shrink:0;font-size:12px;min-height:36px;}
   .leads-view-toggle{flex-shrink:0;}
-  .lvt-btn{padding:4px 8px;font-size:11px;}
+  .lvt-btn{padding:5px 10px;font-size:11px;min-height:34px;}
 
-  /* Leads indicadores: 1 col */
+  /* Leads indicadores comparativo: 1 col */
   .comparativo-grid{grid-template-columns:1fr;}
   .comp-col:first-child{border-right:none;border-bottom:1px solid var(--border);}
 
-  /* Clientes grid: 1 col */
+  /* Clientes/freelancers/usuários: 1 col */
   #clientes-grid{grid-template-columns:1fr !important;}
   #fl-grid{grid-template-columns:1fr !important;}
   #usuarios-grid{grid-template-columns:1fr !important;}
 
   /* Tabelas: scroll horizontal */
-  .table-wrap{border-radius:8px;overflow-x:auto;}
+  .table-wrap{border-radius:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   thead th{padding:8px 10px;font-size:10px;white-space:nowrap;}
   tbody td{padding:9px 10px;font-size:12px;}
-  /* Hide less critical columns on mobile */
   .hide-mobile{display:none !important;}
+
+  /* Colunas a ocultar nas tabelas em mobile */
+  table th:nth-child(3),table td:nth-child(3){display:none;}/* Serviços/col3 */
+  table th:nth-child(5),table td:nth-child(5){display:none;}/* Início */
 
   /* Modais: bottom sheet */
   .modal-overlay{padding:0;align-items:flex-end;}
-  .modal{width:100%;max-width:100%;border-radius:20px 20px 0 0;max-height:92vh;overflow-y:auto;}
+  .modal{width:100%;max-width:100%;border-radius:20px 20px 0 0;max-height:93vh;overflow-y:auto;}
   .modal-header{padding:16px 18px 12px;position:sticky;top:0;z-index:1;background:var(--surface);}
-  .modal-body{padding:14px 18px;}
-  .modal-footer{padding:12px 18px;flex-wrap:wrap;position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);}
-  .modal-footer .btn{flex:1;justify-content:center;min-height:44px;}
+  .modal-body{padding:14px 18px 8px;}
+  .modal-footer{padding:12px 18px 20px;flex-wrap:wrap;position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);}
+  .modal-footer .btn{flex:1;justify-content:center;min-height:46px;font-size:14px;}
 
-  /* Forms */
+  /* Forms: 1 col */
   .form-row,.form-row-3{grid-template-columns:1fr;}
 
   /* Cards */
-  .card{padding:14px;}
+  .card{padding:14px 12px;}
   .card-header{flex-wrap:wrap;gap:8px;}
 
   /* User cards */
-  .user-card{flex-wrap:wrap;}
-  .user-card-actions{width:100%;justify-content:flex-end;margin-top:4px;}
+  .user-card{flex-wrap:wrap;gap:10px;}
+  .user-card-actions{width:100%;justify-content:flex-end;margin-top:4px;gap:8px;}
+  .user-card-actions .btn{flex:1;justify-content:center;}
   .user-card-avatar{width:38px;height:38px;font-size:15px;}
 
   /* Filter row: scroll horizontal */
-  .filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:6px;}
   .filter-row::-webkit-scrollbar{display:none;}
-  .filter-btn{flex-shrink:0;}
+  .filter-btn{flex-shrink:0;min-height:34px;}
 
-  /* Toast: full width bottom */
-  #toast{left:12px;right:12px;bottom:72px;max-width:none;border-radius:12px;}
+  /* Toast: faixa na base */
+  #toast{left:12px;right:12px;bottom:16px;max-width:none;border-radius:12px;}
 
   /* Progress bar */
   .progress-bar{width:100% !important;}
 
-  /* Perm table: compact */
+  /* Tabela de permissões: compacta */
   .perm-table{font-size:10px;}
   .perm-table th,.perm-table td{padding:6px 4px;}
+  .perm-check{font-size:13px;}
 
-  /* Diagnostic tabs on mobile */
+  /* Diagnostic: tabs menores */
   .diag-tab-btn{padding:6px 10px;font-size:11px;}
-  .diag-stars{gap:2px;}
-  .diag-star{font-size:26px;}
+  .diag-stars{gap:3px;}
+  .diag-star{font-size:26px;min-width:40px;min-height:40px;}
 
   /* Delivery items */
   .delivery-meta{gap:6px;font-size:11px;}
-  .delivery-item{padding:10px 0;}
+  .delivery-item{padding:10px 0;gap:10px;}
 
-  /* Buttons: maiores para toque */
-  .btn{min-height:40px;padding:8px 14px;}
-  .btn-sm{min-height:34px;padding:5px 10px;}
+  /* Botões: touch-friendly */
+  .btn{min-height:42px;padding:8px 14px;-webkit-tap-highlight-color:transparent;}
+  .btn-sm{min-height:36px;padding:5px 10px;}
 
-  /* Finance row */
+  /* Finance row mobile */
   .finance-row{flex-wrap:wrap;gap:6px;}
   .amount-green,.amount-red,.amount-yellow{font-size:13px;}
 
   /* Nav sidebar */
-  .sidebar-nav{padding:8px 0;}
-  .nav-item{padding:10px 16px;font-size:13px;}
-  .nav-section-label{padding:12px 16px 4px;font-size:9px;}
+  .nav-item{padding:11px 14px;font-size:14px;}
+  .nav-section-label{padding:12px 14px 4px;font-size:9px;}
+  .logo{padding:18px 16px 14px;}
 
   /* Section sub */
   .section-sub{font-size:11px;}
 
   /* Meus contratos */
-  #meus-contratos-content .card{padding:14px;}
+  #meus-contratos-content .card{padding:14px 12px;}
 
-  /* Leads kanban card: botões de ação maiores */
-  .lk-card{padding:12px;}
-  .lk-card-name{font-size:13px;}
+  /* Leads kanban card */
+  .lk-card{padding:12px;touch-action:manipulation;}
+  .lk-card-name{font-size:14px;}
+
+  /* Client card touch */
+  .client-card{touch-action:manipulation;}
+
+  /* Topbar theme btn */
+  .theme-btn{width:40px;height:40px;}
+
+  /* Diagnóstico modal: maior */
+  #modal-diagnostico .modal{max-height:96vh;}
 }
+
 @media(max-width:400px){
   .stats-grid,#fin-stats{grid-template-columns:1fr;}
-  .topbar h2{font-size:14px;}
+  #leads-kpi-grid{grid-template-columns:1fr !important;}
+  .topbar h2{font-size:13px;}
   .stat-value{font-size:18px;}
-  .lk-col{width:220px;}
+  .lk-col{width:88vw;}
   .modal-footer .btn{font-size:13px;}
+  .ic-value{font-size:18px;}
 }
 </style>
 </head>
@@ -2260,7 +2306,15 @@ function filterEntregas(f,el){fEnt=f;document.querySelectorAll('#tab-entregas .f
 function populateEntregaContratos(){document.getElementById('e-contrato').innerHTML='<option value="">Selecione...</option>'+st.contratos.filter(c=>c.status==='ativo').map(c=>`<option value="${c.id}">${c.clienteNome} — ${c.nome}</option>`).join('');}
 function renderEntregas(){
   const td=today();
-  const list=st.entregas.filter(e=>{
+  let list=st.entregas;
+
+  // Cliente só vê entregas dos seus contratos vinculados
+  if(currentRole==='cliente'){
+    const ids = window.clienteContratos||[];
+    list = list.filter(e=>ids.includes(e.contratoId));
+  }
+
+  list = list.filter(e=>{
     if(fEnt==='pendente')return !e.concluida&&(!e.prazo||e.prazo>=td);
     if(fEnt==='concluido')return e.concluida;
     if(fEnt==='atrasado')return !e.concluida&&e.prazo&&e.prazo<td;
@@ -3131,7 +3185,10 @@ async function deleteFreelancer(id){
 
 // Atualiza modal de entrega para incluir campo freelancer
 function populateEntregaContratos(){
-  document.getElementById('e-contrato').innerHTML='<option value="">Selecione...</option>'+st.contratos.filter(c=>c.status==='ativo').map(c=>`<option value="${c.id}">${c.clienteNome} — ${c.nome}</option>`).join('');
+  const contratos = currentRole==='cliente'
+    ? st.contratos.filter(c=>(window.clienteContratos||[]).includes(c.id))
+    : st.contratos.filter(c=>c.status==='ativo');
+  document.getElementById('e-contrato').innerHTML='<option value="">Selecione...</option>'+contratos.map(c=>`<option value="${c.id}">${c.clienteNome} — ${c.nome}</option>`).join('');
   // Populate freelancer select if exists
   const sel = document.getElementById('e-freelancer');
   if(sel) sel.innerHTML='<option value="">Nenhum (interno)</option>'+st.freelancers.map(f=>`<option value="${f.id}">${f.nome} — ${f.especialidade}</option>`).join('');
@@ -3755,6 +3812,24 @@ document.addEventListener('click',e=>{
   if(window.innerWidth<=768 && e.target.closest('.nav-item')) closeMobMenu();
 });
 window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMobMenu(); });
+
+// ── SWIPE para fechar sidebar no mobile ──
+(function(){
+  let startX=0, startY=0;
+  document.addEventListener('touchstart',e=>{
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=Math.abs(e.changedTouches[0].clientY-startY);
+    // Swipe para esquerda (>60px horizontal, <40px vertical) fecha sidebar
+    if(dx<-60 && dy<40){
+      const sidebar=document.getElementById('sidebar');
+      if(sidebar && sidebar.classList.contains('mob-open')) closeMobMenu();
+    }
+  },{passive:true});
+})();
 </script>
 </body>
 </html>
