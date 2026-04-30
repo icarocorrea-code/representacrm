@@ -972,7 +972,7 @@ select option{background:var(--surface2);}
             <tr><td>Criar / editar / excluir registros</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
             <tr><td>Marcar entregas como concluídas</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
             <tr><td>Lançamentos financeiros</td><td class="perm-check">✅</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
-            <tr><td>Visualizar dados financeiros</td><td class="perm-check">✅</td><td class="perm-check">🔐 Liberável</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
+            <tr><td>Visualizar dados financeiros</td><td class="perm-check">✅</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
             <tr><td>Ver seus contratos e entregas</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">✅</td><td class="perm-check">✅</td></tr>
             <tr><td>Gerenciar usuários e permissões</td><td class="perm-check">✅</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td><td class="perm-check">🚫</td></tr>
           </tbody>
@@ -1271,20 +1271,18 @@ select option{background:var(--surface2);}
       <div class="form-group" id="u-cargo-group"><label>Cargo / Função</label><input type="text" id="u-cargo" placeholder="Ex: Gestor de Tráfego, Designer..."></div>
       <!-- Visível apenas quando role = cliente -->
       <div class="form-group" id="u-contratos-group" style="display:none;">
-        <label>Contratos vinculados*</label>
+        <label>Empresa vinculada*</label>
         <div class="note-card" style="margin-bottom:8px;padding:10px 12px;">
-          <div class="note-text" style="font-size:12px;">Selecione quais contratos este cliente poderá visualizar. Ele verá apenas as informações desses contratos e suas entregas (sem dados financeiros).</div>
+          <div class="note-text" style="font-size:12px;">Selecione <strong>qual empresa</strong> (cliente) este usuário poderá visualizar. Ele verá apenas os contratos e entregas dessa empresa (sem dados financeiros).</div>
         </div>
-        <div id="u-contratos-list" style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;padding:2px;"></div>
+        <select id="u-cliente-vinculado" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;">
+          <option value="">Selecione a empresa...</option>
+        </select>
       </div>
-      <!-- Liberação financeira para editores -->
+      <!-- Nota informativa para editores -->
       <div class="form-group" id="u-fin-group" style="display:none;">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-          <input type="checkbox" id="u-fin-access" style="width:auto;accent-color:var(--accent);">
-          <span>Liberar acesso aos dados financeiros</span>
-        </label>
-        <div class="note-card" style="margin-top:6px;padding:8px 12px;">
-          <div class="note-text" style="font-size:12px;">Editores não têm acesso financeiro por padrão. Marque para liberar visualização de indicadores, receitas e despesas.</div>
+        <div class="note-card" style="margin-top:6px;padding:8px 12px;border-color:rgba(252,92,92,.3);background:rgba(252,92,92,.06);">
+          <div class="note-text" style="font-size:12px;color:var(--danger);">🔒 Editores <strong>não têm acesso</strong> a dados financeiros (valores de contratos, receitas, despesas). Apenas administradores visualizam o módulo financeiro.</div>
         </div>
       </div>
       <div class="note-card" style="margin-top:4px;">
@@ -1311,22 +1309,20 @@ select option{background:var(--surface2);}
         </select>
       </div>
       <div class="form-group" id="edit-cargo-group"><label>Cargo / Função</label><input type="text" id="edit-role-cargo" placeholder="Ex: Designer..."></div>
-      <!-- Contratos para cliente -->
+      <!-- Empresa para cliente -->
       <div class="form-group" id="edit-contratos-group" style="display:none;">
-        <label>Contratos vinculados</label>
+        <label>Empresa vinculada</label>
         <div class="note-card" style="margin-bottom:8px;padding:10px 12px;">
-          <div class="note-text" style="font-size:12px;">Defina quais contratos este cliente pode visualizar.</div>
+          <div class="note-text" style="font-size:12px;">Defina <strong>qual empresa</strong> (cliente) este usuário pode visualizar.</div>
         </div>
-        <div id="edit-contratos-list" style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;padding:2px;"></div>
+        <select id="edit-cliente-vinculado" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;">
+          <option value="">Selecione a empresa...</option>
+        </select>
       </div>
-      <!-- Liberação financeira para editor -->
+      <!-- Nota financeira para editor -->
       <div class="form-group" id="edit-fin-group" style="display:none;">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-          <input type="checkbox" id="edit-fin-access" style="width:auto;accent-color:var(--accent);">
-          <span>Liberar acesso aos dados financeiros</span>
-        </label>
-        <div class="note-card" style="margin-top:6px;padding:8px 12px;">
-          <div class="note-text" style="font-size:12px;">Editores não têm acesso financeiro por padrão. Marque para liberar visualização.</div>
+        <div class="note-card" style="margin-top:6px;padding:8px 12px;border-color:rgba(252,92,92,.3);background:rgba(252,92,92,.06);">
+          <div class="note-text" style="font-size:12px;color:var(--danger);">🔒 Editores <strong>não têm acesso</strong> a dados financeiros. Apenas administradores visualizam valores de contratos, receitas e despesas.</div>
         </div>
       </div>
     </div>
@@ -1824,8 +1820,15 @@ function startApp(userData){
   const isCliente = userData.role==='cliente';
   document.querySelectorAll('.internal-only').forEach(el=>el.style.display=isCliente?'none':'');
   document.querySelectorAll('.cliente-only').forEach(el=>el.style.display=isCliente?'':'none');
-  // Store contratos vinculados for client
-  window.clienteContratos = userData.contratosVinculados || [];
+  // Store contratos vinculados for client — support both new (clienteVinculadoId) and legacy (contratosVinculados array)
+  if(userData.clienteVinculadoId){
+    // New model: derive contracts from empresa at runtime
+    window._clienteVinculadoId = userData.clienteVinculadoId;
+    window.clienteContratos = st.contratos.filter(c=>c.clienteId===userData.clienteVinculadoId).map(c=>c.id);
+  } else {
+    window._clienteVinculadoId = '';
+    window.clienteContratos = userData.contratosVinculados || [];
+  }
   // Nav leads — visible to clients and internal (always visible)
   const navLeads = document.getElementById('nav-leads');
   if(navLeads) navLeads.style.display = '';
@@ -1844,7 +1847,7 @@ function applyPermissions(userData){
   const role = currentRole;
   const canEdit = role==='admin'||role==='editor';
   const isCliente = role==='cliente';
-  const finAccess = role==='admin' || (role==='editor' && userData && userData.finAccess===true);
+  const finAccess = role==='admin';
 
   document.querySelectorAll('.editor-action').forEach(el=>{
     el.style.display = canEdit ? '' : 'none';
@@ -1868,7 +1871,7 @@ function applyPermissions(userData){
   }
 }
 
-function canFinanceiro(){ return currentRole==='admin' || (currentRole==='editor' && window._currentUserData && window._currentUserData.finAccess===true); }
+function canFinanceiro(){ return currentRole==='admin'; }
 
 // ═══════════════════════════════════════════════
 //  LOGIN / LOGOUT / SETUP
@@ -1979,6 +1982,10 @@ function canEdit(){ return currentRole==='admin'||currentRole==='editor'; }
 //  RENDER ALL
 // ═══════════════════════════════════════════════
 function renderAll(){
+  // Re-derive cliente contracts in case new contracts were added to that empresa
+  if(currentRole==='cliente' && window._clienteVinculadoId){
+    window.clienteContratos = st.contratos.filter(c=>c.clienteId===window._clienteVinculadoId).map(c=>c.id);
+  }
   renderDashboard(); renderClientes(); renderContratos(); renderEntregas();
   renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers(); renderLeads();
   document.getElementById('badge-clientes').textContent=st.clientes.filter(c=>c.status==='ativo').length;
@@ -2195,11 +2202,12 @@ function renderContratos(){
   const list=st.contratos.filter(c=>(fCon==='todos'||c.status===fCon)&&(!q||c.nome.toLowerCase().includes(q)||(c.clienteNome||'').toLowerCase().includes(q)));
   const tbody=document.getElementById('contratos-tbody');if(!tbody)return;
   if(!list.length){tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state"><div>📋</div><p>Nenhum contrato ainda.</p></div></td></tr>`;return;}
+  const showFin = canFinanceiro();
   tbody.innerHTML=list.map(c=>{
     const sv=(c.servicos||[]).slice(0,3);
     return `<tr><td><strong>${c.clienteNome||'—'}</strong></td><td><span style="font-weight:500;">${c.nome}</span></td>
       <td><div style="display:flex;gap:4px;flex-wrap:wrap;">${sv.map(s=>`<span class="tag">${s}</span>`).join('')}${(c.servicos||[]).length>3?`<span class="tag">+${c.servicos.length-3}</span>`:''}</div></td>
-      <td><strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong></td>
+      <td>${showFin?`<strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong>`:'<span style="color:var(--text3);font-size:12px;">🔒 Restrito</span>'}</td>
       <td>${c.inicio||'—'}</td><td>${c.fim||'—'}</td>
       <td><span class="badge badge-${c.status==='ativo'?'active':c.status==='pausado'?'paused':'inactive'}">${c.status}</span></td>
       <td><div style="display:flex;gap:4px;"><button class="btn btn-sm" onclick="showContratoDetalhe('${c.id}')">👁</button>${canEdit()?`<button class="btn btn-sm btn-warning" onclick="event.stopPropagation();openEditContrato('${c.id}')">✏️</button><button class="btn btn-sm btn-danger" onclick="deleteContrato('${c.id}')">✕</button>`:''}</div></td></tr>`;
@@ -2229,7 +2237,7 @@ function showContratoDetalhe(id){
     <div class="grid-2" style="margin-bottom:16px;">
       <div>
         <div class="form-group" style="margin-bottom:8px;"><label>Cliente</label><strong>${c.clienteNome}</strong></div>
-        <div class="form-group" style="margin-bottom:8px;"><label>Valor Mensal</label><strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong></div>
+        <div class="form-group" style="margin-bottom:8px;"><label>Valor Mensal</label>${canFinanceiro()?`<strong class="amount-green">R$ ${(+c.valor||0).toLocaleString('pt-BR')}</strong>`:'<span style="color:var(--text3);font-size:13px;">🔒 Restrito</span>'}</div>
         <div class="form-group" style="margin-bottom:8px;"><label>Início</label>${c.inicio||'—'}</div>
       </div>
       <div>
@@ -2372,7 +2380,19 @@ function renderUsuarios(){
   if(!st.usuarios.length){grid.innerHTML='<div class="empty-state"><div>👥</div><p>Nenhum usuário cadastrado.</p></div>';return;}
   const roleLabel={admin:'👑 Admin',editor:'✏️ Editor',viewer:'👁 Visualizador',cliente:'🤝 Cliente',blocked:'🚫 Bloqueado'};
   const roleClass={admin:'perm-admin',editor:'perm-editor',viewer:'perm-viewer',cliente:'perm-cliente',blocked:'perm-blocked'};
-  grid.innerHTML=st.usuarios.map(u=>`
+  grid.innerHTML=st.usuarios.map(u=>{
+    // Find empresa name for cliente
+    let empresaVinculada = '';
+    if(u.role==='cliente' && u.clienteVinculadoId){
+      const cli = st.clientes.find(c=>c.id===u.clienteVinculadoId);
+      empresaVinculada = cli ? (cli.empresa||cli.nome) : '—';
+    } else if(u.role==='cliente' && u.contratosVinculados?.length){
+      // legacy: derive from first contract
+      const ct = st.contratos.find(c=>u.contratosVinculados.includes(c.id));
+      const cli = ct ? st.clientes.find(c=>c.id===ct.clienteId) : null;
+      empresaVinculada = cli ? (cli.empresa||cli.nome) : '—';
+    }
+    return `
     <div class="user-card">
       <div class="user-card-avatar">${(u.nome||'?').charAt(0).toUpperCase()}</div>
       <div class="user-card-info">
@@ -2380,17 +2400,17 @@ function renderUsuarios(){
         <div class="user-card-email">${u.email||'—'}</div>
         <div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
           <span class="perm-badge ${roleClass[u.role]||'perm-viewer'}">${roleLabel[u.role]||u.role}</span>
-          ${u.role==='editor'&&u.finAccess?'<span class="perm-badge" style="background:rgba(240,165,0,.12);color:var(--accent);border:1px solid rgba(240,165,0,.3);">💰 Fin. liberado</span>':''}
-          ${u.role==='cliente'&&u.contratosVinculados?.length?`<span style="font-size:11px;color:var(--text3);">${u.contratosVinculados.length} contrato(s)</span>`:''}
+          ${u.role==='cliente'&&empresaVinculada?`<span style="font-size:11px;color:var(--accent);background:var(--accent-glow);padding:2px 8px;border-radius:12px;border:1px solid rgba(240,165,0,.3);">🏢 ${empresaVinculada}</span>`:''}
           ${u.cargo?`<span style="font-size:11px;color:var(--text3);">${u.cargo}</span>`:''}
           <span style="font-size:11px;color:var(--text3);">Cadastrado: ${u.criadoEm||'—'}</span>
         </div>
       </div>
       ${u.id!==currentUser?.uid?`<div class="user-card-actions">
-        <button class="btn btn-sm btn-warning" onclick="openEditRole('${u.id}','${u.role}','${u.nome||''}','${u.cargo||''}',${JSON.stringify(u.contratosVinculados||[]).replace(/"/g,"'")},${!!u.finAccess})">✏️ Editar</button>
+        <button class="btn btn-sm btn-warning" onclick="openEditRole('${u.id}','${u.role}','${(u.nome||'').replace(/'/g,"\\'")}','${(u.cargo||'').replace(/'/g,"\\'")}','${u.clienteVinculadoId||''}',false)">✏️ Editar</button>
         <button class="btn btn-sm btn-danger" onclick="deleteUsuario('${u.id}','${u.nome||''}')">🗑️</button>
       </div>`:'<div style="padding:0 8px;font-size:12px;color:var(--text3);">Sua conta</div>'}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 async function saveUsuario(){
@@ -2400,25 +2420,28 @@ async function saveUsuario(){
   const senha=document.getElementById('u-senha').value;
   const role=document.getElementById('u-role').value;
   const cargo=document.getElementById('u-cargo').value.trim();
-  const finAccess = role==='editor' && document.getElementById('u-fin-access')?.checked;
+  const finAccess = false; // Editores não têm acesso financeiro
   if(!nome||!email||!senha){toast('Preencha todos os campos obrigatórios!','⚠️');return;}
   if(senha.length<6){toast('Senha deve ter mínimo 6 caracteres.','⚠️');return;}
 
-  // Get selected contracts for client role
+  // Get selected empresa (cliente) for client role
   let contratosVinculados = [];
+  let clienteVinculadoId = '';
   if(role==='cliente'){
-    document.querySelectorAll('#u-contratos-list input[type=checkbox]:checked').forEach(cb=>contratosVinculados.push(cb.value));
-    if(!contratosVinculados.length){toast('Selecione ao menos um contrato para o cliente.','⚠️');return;}
+    clienteVinculadoId = document.getElementById('u-cliente-vinculado')?.value;
+    if(!clienteVinculadoId){toast('Selecione a empresa que este cliente poderá visualizar.','⚠️');return;}
+    // Derive all contracts of that empresa
+    contratosVinculados = st.contratos.filter(c=>c.clienteId===clienteVinculadoId).map(c=>c.id);
   }
 
   const btn=document.getElementById('btn-save-usuario');btn.disabled=true;btn.textContent='Criando...';
   try{
     const cred=await authSec.createUserWithEmailAndPassword(email,senha);
-    await db.collection('usuarios').doc(cred.user.uid).set({nome,email,role,cargo,finAccess,contratosVinculados,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome,ativo:true});
+    await db.collection('usuarios').doc(cred.user.uid).set({nome,email,role,cargo,finAccess:false,clienteVinculadoId,contratosVinculados,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome,ativo:true});
     await authSec.signOut();
     closeModal('modal-usuario');
     ['u-nome','u-email','u-senha','u-cargo'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    if(document.getElementById('u-fin-access')) document.getElementById('u-fin-access').checked=false;
+    const sel=document.getElementById('u-cliente-vinculado');if(sel)sel.value='';
     toast(`Usuário "${nome}" criado com sucesso!`);
   }catch(e){
     const msgs={'auth/email-already-in-use':'Este e-mail já está em uso.','auth/invalid-email':'E-mail inválido.','auth/weak-password':'Senha muito fraca.'};
@@ -2428,22 +2451,16 @@ async function saveUsuario(){
   btn.disabled=false;btn.textContent='Criar Usuário';
 }
 
-function openEditRole(uid,role,nome,cargo,contratosVinculados=[],finAccess=false){
+function openEditRole(uid,role,nome,cargo,clienteVinculadoId,finAccess){
   document.getElementById('edit-role-uid').value=uid;
   document.getElementById('edit-role-title').textContent=`✏️ Editar — ${nome}`;
   document.getElementById('edit-role-select').value=role;
   document.getElementById('edit-role-cargo').value=cargo;
-  if(document.getElementById('edit-fin-access')) document.getElementById('edit-fin-access').checked=finAccess;
   onEditRoleChange(role);
-  // Populate contratos
-  const clist = document.getElementById('edit-contratos-list');
-  if(clist){
-    clist.innerHTML = st.contratos.map(c=>`
-      <label style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;">
-        <input type="checkbox" value="${c.id}" ${(contratosVinculados||[]).includes(c.id)?'checked':''} style="width:auto;accent-color:var(--accent);">
-        <span><strong>${c.nome}</strong> — ${c.clienteNome||'—'}</span>
-        <span class="badge badge-${c.status==='ativo'?'active':c.status==='pausado'?'paused':'inactive'}" style="margin-left:auto;">${c.status}</span>
-      </label>`).join('');
+  // Pre-select empresa vinculada
+  if(role==='cliente'){
+    const sel = document.getElementById('edit-cliente-vinculado');
+    if(sel) setTimeout(()=>{ sel.value = clienteVinculadoId||''; }, 50);
   }
   openModal('modal-edit-role');
 }
@@ -2453,13 +2470,15 @@ async function saveEditRole(){
   const uid=document.getElementById('edit-role-uid').value;
   const newRole=document.getElementById('edit-role-select').value;
   const cargo=document.getElementById('edit-role-cargo').value.trim();
-  const finAccess = newRole==='editor' && document.getElementById('edit-fin-access')?.checked;
   let contratosVinculados = [];
+  let clienteVinculadoId = '';
   if(newRole==='cliente'){
-    document.querySelectorAll('#edit-contratos-list input[type=checkbox]:checked').forEach(cb=>contratosVinculados.push(cb.value));
+    clienteVinculadoId = document.getElementById('edit-cliente-vinculado')?.value||'';
+    if(!clienteVinculadoId){toast('Selecione a empresa vinculada ao cliente.','⚠️');return;}
+    contratosVinculados = st.contratos.filter(c=>c.clienteId===clienteVinculadoId).map(c=>c.id);
   }
   try{
-    await db.collection('usuarios').doc(uid).update({role:newRole,cargo,finAccess,contratosVinculados});
+    await db.collection('usuarios').doc(uid).update({role:newRole,cargo,finAccess:false,clienteVinculadoId,contratosVinculados});
     closeModal('modal-edit-role');
     toast('Permissão atualizada!');
   }catch(e){toast('Erro.','❌');console.error(e);}
@@ -2816,13 +2835,12 @@ function onRoleChange(role){
   if(finGroup) finGroup.style.display = role==='editor' ? '' : 'none';
   if(cargoGroup) cargoGroup.style.display = role==='cliente' ? 'none' : '';
   if(role==='cliente'){
-    const clist = document.getElementById('u-contratos-list');
-    if(clist) clist.innerHTML = st.contratos.map(c=>`
-      <label style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;">
-        <input type="checkbox" value="${c.id}" style="width:auto;accent-color:var(--accent);">
-        <span><strong>${c.nome}</strong> — ${c.clienteNome||'—'}</span>
-        <span class="badge badge-${c.status==='ativo'?'active':c.status==='pausado'?'paused':'inactive'}" style="margin-left:auto;">${c.status}</span>
-      </label>`).join('') || '<p style="font-size:13px;color:var(--text3);">Nenhum contrato cadastrado ainda.</p>';
+    const sel = document.getElementById('u-cliente-vinculado');
+    if(sel){
+      sel.innerHTML = '<option value="">Selecione a empresa...</option>' +
+        st.clientes.filter(c=>c.status==='ativo'||c.status==='prospect').map(c=>`
+          <option value="${c.id}">${c.empresa||c.nome} — ${c.nome}</option>`).join('');
+    }
   }
 }
 
@@ -2833,6 +2851,14 @@ function onEditRoleChange(role){
   if(contratosGroup) contratosGroup.style.display = role==='cliente' ? '' : 'none';
   if(finGroup) finGroup.style.display = role==='editor' ? '' : 'none';
   if(cargoGroup) cargoGroup.style.display = role==='cliente' ? 'none' : '';
+  if(role==='cliente'){
+    const sel = document.getElementById('edit-cliente-vinculado');
+    if(sel){
+      sel.innerHTML = '<option value="">Selecione a empresa...</option>' +
+        st.clientes.filter(c=>c.status==='ativo'||c.status==='prospect').map(c=>`
+          <option value="${c.id}">${c.empresa||c.nome} — ${c.nome}</option>`).join('');
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════
