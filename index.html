@@ -524,7 +524,7 @@ select option{background:var(--surface2);}
   .main{margin-left:0;}
 
   /* Topbar compacta */
-  .topbar{padding:0 14px 0 64px;gap:8px;}
+  .topbar{padding:0 60px 0 16px;gap:8px;}
   .topbar h2{font-size:15px;}
   #topbar-role-badge{display:none;}
   #topbar-user-name{display:none;}
@@ -698,6 +698,14 @@ select option{background:var(--surface2);}
   <span></span><span></span><span></span>
 </button>
 <div class="mob-overlay" id="mob-overlay" onclick="closeMobMenu()"></div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="mob-bottom-nav" id="mob-bottom-nav">
+  <div class="mob-bottom-nav-inner" id="mob-bottom-nav-inner"></div>
+</nav>
+
+<!-- FAB -->
+<button class="fab" id="fab-btn" onclick="fabAction()" aria-label="Criar novo">+</button>
 
 <!-- LOADER -->
 <div id="loader">
@@ -1817,6 +1825,7 @@ let currentUser = null;
 let currentRole = null;
 let currentNome = null;
 let listeners = [];
+let _currentTab = 'dashboard';
 
 // ═══════════════════════════════════════════════
 //  AUTH STATE
@@ -1902,6 +1911,8 @@ function startApp(userData){
   if(navLeads) navLeads.style.display = '';
   // Apply permission to editor-action buttons
   applyPermissions(userData);
+  // Init mobile bottom nav
+  initBottomNav(userData);
   // Start Firestore listeners
   startListeners();
   // If cliente, start on meus-contratos tab
@@ -2033,6 +2044,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click
 function today(){ return new Date().toISOString().split('T')[0]; }
 
 function switchTab(name,el){
+  _currentTab = name;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const tabEl = document.getElementById('tab-'+name);
@@ -2042,6 +2054,11 @@ function switchTab(name,el){
   document.getElementById('page-title').textContent=titles[name]||name;
   if(name==='meus-contratos') renderMeusContratos();
   if(name==='leads'){ populateLeadFiltros(); renderLeads(); }
+  updateBottomNavActive(name);
+  updateFab();
+  // Scroll content to top on tab change
+  const ct = document.querySelector('.content');
+  if(ct) ct.scrollTop = 0;
 }
 
 function canEdit(){ return currentRole==='admin'||currentRole==='editor'; }
@@ -3845,13 +3862,109 @@ window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMobMenu();
   document.addEventListener('touchend',e=>{
     const dx=e.changedTouches[0].clientX-startX;
     const dy=Math.abs(e.changedTouches[0].clientY-startY);
-    // Swipe para esquerda (>60px horizontal, <40px vertical) fecha sidebar
     if(dx<-60 && dy<40){
       const sidebar=document.getElementById('sidebar');
       if(sidebar && sidebar.classList.contains('mob-open')) closeMobMenu();
     }
   },{passive:true});
 })();
+
+// ═══════════════════════════════════════════════
+//  BOTTOM NAV & FAB
+// ═══════════════════════════════════════════════
+const _FAB_ACTIONS = {
+  clientes:    ()=>{ if(canEdit()) openModal('modal-cliente'); },
+  pipeline:    ()=>{ if(canEdit()) openModal('modal-pipeline'); },
+  contratos:   ()=>{ if(canEdit()) openModal('modal-contrato'); },
+  entregas:    ()=>{ if(canEdit()) openModal('modal-entrega'); },
+  financeiro:  ()=>{ if(canEdit()&&canFinanceiro()) openModal('modal-financeiro'); },
+  tarefas:     ()=>{ if(canEdit()) openModal('modal-tarefa'); },
+  leads:       ()=>{ if(canEdit()) openModalLead(); },
+  freelancers: ()=>{ if(canEdit()) openModal('modal-freelancer'); },
+  usuarios:    ()=>{ if(currentRole==='admin') openModal('modal-usuario'); },
+};
+
+function initBottomNav(userData){
+  updateBottomNavActive(_currentTab);
+  updateFab();
+}
+
+function _buildBottomNavTabs(){
+  const isCliente = currentRole==='cliente';
+  const isAdmin   = currentRole==='admin';
+  if(isCliente){
+    return [
+      {id:'dashboard',      icon:'📊', label:'Home'},
+      {id:'meus-contratos', icon:'📋', label:'Contratos'},
+      {id:'entregas',       icon:'✅', label:'Entregas'},
+      {id:'leads',          icon:'📣', label:'Leads'},
+    ];
+  }
+  return [
+    {id:'dashboard', icon:'📊', label:'Home'},
+    {id:'contratos', icon:'📋', label:'Contratos'},
+    {id:'entregas',  icon:'✅', label:'Entregas'},
+    {id:'leads',     icon:'📣', label:'Leads'},
+  ];
+}
+
+function updateBottomNavActive(name){
+  const inner = document.getElementById('mob-bottom-nav-inner');
+  if(!inner) return;
+  const tabs = _buildBottomNavTabs();
+  const pendEntregas = st.entregas.filter(e=>!e.concluida).length;
+  const pendLeads    = st.leads.filter(l=>l.status==='novo').length;
+
+  inner.innerHTML = tabs.map(t=>{
+    let badge = '';
+    if(t.id==='entregas' && pendEntregas>0) badge=`<span class="mbn-badge">${pendEntregas>99?'99+':pendEntregas}</span>`;
+    if(t.id==='leads'    && pendLeads>0)    badge=`<span class="mbn-badge">${pendLeads>99?'99+':pendLeads}</span>`;
+    return `<button class="mbn-btn${name===t.id?' active':''}" onclick="switchTabFromNav('${t.id}')">
+      ${badge}<span class="mbn-icon">${t.icon}</span><span class="mbn-label">${t.label}</span>
+    </button>`;
+  }).join('') +
+  `<button class="mbn-btn${!tabs.find(t=>t.id===name)?' active':''}" onclick="toggleMobMenu()">
+    <span class="mbn-icon">☰</span><span class="mbn-label">Menu</span>
+  </button>`;
+}
+
+function switchTabFromNav(name){
+  const navEl = document.querySelector(`.nav-item[onclick*="'${name}'"]`);
+  switchTab(name, navEl);
+  closeMobMenu();
+}
+
+function updateFab(){
+  const fab = document.getElementById('fab-btn');
+  if(!fab) return;
+  if(window.innerWidth > 768 || !canEdit() || !_FAB_ACTIONS[_currentTab]){
+    fab.classList.remove('fab-show');
+    return;
+  }
+  fab.classList.add('fab-show');
+}
+
+function fabAction(){
+  const action = _FAB_ACTIONS[_currentTab];
+  if(action) action();
+}
+
+// Re-render bottom nav badges when data updates
+const _origRenderAll = typeof renderAll === 'function' ? renderAll : null;
+window.addEventListener('_dataRefresh', ()=>{ updateBottomNavActive(_currentTab); updateFab(); });
+// Patch renderAll to update bottom nav badges
+(function(){
+  const _orig = window.renderAll;
+  if(!_orig) return;
+  window.renderAll = function(){
+    _orig();
+    updateBottomNavActive(_currentTab);
+    updateFab();
+  };
+})();
+
+// Re-evaluate FAB on resize
+window.addEventListener('resize', updateFab, {passive:true});
 </script>
 </body>
 </html>
