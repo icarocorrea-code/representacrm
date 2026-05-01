@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Representa — Gestão Completa</title>
+<link rel="icon" type="image/png" href="./icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════
@@ -57,12 +58,14 @@
 
 *{box-sizing:border-box;margin:0;padding:0;}
 html{transition:background .25s,color .25s;height:100%;-webkit-text-size-adjust:100%;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden;transition:background .25s,color .25s;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;height:100vh;display:flex;overflow:hidden;transition:background .25s,color .25s;}
 
 /* ── LOADER ── */
-#loader{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;transition:opacity .4s;}
+#loader{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px;transition:opacity .4s;}
 #loader h1{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}
+#loader img{filter:drop-shadow(0 0 20px rgba(240,165,0,.3));animation:pulse 2s ease-in-out infinite;}
 #loader p{color:var(--text3);font-size:13px;}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 16px rgba(240,165,0,.25));}50%{filter:drop-shadow(0 0 28px rgba(240,165,0,.5));}}
 .loader-bar{width:220px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;}
 .loader-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));animation:slide 1.2s ease-in-out infinite;}
 @keyframes slide{0%{transform:translateX(-100%);}100%{transform:translateX(300%);}}
@@ -83,7 +86,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .login-box{width:100%;max-width:420px;}
 .login-logo{text-align:center;margin-bottom:32px;}
 .login-logo h1{font-family:'Syne',sans-serif;font-size:34px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}
-.login-logo p{color:var(--text3);font-size:13px;margin-top:6px;}
+.login-logo img{filter:drop-shadow(0 4px 24px rgba(240,165,0,.25));margin-bottom:4px;}
+[data-theme="light"] .login-logo img{filter:drop-shadow(0 4px 20px rgba(200,136,0,.2));}
+.login-logo p{color:var(--text3);font-size:13px;margin-top:8px;}
 .login-logo .login-brand{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-top:2px;}
 .login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:0 32px 80px rgba(0,0,0,.3);}
 [data-theme="dark"] .login-card{box-shadow:0 32px 80px rgba(0,0,0,.7);}
@@ -94,8 +99,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;bottom:0;z-index:200;transition:transform .28s cubic-bezier(.4,0,.2,1);}
-.logo{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.logo{padding:18px 20px 14px;border-bottom:1px solid var(--border);}
 .logo h1{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}
+.logo img{filter:drop-shadow(0 0 8px rgba(240,165,0,.2));transition:filter .2s;}
+.logo img:hover{filter:drop-shadow(0 0 12px rgba(240,165,0,.4));}
 .logo-sub{font-size:10px;color:var(--text3);font-weight:400;letter-spacing:1.5px;text-transform:uppercase;display:block;margin-top:2px;}
 .online-dot{width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;margin-right:5px;box-shadow:0 0 5px var(--success);}
 .nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
@@ -117,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .logout-btn:hover{color:var(--danger);}
 
 /* ── MAIN ── */
-.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+.main{margin-left:var(--sidebar-w);flex:1;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 .topbar{padding:0 28px;height:var(--topbar-h);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:50;gap:12px;}
 .topbar h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.4px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .topbar-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
@@ -145,7 +152,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-sm{padding:5px 10px;font-size:12px;}
 
 /* ── CONTENT ── */
-.content{flex:1;padding:24px 28px;overflow-y:auto;height:calc(100vh - var(--topbar-h));}
+.content{flex:1;padding:24px 28px;overflow-y:auto;min-height:0;}
 .tab{display:none;}.tab.active{display:block;animation:fadeIn .2s ease;}
 
 /* ── CARDS ── */
@@ -521,7 +528,8 @@ select option{background:var(--surface2);}
   .sidebar.mob-open{transform:translateX(0);box-shadow:4px 0 40px rgba(0,0,0,.5);}
 
   /* Main: tela toda */
-  .main{margin-left:0;}
+  .main{margin-left:0;height:100dvh;}
+  body{height:100dvh;}
 
   /* Topbar compacta */
   .topbar{padding:0 60px 0 16px;gap:8px;}
@@ -530,7 +538,7 @@ select option{background:var(--surface2);}
   #topbar-user-name{display:none;}
 
   /* Content — scroll fix + safe area + bottom nav clearance */
-  .content{padding:16px 14px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;height:calc(100vh - var(--topbar-h));height:calc(100dvh - var(--topbar-h));padding-bottom:max(calc(54px + 32px + env(safe-area-inset-bottom,0px)),calc(54px + 32px));}
+  .content{padding:16px 14px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;min-height:0;flex:1;padding-bottom:max(calc(54px + 24px + env(safe-area-inset-bottom,0px)),calc(54px + 24px));}
   .modal-footer{padding-bottom:max(20px, calc(12px + env(safe-area-inset-bottom,0px)));}
 
   /* Login */
@@ -709,7 +717,7 @@ select option{background:var(--surface2);}
 
 <!-- LOADER -->
 <div id="loader">
-  <h1>Representa</h1>
+  <img src="./logo.png" alt="Representa" style="height:64px;object-fit:contain;max-width:280px;margin-bottom:4px;" onerror="this.replaceWith(Object.assign(document.createElement('h1'),{textContent:'Representa',style:'font-family:Syne,sans-serif;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.5px;'}))">
   <p>Carregando sistema...</p>
   <div class="loader-bar"><div class="loader-fill"></div></div>
 </div>
@@ -721,7 +729,7 @@ select option{background:var(--surface2);}
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
-      <h1>Representa</h1>
+      <img src="./logo.png" alt="Representa Assessoria" style="height:80px;object-fit:contain;max-width:300px;display:block;margin:0 auto 8px;" onerror="this.replaceWith(Object.assign(document.createElement('h1'),{textContent:'Representa',style:'font-family:Syne,sans-serif;font-size:34px;font-weight:800;color:var(--accent);letter-spacing:-.5px;'}))">
       <p>Gestão completa para agências de marketing</p>
     </div>
     <div class="login-card">
@@ -752,8 +760,8 @@ select option{background:var(--surface2);}
 <!-- ══════════════════ APP ══════════════════ -->
 <aside class="sidebar" id="sidebar" style="display:none;">
   <div class="logo">
-    <h1>Representa</h1>
-    <span class="logo-sub"><span class="online-dot"></span>Online · Tempo real</span>
+    <img src="./logo.png" alt="Representa" style="height:36px;object-fit:contain;max-width:180px;display:block;" onerror="this.replaceWith(Object.assign(document.createElement('div'),{innerHTML:'<span style=\'font-family:Syne,sans-serif;font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-.5px;\'>Representa</span>'}))">
+    <span class="logo-sub" style="margin-top:6px;"><span class="online-dot"></span>Online · Tempo real</span>
   </div>
   <nav class="nav">
     <div class="nav-section-label">Principal</div>
