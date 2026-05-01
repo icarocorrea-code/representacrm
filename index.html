@@ -1219,7 +1219,7 @@ select option{background:var(--surface2);}
     <div class="modal-body">
       <div class="form-row"><div class="form-group"><label>Cliente*</label><select id="ct-cliente"></select></div><div class="form-group"><label>Nome do Contrato*</label><input type="text" id="ct-nome" placeholder="Ex: Gestão Full Social + Tráfego"></div></div>
       <div class="form-row-3">
-        <div class="form-group"><label>Valor Mensal (R$)*</label><input type="number" id="ct-valor" placeholder="0,00"></div>
+        <div class="form-group" id="ct-valor-group"><label>Valor Mensal (R$)*</label><input type="number" id="ct-valor" placeholder="0,00"></div>
         <div class="form-group"><label>Data de Início</label><input type="date" id="ct-inicio"></div>
         <div class="form-group"><label>Vencimento</label><input type="date" id="ct-fim"></div>
       </div>
@@ -2040,7 +2040,7 @@ let _tt;
 function toast(msg,icon='✅'){ const el=document.getElementById('toast'); el.innerHTML=`<span>${icon}</span> ${msg}`; el.classList.add('show'); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2800); }
 function openModal(id){
   document.getElementById(id).classList.add('open');
-  if(id==='modal-contrato') populateContratoClientes();
+  if(id==='modal-contrato'){ populateContratoClientes(); const vg=document.getElementById('ct-valor-group'); if(vg) vg.style.display=currentRole==='admin'?'':'none'; }
   if(id==='modal-entrega') populateEntregaContratos();
   if(id==='modal-tarefa') populateTarefaClientes();
   if(id==='modal-financeiro'){ const d=document.getElementById('f-data'); if(d&&!d.value) d.value=today(); }
@@ -2316,7 +2316,8 @@ async function saveContrato(){
   try{
     const cli=st.clientes.find(c=>c.id===cId);
     const servicos=Array.from(document.querySelectorAll('#servicos-check input:checked')).map(cb=>cb.value);
-    await db.collection('contratos').add({clienteId:cId,clienteNome:cli?cli.empresa:nome,nome,valor:document.getElementById('ct-valor').value,inicio:document.getElementById('ct-inicio').value,fim:document.getElementById('ct-fim').value,diaVcto:document.getElementById('ct-diavcto').value,status:document.getElementById('ct-status').value,servicos,obs:document.getElementById('ct-obs').value,criadoPor:currentNome});
+    const _ctValor=currentRole==='admin'?document.getElementById('ct-valor').value:'';
+    await db.collection('contratos').add({clienteId:cId,clienteNome:cli?cli.empresa:nome,nome,valor:_ctValor,inicio:document.getElementById('ct-inicio').value,fim:document.getElementById('ct-fim').value,diaVcto:document.getElementById('ct-diavcto').value,status:document.getElementById('ct-status').value,servicos,obs:document.getElementById('ct-obs').value,criadoPor:currentNome});
     closeModal('modal-contrato');['ct-nome','ct-valor','ct-inicio','ct-fim','ct-diavcto','ct-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     toast('Contrato salvo!');
   }catch(e){toast('Erro.','❌');console.error(e);}
@@ -3769,6 +3770,8 @@ function openEditContrato(id){
     set('ct-cliente',ct.clienteId); set('ct-nome',ct.nome); set('ct-valor',ct.valor);
     set('ct-inicio',ct.inicio); set('ct-fim',ct.fim); set('ct-diavcto',ct.diaVcto);
     set('ct-status',ct.status||'ativo'); set('ct-obs',ct.obs);
+    const vg=document.getElementById('ct-valor-group'); if(vg) vg.style.display=currentRole==='admin'?'':'none';
+    const vEl=document.getElementById('ct-valor'); if(vEl) vEl.dataset.original=ct.valor||'';
     document.querySelectorAll('#servicos-check input[type=checkbox]').forEach(cb=>{cb.checked=(ct.servicos||[]).includes(cb.value);});
     const btn=document.getElementById('btn-save-contrato');
     if(btn){btn.textContent='Salvar Alterações';btn.onclick=()=>updateContrato(id);}
@@ -3783,7 +3786,9 @@ async function updateContrato(id){
   try{
     const cli=st.clientes.find(c=>c.id===cId);
     const servicos=Array.from(document.querySelectorAll('#servicos-check input:checked')).map(cb=>cb.value);
-    await db.collection('contratos').doc(id).update({clienteId:cId,clienteNome:cli?cli.empresa:nome,nome,valor:document.getElementById('ct-valor').value,inicio:document.getElementById('ct-inicio').value,fim:document.getElementById('ct-fim').value,diaVcto:document.getElementById('ct-diavcto').value,status:document.getElementById('ct-status').value,servicos,obs:document.getElementById('ct-obs').value});
+    const vEl=document.getElementById('ct-valor');
+    const valor=currentRole==='admin'?vEl.value:(vEl.dataset.original||'');
+    await db.collection('contratos').doc(id).update({clienteId:cId,clienteNome:cli?cli.empresa:nome,nome,valor,inicio:document.getElementById('ct-inicio').value,fim:document.getElementById('ct-fim').value,diaVcto:document.getElementById('ct-diavcto').value,status:document.getElementById('ct-status').value,servicos,obs:document.getElementById('ct-obs').value});
     closeModal('modal-contrato');
     const sb=document.getElementById('btn-save-contrato');if(sb){sb.textContent='Salvar Contrato';sb.onclick=saveContrato;}
     toast('Contrato atualizado!');
