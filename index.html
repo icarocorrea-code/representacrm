@@ -2083,9 +2083,11 @@ function renderAll(){
   renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers(); renderLeads();
   document.getElementById('badge-clientes').textContent=st.clientes.filter(c=>c.status==='ativo').length;
   document.getElementById('badge-contratos').textContent=st.contratos.filter(c=>c.status==='ativo').length;
-  document.getElementById('badge-entregas').textContent=st.entregas.filter(e=>!e.concluida).length;
+  const _myCtIds = currentRole==='cliente' ? (window.clienteContratos||[]) : null;
+  document.getElementById('badge-entregas').textContent=(_myCtIds ? st.entregas.filter(e=>!e.concluida&&_myCtIds.includes(e.contratoId)) : st.entregas.filter(e=>!e.concluida)).length;
   document.getElementById('badge-freelancers').textContent=st.freelancers.length;
-  document.getElementById('badge-leads').textContent=st.leads.filter(l=>l.status==='novo'||l.status==='contato').length;
+  const _myCliIds = _myCtIds ? [...new Set(st.contratos.filter(c=>_myCtIds.includes(c.id)).map(c=>c.clienteId))] : null;
+  document.getElementById('badge-leads').textContent=(_myCliIds ? st.leads.filter(l=>(l.status==='novo'||l.status==='contato')&&_myCliIds.includes(l.clienteId)) : st.leads.filter(l=>l.status==='novo'||l.status==='contato')).length;
   populateLeadFiltros();
 }
 
