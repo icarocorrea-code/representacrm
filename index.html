@@ -705,6 +705,43 @@ select option{background:var(--surface2);}
   .modal-footer .btn{font-size:13px;}
   .ic-value{font-size:18px;}
 }
+
+/* ══════════════════════════════════════
+   GESTÃO DE ACESSOS
+══════════════════════════════════════ */
+.acesso-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+.acesso-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden;}
+.acesso-card:hover{border-color:var(--accent);box-shadow:0 4px 20px var(--accent-glow);}
+.acesso-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.acesso-platform{display:flex;align-items:center;gap:8px;}
+.acesso-platform-badge{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;}
+.platform-meta{background:rgba(24,119,242,.15);color:#1877f2;border:1px solid rgba(24,119,242,.3);}
+[data-theme="light"] .platform-meta{background:rgba(24,119,242,.1);color:#0d5fc2;}
+.platform-google{background:rgba(66,133,244,.15);color:#4285f4;border:1px solid rgba(66,133,244,.3);}
+[data-theme="light"] .platform-google{background:rgba(66,133,244,.1);color:#1a56c4;}
+.acesso-status-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.acesso-status-ok{background:rgba(92,244,160,.15);color:var(--success);border:1px solid rgba(92,244,160,.3);}
+.acesso-status-pending{background:rgba(240,165,0,.15);color:var(--warning);border:1px solid rgba(240,165,0,.3);}
+.acesso-status-no{background:rgba(252,92,92,.15);color:var(--danger);border:1px solid rgba(252,92,92,.3);}
+.acesso-card-cliente{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.acesso-card-conta{font-size:13px;color:var(--text2);margin-bottom:12px;}
+.acesso-fields{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.acesso-field-row{display:flex;align-items:center;gap:8px;font-size:12.5px;}
+.acesso-field-label{color:var(--text3);min-width:110px;flex-shrink:0;}
+.acesso-field-val{color:var(--text2);font-weight:500;word-break:break-all;}
+.acesso-field-val a{color:var(--accent);text-decoration:none;}
+.acesso-field-val a:hover{text-decoration:underline;}
+.acesso-card-actions{display:flex;gap:6px;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--border);}
+.acesso-nivel-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
+.acesso-filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.acesso-filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:12.5px;transition:all .15s;}
+.acesso-filter-btn.active,.acesso-filter-btn:hover{background:var(--accent-glow);border-color:var(--accent);color:var(--accent);}
+.acesso-plat-fields{transition:all .2s;}
+.acesso-obs{font-size:12px;color:var(--text3);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);line-height:1.5;}
+@media(max-width:768px){
+  .acesso-grid{grid-template-columns:1fr;}
+  .acesso-field-label{min-width:90px;}
+}
 </style>
 </head>
 <body>
@@ -786,6 +823,7 @@ select option{background:var(--surface2);}
     <div class="nav-item financial-nav internal-only" onclick="switchTab('financeiro',this)"><span class="icon">💰</span>Financeiro</div>
     <div class="nav-item internal-only" onclick="switchTab('tarefas',this)"><span class="icon">📌</span>Tarefas</div>
     <div class="nav-item internal-only" onclick="switchTab('freelancers',this)"><span class="icon">🧑‍💻</span>Freelancers<span class="nav-badge" id="badge-freelancers">0</span></div>
+    <div class="nav-item internal-only" onclick="switchTab('acessos',this)"><span class="icon">🔑</span>Gestão de Acessos</div>
     <div class="nav-section-label admin-only" style="display:none;">Administração</div>
     <div class="nav-item admin-only" style="display:none;" onclick="switchTab('usuarios',this)"><span class="icon">🔐</span>Usuários</div>
   </nav>
@@ -1074,9 +1112,207 @@ select option{background:var(--surface2);}
       <div id="usuarios-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
     </div>
 
+    <!-- GESTÃO DE ACESSOS -->
+    <div id="tab-acessos" class="tab">
+      <div class="section-header">
+        <div>
+          <div class="section-title">🔑 Gestão de Acessos</div>
+          <div class="section-sub">Credenciais de Meta Ads e Google Ads por cliente</div>
+        </div>
+        <button class="btn btn-primary editor-action" onclick="openModalAcesso()">+ Novo Acesso</button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="stats-grid" id="acessos-kpi" style="margin-bottom:20px;"></div>
+
+      <!-- Filtros e busca -->
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px;">
+        <div class="acesso-filters" id="acesso-filter-btns">
+          <button class="acesso-filter-btn active" onclick="filterAcessos('todos',this)">Todos</button>
+          <button class="acesso-filter-btn" onclick="filterAcessos('meta',this)">📘 Meta Ads</button>
+          <button class="acesso-filter-btn" onclick="filterAcessos('google',this)">🔵 Google Ads</button>
+          <button class="acesso-filter-btn" onclick="filterAcessos('sem_acesso',this)">🚫 Sem Acesso</button>
+          <button class="acesso-filter-btn" onclick="filterAcessos('pendente',this)">⏳ Pendentes</button>
+        </div>
+        <div class="search-bar" style="flex:1;min-width:200px;">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Buscar por cliente ou conta..." id="search-acessos" oninput="renderAcessos()">
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div class="acesso-grid" id="acessos-grid"></div>
+    </div>
+
   </div>
 </div>
 <!-- ══════════════════ MODAIS ══════════════════ -->
+<!-- Modal Gestão de Acessos -->
+<div class="modal-overlay" id="modal-acesso">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <h3 id="acesso-modal-title">🔑 Novo Acesso</h3>
+      <button class="close-btn" onclick="closeModal('modal-acesso')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="acesso-id">
+
+      <!-- Dados gerais -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Cliente*</label>
+          <select id="ac-cliente"></select>
+        </div>
+        <div class="form-group">
+          <label>Plataforma*</label>
+          <select id="ac-plataforma" onchange="toggleAcessoFields()">
+            <option value="">Selecione...</option>
+            <option value="meta">📘 Meta Ads (Facebook/Instagram)</option>
+            <option value="google">🔵 Google Ads</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome da Conta</label>
+          <input type="text" id="ac-nome-conta" placeholder="Ex: Empresa LTDA - Anúncios">
+        </div>
+        <div class="form-group">
+          <label>Status de Acesso*</label>
+          <select id="ac-status">
+            <option value="com_acesso">✅ Com Acesso</option>
+            <option value="pendente">⏳ Pendente</option>
+            <option value="sem_acesso">🚫 Sem Acesso</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Campos Meta Ads -->
+      <div id="acesso-meta-fields" class="acesso-plat-fields" style="display:none;">
+        <div style="background:rgba(24,119,242,.08);border:1px solid rgba(24,119,242,.2);border-radius:10px;padding:14px;margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:600;color:#1877f2;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;">📘 Meta Ads</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>ID da Conta de Anúncios*</label>
+              <input type="text" id="ac-meta-conta-id" placeholder="Ex: act_123456789">
+            </div>
+            <div class="form-group">
+              <label>Business Manager ID</label>
+              <input type="text" id="ac-meta-bm-id" placeholder="Ex: 987654321">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Pixel ID</label>
+              <input type="text" id="ac-meta-pixel-id" placeholder="Ex: 1234567890123456">
+            </div>
+            <div class="form-group">
+              <label>Nível de Acesso</label>
+              <select id="ac-meta-nivel">
+                <option value="">Não definido</option>
+                <option value="admin">Administrador</option>
+                <option value="anunciante">Anunciante</option>
+                <option value="analista">Analista</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Conta vinculada ao CNPJ?</label>
+              <select id="ac-meta-cnpj">
+                <option value="">Não informado</option>
+                <option value="sim">Sim</option>
+                <option value="nao">Não</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Verificação de negócio</label>
+              <select id="ac-meta-verificado">
+                <option value="">Não informado</option>
+                <option value="verificado">Verificado ✅</option>
+                <option value="pendente">Pendente ⏳</option>
+                <option value="nao_verificado">Não verificado</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Link do Gerenciador de Anúncios</label>
+            <input type="url" id="ac-meta-link" placeholder="https://business.facebook.com/...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Campos Google Ads -->
+      <div id="acesso-google-fields" class="acesso-plat-fields" style="display:none;">
+        <div style="background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:10px;padding:14px;margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:600;color:#4285f4;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;">🔵 Google Ads</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>ID da Conta Google Ads*</label>
+              <input type="text" id="ac-google-conta-id" placeholder="Ex: 123-456-7890">
+            </div>
+            <div class="form-group">
+              <label>ID da Conta MCC (Gerenciadora)</label>
+              <input type="text" id="ac-google-mcc-id" placeholder="Ex: 987-654-3210">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>ID do Google Analytics</label>
+              <input type="text" id="ac-google-ga-id" placeholder="Ex: G-XXXXXXXXXX ou UA-XXXXX">
+            </div>
+            <div class="form-group">
+              <label>Nível de Acesso</label>
+              <select id="ac-google-nivel">
+                <option value="">Não definido</option>
+                <option value="admin">Administrador</option>
+                <option value="padrao">Padrão</option>
+                <option value="leitura">Somente leitura</option>
+                <option value="email">Acesso de e-mail</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Google Tag Manager ID</label>
+              <input type="text" id="ac-google-gtm-id" placeholder="Ex: GTM-XXXXXXX">
+            </div>
+            <div class="form-group">
+              <label>ID Google Merchant Center</label>
+              <input type="text" id="ac-google-merchant-id" placeholder="Ex: 123456789">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Link da Conta Google Ads</label>
+            <input type="url" id="ac-google-link" placeholder="https://ads.google.com/...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Campos comuns -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>E-mail de acesso vinculado</label>
+          <input type="email" id="ac-email" placeholder="email@agencia.com">
+        </div>
+        <div class="form-group">
+          <label>Data de concessão do acesso</label>
+          <input type="date" id="ac-data-acesso">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Observações</label>
+        <textarea id="ac-obs" rows="3" placeholder="Informações adicionais, histórico de acesso, alertas..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-acesso')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-acesso" onclick="saveAcesso()">Salvar Acesso</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Novo/Editar Lead -->
 <div class="modal-overlay" id="modal-lead">
   <div class="modal" style="max-width:640px;">
@@ -1834,8 +2070,8 @@ const authSec = secondaryApp.auth();
 // ═══════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════
-const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[],freelancers:[],leads:[]};
-const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas','freelancers','leads'];
+const st = {clientes:[],contratos:[],entregas:[],pipeline:[],financeiro:[],tarefas:[],customServicos:[],usuarios:[],freelancers:[],leads:[],acessos:[]};
+const COLS = ['clientes','contratos','entregas','pipeline','financeiro','tarefas','freelancers','leads','acessos'];
 const readyCols = new Set();
 let currentUser = null;
 let currentRole = null;
@@ -2066,10 +2302,11 @@ function switchTab(name,el){
   const tabEl = document.getElementById('tab-'+name);
   if(tabEl) tabEl.classList.add('active');
   if(el) el.classList.add('active');
-  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',freelancers:'Freelancers',usuarios:'Gerenciador de Usuários','meus-contratos':'Meus Contratos',leads:'Gestão de Leads'};
+  const titles={dashboard:'Dashboard',clientes:'Clientes',pipeline:'Pipeline de Vendas',contratos:'Contratos',entregas:'Controle de Entregas',financeiro:'Financeiro',tarefas:'Tarefas',freelancers:'Freelancers',usuarios:'Gerenciador de Usuários','meus-contratos':'Meus Contratos',leads:'Gestão de Leads',acessos:'Gestão de Acessos'};
   document.getElementById('page-title').textContent=titles[name]||name;
   if(name==='meus-contratos') renderMeusContratos();
   if(name==='leads'){ populateLeadFiltros(); renderLeads(); }
+  if(name==='acessos') renderAcessos();
   updateBottomNavActive(name);
   updateFab();
   // Scroll content to top on tab change
@@ -2088,7 +2325,7 @@ function renderAll(){
     window.clienteContratos = st.contratos.filter(c=>c.clienteId===window._clienteVinculadoId).map(c=>c.id);
   }
   renderDashboard(); renderClientes(); renderContratos(); renderEntregas();
-  renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers(); renderLeads();
+  renderPipeline(); renderFinanceiro(); renderTarefas(); renderFreelancers(); renderLeads(); renderAcessos();
   document.getElementById('badge-clientes').textContent=st.clientes.filter(c=>c.status==='ativo').length;
   document.getElementById('badge-contratos').textContent=st.contratos.filter(c=>c.status==='ativo').length;
   const _myCtIds = currentRole==='cliente' ? (window.clienteContratos||[]) : null;
@@ -3906,6 +4143,7 @@ const _FAB_ACTIONS = {
   leads:       ()=>{ if(canEdit()) openModalLead(); },
   freelancers: ()=>{ if(canEdit()) openModal('modal-freelancer'); },
   usuarios:    ()=>{ if(currentRole==='admin') openModal('modal-usuario'); },
+  acessos:     ()=>{ if(canEdit()) openModalAcesso(); },
 };
 
 function initBottomNav(userData){
@@ -3989,6 +4227,253 @@ window.addEventListener('_dataRefresh', ()=>{ updateBottomNavActive(_currentTab)
 
 // Re-evaluate FAB on resize
 window.addEventListener('resize', updateFab, {passive:true});
+
+// ═══════════════════════════════════════════════
+//  GESTÃO DE ACESSOS
+// ═══════════════════════════════════════════════
+let _fAcesso = 'todos';
+
+function filterAcessos(f, el){
+  _fAcesso = f;
+  document.querySelectorAll('.acesso-filter-btn').forEach(b => b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderAcessos();
+}
+
+function toggleAcessoFields(){
+  const plat = document.getElementById('ac-plataforma').value;
+  document.getElementById('acesso-meta-fields').style.display   = plat === 'meta'   ? '' : 'none';
+  document.getElementById('acesso-google-fields').style.display = plat === 'google' ? '' : 'none';
+}
+
+function openModalAcesso(id){
+  // Reset form
+  ['acesso-id','ac-nome-conta','ac-email','ac-data-acesso','ac-obs',
+   'ac-meta-conta-id','ac-meta-bm-id','ac-meta-pixel-id','ac-meta-link',
+   'ac-google-conta-id','ac-google-mcc-id','ac-google-ga-id','ac-google-gtm-id','ac-google-merchant-id','ac-google-link']
+    .forEach(f => { const el = document.getElementById(f); if(el) el.value = ''; });
+  ['ac-plataforma','ac-status','ac-meta-nivel','ac-meta-cnpj','ac-meta-verificado','ac-google-nivel']
+    .forEach(f => { const el = document.getElementById(f); if(el) el.selectedIndex = 0; });
+  document.getElementById('acesso-meta-fields').style.display   = 'none';
+  document.getElementById('acesso-google-fields').style.display = 'none';
+
+  // Populate clientes
+  const sel = document.getElementById('ac-cliente');
+  sel.innerHTML = '<option value="">Selecione o cliente...</option>' +
+    st.clientes.map(c => `<option value="${c.id}">${c.empresa} — ${c.nome}</option>`).join('');
+
+  if(id){
+    const a = st.acessos.find(x => x.id === id);
+    if(!a) return;
+    document.getElementById('acesso-modal-title').textContent = '✏️ Editar Acesso';
+    document.getElementById('acesso-id').value       = a.id;
+    document.getElementById('ac-cliente').value      = a.clienteId || '';
+    document.getElementById('ac-plataforma').value   = a.plataforma || '';
+    document.getElementById('ac-nome-conta').value   = a.nomeConta || '';
+    document.getElementById('ac-status').value       = a.status || 'com_acesso';
+    document.getElementById('ac-email').value        = a.email || '';
+    document.getElementById('ac-data-acesso').value  = a.dataAcesso || '';
+    document.getElementById('ac-obs').value          = a.obs || '';
+    if(a.plataforma === 'meta'){
+      document.getElementById('ac-meta-conta-id').value   = a.metaContaId || '';
+      document.getElementById('ac-meta-bm-id').value      = a.metaBmId || '';
+      document.getElementById('ac-meta-pixel-id').value   = a.metaPixelId || '';
+      document.getElementById('ac-meta-nivel').value      = a.metaNivel || '';
+      document.getElementById('ac-meta-cnpj').value       = a.metaCnpj || '';
+      document.getElementById('ac-meta-verificado').value = a.metaVerificado || '';
+      document.getElementById('ac-meta-link').value       = a.metaLink || '';
+    } else if(a.plataforma === 'google'){
+      document.getElementById('ac-google-conta-id').value    = a.googleContaId || '';
+      document.getElementById('ac-google-mcc-id').value      = a.googleMccId || '';
+      document.getElementById('ac-google-ga-id').value       = a.googleGaId || '';
+      document.getElementById('ac-google-gtm-id').value      = a.googleGtmId || '';
+      document.getElementById('ac-google-merchant-id').value = a.googleMerchantId || '';
+      document.getElementById('ac-google-link').value        = a.googleLink || '';
+      document.getElementById('ac-google-nivel').value       = a.googleNivel || '';
+    }
+    toggleAcessoFields();
+  } else {
+    document.getElementById('acesso-modal-title').textContent = '🔑 Novo Acesso';
+  }
+
+  const btn = document.getElementById('btn-save-acesso');
+  btn.disabled = false;
+  btn.textContent = 'Salvar Acesso';
+  openModal('modal-acesso');
+}
+
+async function saveAcesso(){
+  const id        = document.getElementById('acesso-id').value;
+  const clienteId = document.getElementById('ac-cliente').value;
+  const plataforma= document.getElementById('ac-plataforma').value;
+  const status    = document.getElementById('ac-status').value;
+
+  if(!clienteId)   { toast('Selecione o cliente.', '⚠️'); return; }
+  if(!plataforma)  { toast('Selecione a plataforma.', '⚠️'); return; }
+
+  if(plataforma === 'meta' && !document.getElementById('ac-meta-conta-id').value.trim()){
+    toast('Informe o ID da Conta de Anúncios Meta.', '⚠️'); return;
+  }
+  if(plataforma === 'google' && !document.getElementById('ac-google-conta-id').value.trim()){
+    toast('Informe o ID da Conta Google Ads.', '⚠️'); return;
+  }
+
+  const cliente   = st.clientes.find(c => c.id === clienteId);
+  const data = {
+    clienteId,
+    clienteNome: cliente ? (cliente.empresa || cliente.nome) : '',
+    plataforma,
+    nomeConta:    document.getElementById('ac-nome-conta').value.trim(),
+    status,
+    email:        document.getElementById('ac-email').value.trim(),
+    dataAcesso:   document.getElementById('ac-data-acesso').value,
+    obs:          document.getElementById('ac-obs').value.trim(),
+    atualizadoEm: new Date().toLocaleDateString('pt-BR'),
+    atualizadoPor: currentNome,
+  };
+
+  if(plataforma === 'meta'){
+    data.metaContaId   = document.getElementById('ac-meta-conta-id').value.trim();
+    data.metaBmId      = document.getElementById('ac-meta-bm-id').value.trim();
+    data.metaPixelId   = document.getElementById('ac-meta-pixel-id').value.trim();
+    data.metaNivel     = document.getElementById('ac-meta-nivel').value;
+    data.metaCnpj      = document.getElementById('ac-meta-cnpj').value;
+    data.metaVerificado= document.getElementById('ac-meta-verificado').value;
+    data.metaLink      = document.getElementById('ac-meta-link').value.trim();
+  } else {
+    data.googleContaId    = document.getElementById('ac-google-conta-id').value.trim();
+    data.googleMccId      = document.getElementById('ac-google-mcc-id').value.trim();
+    data.googleGaId       = document.getElementById('ac-google-ga-id').value.trim();
+    data.googleGtmId      = document.getElementById('ac-google-gtm-id').value.trim();
+    data.googleMerchantId = document.getElementById('ac-google-merchant-id').value.trim();
+    data.googleLink       = document.getElementById('ac-google-link').value.trim();
+    data.googleNivel      = document.getElementById('ac-google-nivel').value;
+  }
+
+  const btn = document.getElementById('btn-save-acesso');
+  btn.disabled = true;
+  btn.textContent = 'Salvando...';
+
+  try {
+    if(id){
+      await db.collection('acessos').doc(id).update(data);
+      toast('Acesso atualizado!');
+    } else {
+      data.criadoEm  = new Date().toLocaleDateString('pt-BR');
+      data.criadoPor = currentNome;
+      await db.collection('acessos').add(data);
+      toast('Acesso cadastrado!');
+    }
+    closeModal('modal-acesso');
+  } catch(e){
+    toast('Erro: ' + e.message, '❌');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Salvar Acesso';
+}
+
+async function deleteAcesso(id){
+  if(!canEdit()) return;
+  if(!confirm('Remover este acesso?')) return;
+  try {
+    await db.collection('acessos').doc(id).delete();
+    toast('Acesso removido.', '🗑️');
+  } catch(e){
+    toast('Erro: ' + e.message, '❌');
+  }
+}
+
+function renderAcessos(){
+  const q = (document.getElementById('search-acessos')?.value || '').toLowerCase();
+  let list = st.acessos;
+
+  if(_fAcesso === 'meta')       list = list.filter(a => a.plataforma === 'meta');
+  else if(_fAcesso === 'google') list = list.filter(a => a.plataforma === 'google');
+  else if(_fAcesso === 'sem_acesso') list = list.filter(a => a.status === 'sem_acesso');
+  else if(_fAcesso === 'pendente')   list = list.filter(a => a.status === 'pendente');
+
+  if(q) list = list.filter(a =>
+    (a.clienteNome||'').toLowerCase().includes(q) ||
+    (a.nomeConta||'').toLowerCase().includes(q)   ||
+    (a.metaContaId||'').toLowerCase().includes(q) ||
+    (a.googleContaId||'').toLowerCase().includes(q)
+  );
+
+  // KPIs
+  const total    = st.acessos.length;
+  const comAcesso= st.acessos.filter(a => a.status === 'com_acesso').length;
+  const pendentes= st.acessos.filter(a => a.status === 'pendente').length;
+  const semAcesso= st.acessos.filter(a => a.status === 'sem_acesso').length;
+  const kpiEl    = document.getElementById('acessos-kpi');
+  if(kpiEl) kpiEl.innerHTML = `
+    <div class="stat-card"><span class="stat-icon">🔑</span><div class="stat-label">Total de Acessos</div><div class="stat-value">${total}</div><div class="stat-sub">${st.acessos.filter(a=>a.plataforma==='meta').length} Meta · ${st.acessos.filter(a=>a.plataforma==='google').length} Google</div></div>
+    <div class="stat-card"><span class="stat-icon" style="color:var(--success)">✅</span><div class="stat-label">Com Acesso</div><div class="stat-value" style="color:var(--success)">${comAcesso}</div><div class="stat-sub">acessos ativos</div></div>
+    <div class="stat-card"><span class="stat-icon" style="color:var(--warning)">⏳</span><div class="stat-label">Pendentes</div><div class="stat-value" style="color:var(--warning)">${pendentes}</div><div class="stat-sub">aguardando acesso</div></div>
+    <div class="stat-card"><span class="stat-icon" style="color:var(--danger)">🚫</span><div class="stat-label">Sem Acesso</div><div class="stat-value" style="color:var(--danger)">${semAcesso}</div><div class="stat-sub">requer atenção</div></div>
+  `;
+
+  const grid = document.getElementById('acessos-grid');
+  if(!grid) return;
+
+  if(!list.length){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div>🔑</div><p>Nenhum acesso encontrado.</p></div>`;
+    return;
+  }
+
+  const statusMap = {
+    com_acesso: {label:'Com Acesso', cls:'acesso-status-ok'},
+    pendente:   {label:'Pendente',   cls:'acesso-status-pending'},
+    sem_acesso: {label:'Sem Acesso', cls:'acesso-status-no'},
+  };
+  const nivelMetaMap  = {admin:'Administrador', anunciante:'Anunciante', analista:'Analista'};
+  const nivelGoogleMap= {admin:'Administrador', padrao:'Padrão', leitura:'Somente leitura', email:'Acesso de e-mail'};
+
+  grid.innerHTML = list.map(a => {
+    const st_info = statusMap[a.status] || {label: a.status, cls:'acesso-status-pending'};
+    const isMeta  = a.plataforma === 'meta';
+    const platBadge = isMeta
+      ? `<span class="acesso-platform-badge platform-meta">📘 Meta Ads</span>`
+      : `<span class="acesso-platform-badge platform-google">🔵 Google Ads</span>`;
+    const contaId = isMeta ? a.metaContaId : a.googleContaId;
+    const nivel   = isMeta
+      ? (nivelMetaMap[a.metaNivel] || a.metaNivel || '')
+      : (nivelGoogleMap[a.googleNivel] || a.googleNivel || '');
+    const link    = isMeta ? a.metaLink : a.googleLink;
+
+    const canE = canEdit();
+    return `
+    <div class="acesso-card">
+      <div class="acesso-card-top">
+        <div class="acesso-platform">${platBadge}</div>
+        <span class="acesso-status-badge ${st_info.cls}">${st_info.label}</span>
+      </div>
+      <div class="acesso-card-cliente">${escHtml(a.clienteNome||'—')}</div>
+      <div class="acesso-card-conta">${escHtml(a.nomeConta||'Sem nome de conta')}</div>
+      <div class="acesso-fields">
+        ${contaId ? `<div class="acesso-field-row"><span class="acesso-field-label">ID da Conta</span><span class="acesso-field-val">${escHtml(contaId)}</span></div>` : ''}
+        ${isMeta && a.metaBmId ? `<div class="acesso-field-row"><span class="acesso-field-label">Business Mgr</span><span class="acesso-field-val">${escHtml(a.metaBmId)}</span></div>` : ''}
+        ${isMeta && a.metaPixelId ? `<div class="acesso-field-row"><span class="acesso-field-label">Pixel ID</span><span class="acesso-field-val">${escHtml(a.metaPixelId)}</span></div>` : ''}
+        ${!isMeta && a.googleMccId ? `<div class="acesso-field-row"><span class="acesso-field-label">MCC (Gerenc.)</span><span class="acesso-field-val">${escHtml(a.googleMccId)}</span></div>` : ''}
+        ${!isMeta && a.googleGaId ? `<div class="acesso-field-row"><span class="acesso-field-label">Analytics ID</span><span class="acesso-field-val">${escHtml(a.googleGaId)}</span></div>` : ''}
+        ${!isMeta && a.googleGtmId ? `<div class="acesso-field-row"><span class="acesso-field-label">GTM ID</span><span class="acesso-field-val">${escHtml(a.googleGtmId)}</span></div>` : ''}
+        ${!isMeta && a.googleMerchantId ? `<div class="acesso-field-row"><span class="acesso-field-label">Merchant Ctr</span><span class="acesso-field-val">${escHtml(a.googleMerchantId)}</span></div>` : ''}
+        ${nivel ? `<div class="acesso-field-row"><span class="acesso-field-label">Nível</span><span class="acesso-field-val"><span class="acesso-nivel-badge">${escHtml(nivel)}</span></span></div>` : ''}
+        ${a.email ? `<div class="acesso-field-row"><span class="acesso-field-label">E-mail</span><span class="acesso-field-val">${escHtml(a.email)}</span></div>` : ''}
+        ${a.dataAcesso ? `<div class="acesso-field-row"><span class="acesso-field-label">Concedido em</span><span class="acesso-field-val">${escHtml(a.dataAcesso)}</span></div>` : ''}
+        ${link ? `<div class="acesso-field-row"><span class="acesso-field-label">Link</span><span class="acesso-field-val"><a href="${escHtml(link)}" target="_blank" rel="noopener">Abrir conta ↗</a></span></div>` : ''}
+        ${isMeta && a.metaVerificado === 'verificado' ? `<div class="acesso-field-row"><span class="acesso-field-label">Verificação</span><span class="acesso-field-val" style="color:var(--success)">Negócio verificado ✅</span></div>` : ''}
+        ${isMeta && a.metaVerificado === 'pendente' ? `<div class="acesso-field-row"><span class="acesso-field-label">Verificação</span><span class="acesso-field-val" style="color:var(--warning)">Pendente ⏳</span></div>` : ''}
+      </div>
+      ${a.obs ? `<div class="acesso-obs">💬 ${escHtml(a.obs)}</div>` : ''}
+      ${canE ? `<div class="acesso-card-actions">
+        <button class="btn btn-sm" onclick="openModalAcesso('${a.id}')">✏️ Editar</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteAcesso('${a.id}')">🗑️</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function escHtml(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
