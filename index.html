@@ -823,7 +823,7 @@ select option{background:var(--surface2);}
     <div class="nav-item financial-nav internal-only" onclick="switchTab('financeiro',this)"><span class="icon">💰</span>Financeiro</div>
     <div class="nav-item internal-only" onclick="switchTab('tarefas',this)"><span class="icon">📌</span>Tarefas</div>
     <div class="nav-item internal-only" onclick="switchTab('freelancers',this)"><span class="icon">🧑‍💻</span>Freelancers<span class="nav-badge" id="badge-freelancers">0</span></div>
-    <div class="nav-item internal-only" onclick="switchTab('acessos',this)"><span class="icon">🔑</span>Gestão de Acessos</div>
+    <div class="nav-item admin-only" style="display:none;" onclick="switchTab('acessos',this)"><span class="icon">🔑</span>Gestão de Acessos</div>
     <div class="nav-section-label admin-only" style="display:none;">Administração</div>
     <div class="nav-item admin-only" style="display:none;" onclick="switchTab('usuarios',this)"><span class="icon">🔐</span>Usuários</div>
   </nav>
@@ -1297,8 +1297,22 @@ select option{background:var(--surface2);}
           <input type="email" id="ac-email" placeholder="email@agencia.com">
         </div>
         <div class="form-group">
+          <label>Senha de acesso</label>
+          <div style="position:relative;display:flex;align-items:center;">
+            <input type="password" id="ac-senha" placeholder="Senha da conta" style="padding-right:42px;flex:1;">
+            <button type="button" onclick="toggleAcessoSenha()" title="Mostrar/ocultar senha"
+              style="position:absolute;right:0;top:0;bottom:0;width:40px;background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:16px;display:flex;align-items:center;justify-content:center;"
+              id="btn-toggle-senha">👁</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label>Data de concessão do acesso</label>
           <input type="date" id="ac-data-acesso">
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;">
+          <div style="font-size:11px;color:var(--text3);padding-bottom:6px;line-height:1.5;">🔒 Senha armazenada com segurança.<br>Visível apenas para administradores.</div>
         </div>
       </div>
       <div class="form-group">
@@ -4240,6 +4254,19 @@ function filterAcessos(f, el){
   renderAcessos();
 }
 
+function toggleAcessoSenha(){
+  const inp = document.getElementById('ac-senha');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function toggleCardSenha(btnEl, senhaEl){
+  const hidden = senhaEl.dataset.hidden === 'true';
+  const senha  = senhaEl.dataset.senha;
+  senhaEl.textContent   = hidden ? senha : '••••••••';
+  senhaEl.dataset.hidden= hidden ? 'false' : 'true';
+  btnEl.textContent     = hidden ? '🙈' : '👁';
+}
+
 function toggleAcessoFields(){
   const plat = document.getElementById('ac-plataforma').value;
   document.getElementById('acesso-meta-fields').style.display   = plat === 'meta'   ? '' : 'none';
@@ -4248,10 +4275,11 @@ function toggleAcessoFields(){
 
 function openModalAcesso(id){
   // Reset form
-  ['acesso-id','ac-nome-conta','ac-email','ac-data-acesso','ac-obs',
+  ['acesso-id','ac-nome-conta','ac-email','ac-senha','ac-data-acesso','ac-obs',
    'ac-meta-conta-id','ac-meta-bm-id','ac-meta-pixel-id','ac-meta-link',
    'ac-google-conta-id','ac-google-mcc-id','ac-google-ga-id','ac-google-gtm-id','ac-google-merchant-id','ac-google-link']
     .forEach(f => { const el = document.getElementById(f); if(el) el.value = ''; });
+  const senhaInput = document.getElementById('ac-senha'); if(senhaInput) senhaInput.type = 'password';
   ['ac-plataforma','ac-status','ac-meta-nivel','ac-meta-cnpj','ac-meta-verificado','ac-google-nivel']
     .forEach(f => { const el = document.getElementById(f); if(el) el.selectedIndex = 0; });
   document.getElementById('acesso-meta-fields').style.display   = 'none';
@@ -4272,6 +4300,7 @@ function openModalAcesso(id){
     document.getElementById('ac-nome-conta').value   = a.nomeConta || '';
     document.getElementById('ac-status').value       = a.status || 'com_acesso';
     document.getElementById('ac-email').value        = a.email || '';
+    document.getElementById('ac-senha').value        = a.senha || '';
     document.getElementById('ac-data-acesso').value  = a.dataAcesso || '';
     document.getElementById('ac-obs').value          = a.obs || '';
     if(a.plataforma === 'meta'){
@@ -4326,6 +4355,7 @@ async function saveAcesso(){
     nomeConta:    document.getElementById('ac-nome-conta').value.trim(),
     status,
     email:        document.getElementById('ac-email').value.trim(),
+    senha:        document.getElementById('ac-senha').value,
     dataAcesso:   document.getElementById('ac-data-acesso').value,
     obs:          document.getElementById('ac-obs').value.trim(),
     atualizadoEm: new Date().toLocaleDateString('pt-BR'),
@@ -4459,6 +4489,7 @@ function renderAcessos(){
         ${!isMeta && a.googleMerchantId ? `<div class="acesso-field-row"><span class="acesso-field-label">Merchant Ctr</span><span class="acesso-field-val">${escHtml(a.googleMerchantId)}</span></div>` : ''}
         ${nivel ? `<div class="acesso-field-row"><span class="acesso-field-label">Nível</span><span class="acesso-field-val"><span class="acesso-nivel-badge">${escHtml(nivel)}</span></span></div>` : ''}
         ${a.email ? `<div class="acesso-field-row"><span class="acesso-field-label">E-mail</span><span class="acesso-field-val">${escHtml(a.email)}</span></div>` : ''}
+        ${currentRole==='admin' && a.senha ? `<div class="acesso-field-row"><span class="acesso-field-label">Senha</span><span class="acesso-field-val" style="display:flex;align-items:center;gap:6px;"><span id="senha-${a.id}" data-hidden="true" data-senha="${escHtml(a.senha)}">••••••••</span><button type="button" onclick="toggleCardSenha(this,document.getElementById('senha-${a.id}'))" style="background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:0;" title="Mostrar senha">👁</button></span></div>` : ''}
         ${a.dataAcesso ? `<div class="acesso-field-row"><span class="acesso-field-label">Concedido em</span><span class="acesso-field-val">${escHtml(a.dataAcesso)}</span></div>` : ''}
         ${link ? `<div class="acesso-field-row"><span class="acesso-field-label">Link</span><span class="acesso-field-val"><a href="${escHtml(link)}" target="_blank" rel="noopener">Abrir conta ↗</a></span></div>` : ''}
         ${isMeta && a.metaVerificado === 'verificado' ? `<div class="acesso-field-row"><span class="acesso-field-label">Verificação</span><span class="acesso-field-val" style="color:var(--success)">Negócio verificado ✅</span></div>` : ''}
