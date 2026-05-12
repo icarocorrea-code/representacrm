@@ -1,0 +1,112 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ──────────────────────────────────────────────
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function userData() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    function role() {
+      return userData().role;
+    }
+
+    function isAdmin()          { return isAuth() && role() == 'admin'; }
+    function isEditor()         { return isAuth() && role() == 'editor'; }
+    function isViewer()         { return isAuth() && role() == 'viewer'; }
+    function isCliente()        { return isAuth() && role() == 'cliente'; }
+    function isAdminOrEditor()  { return isAdmin() || isEditor(); }
+    function isInternal()       { return isAdmin() || isEditor() || isViewer(); }
+    function isActive()         { return userData().ativo == true; }
+
+    // ── USUARIOS ─────────────────────────────────────────────
+    // Admin gerencia tudo; cada usuário lê o próprio doc (necessário no login)
+    match /usuarios/{uid} {
+      allow read:   if isAuth() && (isAdmin() || request.auth.uid == uid);
+      allow create: if isAdmin() && isActive();
+      allow update: if isAdmin() && isActive();
+      allow delete: if isAdmin() && isActive();
+    }
+
+    // ── CLIENTES ──────────────────────────────────────────────
+    // Internos leem tudo; cliente lê apenas o próprio cadastro
+    match /clientes/{clienteId} {
+      allow read: if isInternal() && isActive() ||
+                    (isCliente() && isActive() &&
+                     userData().clienteVinculadoId == clienteId);
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── CONTRATOS ─────────────────────────────────────────────
+    // Internos leem tudo; cliente lê apenas contratos vinculados à sua empresa
+    match /contratos/{contratoId} {
+      allow read: if isInternal() && isActive() ||
+                    (isCliente() && isActive() &&
+                     resource.data.clienteId == userData().clienteVinculadoId);
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── ENTREGAS ──────────────────────────────────────────────
+    // Cliente acessa entregas dos próprios contratos (lookup via contratos)
+    match /entregas/{entregaId} {
+      function clienteOwnsContract() {
+        return get(/databases/$(database)/documents/contratos/$(resource.data.contratoId))
+                 .data.clienteId == userData().clienteVinculadoId;
+      }
+      allow read: if isInternal() && isActive() ||
+                    (isCliente() && isActive() && clienteOwnsContract());
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── PIPELINE ──────────────────────────────────────────────
+    // Somente equipe interna; cliente não acessa
+    match /pipeline/{docId} {
+      allow read:  if isInternal() && isActive();
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── FINANCEIRO ────────────────────────────────────────────
+    // Exclusivo para admin
+    match /financeiro/{docId} {
+      allow read, write: if isAdmin() && isActive();
+    }
+
+    // ── TAREFAS ───────────────────────────────────────────────
+    match /tarefas/{docId} {
+      allow read:  if isInternal() && isActive();
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── FREELANCERS ───────────────────────────────────────────
+    match /freelancers/{docId} {
+      allow read:  if isInternal() && isActive();
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── LEADS ─────────────────────────────────────────────────
+    // Cliente lê leads vinculados à sua empresa
+    match /leads/{leadId} {
+      allow read: if isInternal() && isActive() ||
+                    (isCliente() && isActive() &&
+                     resource.data.clienteId == userData().clienteVinculadoId);
+      allow write: if isAdminOrEditor() && isActive();
+    }
+
+    // ── ACESSOS ───────────────────────────────────────────────
+    // Credenciais sensíveis — exclusivo para admin
+    match /acessos/{docId} {
+      allow read, write: if isAdmin() && isActive();
+    }
+
+    // ── CONFIG ────────────────────────────────────────────────
+    // Qualquer autenticado lê (lista de serviços etc.); admin/editor escrevem
+    match /config/{docId} {
+      allow read:  if isAuth() && isActive();
+      allow write: if isAdminOrEditor() && isActive();
+    }
+  }
+}
