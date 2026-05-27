@@ -2324,8 +2324,16 @@ function openModal(id){
   if(id==='modal-freelancer'){ _flRates=[]; addFlRateRow('Post Instagram',''); addFlRateRow('Reels / Vídeo',''); renderFlRatesEditor(); }
   if(id==='modal-lead') openModalLead();
 }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  if(id==='modal-entrega'){
+    const title=document.querySelector('#modal-entrega .modal-header h3');
+    if(title)title.textContent='✅ Nova Entrega';
+    const btn=document.getElementById('btn-save-entrega');
+    if(btn){btn.textContent='Cadastrar Entrega';btn.onclick=saveEntrega;}
+  }
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) closeModal(m.id); }));
 function today(){ return new Date().toISOString().split('T')[0]; }
 
 function switchTab(name,el){
@@ -2668,7 +2676,7 @@ function renderEntregas(){
           ${e.obs?`<div class="delivery-desc">${e.obs}</div>`:''}
           ${e.imagemUrl?`<div style="margin-top:10px;"><img src="${e.imagemUrl}" alt="Imagem da entrega" style="max-width:100%;max-height:320px;border-radius:8px;object-fit:contain;border:1px solid var(--border);" onerror="this.style.display='none'"></div>`:''}
         </div>
-        ${editable?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntrega('${e.id}')">✕</button>`:''}
+        ${editable?`<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;"><button class="btn btn-sm" onclick="event.stopPropagation();openEditEntrega('${e.id}')" title="Editar">✏️</button><button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntrega('${e.id}')">✕</button></div>`:''}
       </div>`;}).join('')}
     </div>`;
   }).join('');
@@ -2715,6 +2723,45 @@ async function saveEntrega(){
     toast('Entrega cadastrada!');
   }catch(e){toast('Erro.','❌');console.error(e);}
   btn.disabled=false;btn.textContent='Cadastrar Entrega';
+}
+
+function openEditEntrega(id){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const e=st.entregas.find(x=>x.id===id);if(!e)return;
+  populateEntregaContratos();
+  setTimeout(()=>{
+    const set=(i,v)=>{const el=document.getElementById(i);if(el)el.value=v||'';};
+    set('e-contrato',e.contratoId);
+    set('e-tipo',e.tipo);
+    set('e-descricao',e.descricao);
+    set('e-quantidade',e.quantidade||1);
+    set('e-prazo',e.prazo);
+    set('e-responsavel',e.responsavel);
+    set('e-recorrencia',e.recorrencia||'unica');
+    set('e-freelancer',e.freelancerId||'');
+    set('e-obs',e.obs);
+    set('e-imagemUrl',e.imagemUrl);
+    const title=document.querySelector('#modal-entrega .modal-header h3');
+    if(title)title.textContent='✏️ Editar Entrega';
+    const btn=document.getElementById('btn-save-entrega');
+    if(btn){btn.textContent='Salvar Alterações';btn.onclick=()=>updateEntrega(id);}
+    document.getElementById('modal-entrega').classList.add('open');
+  },80);
+}
+async function updateEntrega(id){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const desc=document.getElementById('e-descricao').value.trim();if(!desc){toast('Descrição obrigatória!','⚠️');return;}
+  const btn=document.getElementById('btn-save-entrega');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    const cId=document.getElementById('e-contrato').value,ct=st.contratos.find(c=>c.id===cId);
+    await db.collection('entregas').doc(id).update({contratoId:cId,contratoNome:ct?`${ct.clienteNome} — ${ct.nome}`:'',tipo:document.getElementById('e-tipo').value,descricao:desc,quantidade:+document.getElementById('e-quantidade').value||1,prazo:document.getElementById('e-prazo').value,responsavel:document.getElementById('e-responsavel').value,recorrencia:document.getElementById('e-recorrencia').value,freelancerId:document.getElementById('e-freelancer')?.value||'',obs:document.getElementById('e-obs').value,imagemUrl:document.getElementById('e-imagemUrl').value.trim()});
+    closeModal('modal-entrega');
+    const title=document.querySelector('#modal-entrega .modal-header h3');
+    if(title)title.textContent='✅ Nova Entrega';
+    if(btn){btn.textContent='Cadastrar Entrega';btn.onclick=saveEntrega;}
+    toast('Entrega atualizada!');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Salvar Alterações';
 }
 
 // ═══════════════════════════════════════════════
