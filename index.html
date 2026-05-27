@@ -2687,7 +2687,7 @@ function toggleEntrega(id){
   urlField.value=e.imagemUrl||'';
   // oculta o campo se a imagem já estiver preenchida
   document.getElementById('concluir-imagem-group').style.display=e.imagemUrl?'none':'';
-  document.getElementById('modal-concluir-entrega').classList.add('active');
+  document.getElementById('modal-concluir-entrega').classList.add('open');
 }
 async function confirmConcluirEntrega(){
   if(!_pendingConcluirId)return;
