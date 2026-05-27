@@ -1524,6 +1524,7 @@ select option{background:var(--surface2);}
       </div>
       <div class="form-group"><label>Atribuir a freelancer</label><select id="e-freelancer"><option value="">Nenhum (interno)</option></select></div>
       <div class="form-group"><label>Descrição para o Cliente</label><textarea id="e-obs" placeholder="Descreva detalhes, especificações e informações que o cliente poderá visualizar sobre esta entrega..."></textarea></div>
+      <div class="form-group"><label>URL da Imagem <span style="color:var(--text3);font-weight:400;">(opcional)</span></label><input type="url" id="e-imagemUrl" placeholder="https://...link direto da imagem..."></div>
     </div>
     <div class="modal-footer"><button class="btn" onclick="closeModal('modal-entrega')">Cancelar</button><button class="btn btn-primary" id="btn-save-entrega" onclick="saveEntrega()">Cadastrar Entrega</button></div>
   </div>
@@ -2647,6 +2648,7 @@ function renderEntregas(){
             ${e.recorrencia&&e.recorrencia!=='unica'?`<span class="badge badge-inprogress">${e.recorrencia}</span>`:''}
           </div>
           ${e.obs?`<div class="delivery-desc">${e.obs}</div>`:''}
+          ${e.imagemUrl?`<div style="margin-top:10px;"><img src="${e.imagemUrl}" alt="Imagem da entrega" style="max-width:100%;max-height:320px;border-radius:8px;object-fit:contain;border:1px solid var(--border);" onerror="this.style.display='none'"></div>`:''}
         </div>
         ${editable?`<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntrega('${e.id}')">✕</button>`:''}
       </div>`;}).join('')}
@@ -2661,8 +2663,8 @@ async function saveEntrega(){
   const btn=document.getElementById('btn-save-entrega');btn.disabled=true;btn.textContent='Salvando...';
   try{
     const cId=document.getElementById('e-contrato').value,ct=st.contratos.find(c=>c.id===cId);
-    await db.collection('entregas').add({contratoId:cId,contratoNome:ct?`${ct.clienteNome} — ${ct.nome}`:'',tipo:document.getElementById('e-tipo').value,descricao:desc,quantidade:+document.getElementById('e-quantidade').value||1,prazo:document.getElementById('e-prazo').value,responsavel:document.getElementById('e-responsavel').value,recorrencia:document.getElementById('e-recorrencia').value,freelancerId:document.getElementById('e-freelancer')?.value||'',obs:document.getElementById('e-obs').value,concluida:false,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});
-    closeModal('modal-entrega');['e-descricao','e-prazo','e-responsavel','e-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('e-quantidade').value='1';
+    await db.collection('entregas').add({contratoId:cId,contratoNome:ct?`${ct.clienteNome} — ${ct.nome}`:'',tipo:document.getElementById('e-tipo').value,descricao:desc,quantidade:+document.getElementById('e-quantidade').value||1,prazo:document.getElementById('e-prazo').value,responsavel:document.getElementById('e-responsavel').value,recorrencia:document.getElementById('e-recorrencia').value,freelancerId:document.getElementById('e-freelancer')?.value||'',obs:document.getElementById('e-obs').value,imagemUrl:document.getElementById('e-imagemUrl').value.trim(),concluida:false,criadoEm:new Date().toLocaleDateString('pt-BR'),criadoPor:currentNome});
+    closeModal('modal-entrega');['e-descricao','e-prazo','e-responsavel','e-obs','e-imagemUrl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('e-quantidade').value='1';
     toast('Entrega cadastrada!');
   }catch(e){toast('Erro.','❌');console.error(e);}
   btn.disabled=false;btn.textContent='Cadastrar Entrega';
