@@ -1495,6 +1495,24 @@ select option{background:var(--surface2);}
   </div>
 </div>
 
+<!-- Modal Confirmar Conclusão de Entrega -->
+<div class="modal-overlay" id="modal-concluir-entrega">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header"><h3>✅ Confirmar Conclusão</h3><button class="close-btn" onclick="closeModal('modal-concluir-entrega')">✕</button></div>
+    <div class="modal-body">
+      <p style="margin:0 0 16px;color:var(--text2);">Confirma que esta entrega foi concluída?</p>
+      <div class="form-group" id="concluir-imagem-group">
+        <label>URL da Imagem <span style="color:var(--text3);font-weight:400;">(opcional)</span></label>
+        <input type="url" id="concluir-imagemUrl" placeholder="https://...link direto da imagem...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-concluir-entrega')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-confirmar-concluir" onclick="confirmConcluirEntrega()">Confirmar Conclusão</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal Entrega -->
 <div class="modal-overlay" id="modal-entrega">
   <div class="modal">
@@ -2655,7 +2673,36 @@ function renderEntregas(){
     </div>`;
   }).join('');
 }
-async function toggleEntrega(id){if(!canEdit()){toast('Sem permissão.','🚫');return;}const e=st.entregas.find(x=>x.id===id);if(!e)return;const c=!e.concluida;await db.collection('entregas').doc(id).update({concluida:c,concluidaEm:c?new Date().toLocaleDateString('pt-BR'):null,concluidaPor:c?currentNome:null});toast(c?'Entrega concluída! ✅':'Entrega reaberta.');}
+let _pendingConcluirId=null;
+function toggleEntrega(id){
+  if(!canEdit()){toast('Sem permissão.','🚫');return;}
+  const e=st.entregas.find(x=>x.id===id);if(!e)return;
+  if(e.concluida){
+    // reabertura: direto, sem confirmação
+    db.collection('entregas').doc(id).update({concluida:false,concluidaEm:null,concluidaPor:null});
+    toast('Entrega reaberta.');return;
+  }
+  _pendingConcluirId=id;
+  const urlField=document.getElementById('concluir-imagemUrl');
+  urlField.value=e.imagemUrl||'';
+  // oculta o campo se a imagem já estiver preenchida
+  document.getElementById('concluir-imagem-group').style.display=e.imagemUrl?'none':'';
+  document.getElementById('modal-concluir-entrega').classList.add('active');
+}
+async function confirmConcluirEntrega(){
+  if(!_pendingConcluirId)return;
+  const btn=document.getElementById('btn-confirmar-concluir');btn.disabled=true;btn.textContent='Salvando...';
+  try{
+    const url=document.getElementById('concluir-imagemUrl').value.trim();
+    const upd={concluida:true,concluidaEm:new Date().toLocaleDateString('pt-BR'),concluidaPor:currentNome};
+    if(url)upd.imagemUrl=url;
+    await db.collection('entregas').doc(_pendingConcluirId).update(upd);
+    closeModal('modal-concluir-entrega');
+    toast('Entrega concluída! ✅');
+  }catch(e){toast('Erro.','❌');console.error(e);}
+  btn.disabled=false;btn.textContent='Confirmar Conclusão';
+  _pendingConcluirId=null;
+}
 async function deleteEntrega(id){if(!canEdit())return;if(!confirm('Excluir?'))return;await db.collection('entregas').doc(id).delete();toast('Removido.','🗑️');}
 async function saveEntrega(){
   if(!canEdit()){toast('Sem permissão.','🚫');return;}
